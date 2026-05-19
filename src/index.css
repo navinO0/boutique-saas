@@ -225,21 +225,15 @@ html.lenis {
   display: none;
 }
 
-/* Magical Infinite Scroll */
-@keyframes infiniteScroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
 .infinite-scroll-track {
   display: flex;
   gap: 4rem;
   width: max-content;
-  animation: infiniteScroll 60s linear infinite;
+  cursor: grab;
 }
 
-.infinite-scroll-track:hover {
-  animation-play-state: paused;
+.infinite-scroll-track:active {
+  cursor: grabbing;
 }
 
 .premium-card-blur {

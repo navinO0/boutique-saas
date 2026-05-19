@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { ShoppingBag, Star, Heart, ArrowRight, Scissors, Sparkles, Briefcase, Phone, Mail, MapPin, Quote, Sparkle, X, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
@@ -174,120 +174,161 @@ const FeaturedCollections = ({ products, onProductClick }) => (
   </section>
 );
 
-const CustomCarousel = ({ products, onProductClick }) => (
-  <section style={{ padding: '15rem 0', background: 'var(--secondary)', color: 'var(--background)', overflow: 'hidden', position: 'relative' }}>
-     <h2 style={{ 
-       position: 'absolute', 
-       top: '50%', 
-       left: '50%', 
-       transform: 'translate(-50%, -50%)', 
-       fontSize: '25vw', 
-       opacity: 0.03, 
-       whiteSpace: 'nowrap', 
-       pointerEvents: 'none',
-       fontFamily: 'Playfair Display',
-       fontWeight: 900,
-       color: 'var(--primary)'
-     }}>
-       DREAMS DREAMS DREAMS
-     </h2>
-     
-     <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-        <div style={{ marginBottom: '10rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-           <div>
-              <span style={{ color: 'var(--primary)', fontWeight: 900, letterSpacing: '6px', fontSize: '0.9rem', textTransform: 'uppercase' }}>Gallery 01</span>
-              <h2 style={{ fontSize: 'clamp(3rem, 8vw, 5rem)', fontFamily: 'Playfair Display', marginTop: '1.5rem', color: 'var(--background)' }}>The Digital Atelier</h2>
-           </div>
-           <p style={{ maxWidth: '350px', opacity: 0.6, fontSize: '1.1rem', textAlign: 'right' }}>An infinite rotation of our most celebrated works. Click any piece to explore its narrative.</p>
-        </div>
-     </div>
+const CustomCarousel = ({ products, onProductClick }) => {
+  const controls = useAnimation();
+  const trackRef = React.useRef(null);
+  const [trackWidth, setTrackWidth] = useState(0);
+  const resumeTimeoutRef = React.useRef(null);
 
-     <div style={{ width: '100%', overflow: 'hidden' }}>
-        <div className="infinite-scroll-track" style={{ gap: '4rem' }}>
-           {[...products, ...products, ...products].map((p, idx) => (
-             <motion.div 
-               key={`${p.id}-${idx}`} 
-               initial="initial"
-               whileHover="hover"
-               onClick={() => onProductClick(p)}
-               className="carousel-card"
-             >
-                <motion.div 
-                  variants={{
-                    initial: { rotate: 0, scale: 1 },
-                    hover: { rotate: 2, scale: 1.02 }
-                  }}
-                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  className="carousel-card-inner"
-                >
-                   <motion.img 
-                     src={p.image} 
-                     variants={{
-                       initial: { scale: 1 },
-                       hover: { scale: 1.1 }
-                     }}
-                     transition={{ duration: 0.8, ease: "easeOut" }}
-                     style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                     alt="" 
-                   />
-                   
-                   {/* Premium Overlay Gradient */}
-                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)' }}></div>
-                   
-                   {/* Glassmorphism Content Panel */}
-                   <motion.div 
-                     variants={{
-                       initial: { y: 20, opacity: 0.9 },
-                       hover: { y: 0, opacity: 1 }
-                     }}
-                     className="premium-card-blur"
-                     style={{ 
-                       position: 'absolute', 
-                       bottom: '2rem', 
-                       left: '2rem', 
-                       right: '2rem', 
-                       padding: '2.5rem', 
-                       borderRadius: '30px',
-                       display: 'flex',
-                       flexDirection: 'column',
-                       gap: '0.5rem'
-                     }}
-                   >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <div>
-                          <p style={{ color: 'var(--primary)', fontWeight: 900, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '4px', marginBottom: '0.5rem' }}>{p.category}</p>
-                          <h4 style={{ fontSize: '1.8rem', fontFamily: 'Playfair Display', color: 'white', lineHeight: 1.2 }}>{p.name}</h4>
+  useEffect(() => {
+    if (trackRef.current) {
+      setTrackWidth(trackRef.current.scrollWidth);
+    }
+  }, [products]);
+
+  const startAnimation = () => {
+    controls.start({
+      x: [0, -trackWidth / 3],
+      transition: {
+        x: {
+          repeat: Infinity,
+          repeatType: "loop",
+          duration: 40,
+          ease: "linear",
+        },
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (trackWidth > 0) {
+      startAnimation();
+    }
+    return () => {
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    };
+  }, [trackWidth]);
+
+  const handleDragStart = () => {
+    controls.stop();
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+  };
+
+  const handleDragEnd = () => {
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    resumeTimeoutRef.current = setTimeout(() => {
+      startAnimation();
+    }, 5000);
+  };
+
+  return (
+    <section style={{ padding: '15rem 0', background: 'var(--secondary)', color: 'var(--background)', overflow: 'hidden', position: 'relative' }}>
+       {/* Background Text */}
+       <h2 style={{ 
+         position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', 
+         fontSize: '25vw', opacity: 0.03, whiteSpace: 'nowrap', pointerEvents: 'none',
+         fontFamily: 'Playfair Display', fontWeight: 900, color: 'var(--primary)'
+       }}>
+         DREAMS DREAMS DREAMS
+       </h2>
+       
+       <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <div style={{ marginBottom: '10rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+             <div>
+                <span style={{ color: 'var(--primary)', fontWeight: 900, letterSpacing: '6px', fontSize: '0.9rem', textTransform: 'uppercase' }}>Gallery 01</span>
+                <h2 style={{ fontSize: 'clamp(3rem, 8vw, 5rem)', fontFamily: 'Playfair Display', marginTop: '1.5rem', color: 'var(--background)' }}>The Digital Atelier</h2>
+             </div>
+             <p style={{ maxWidth: '350px', opacity: 0.6, fontSize: '1.1rem', textAlign: 'right' }}>An infinite rotation of our most celebrated works. Click any piece to explore its narrative.</p>
+          </div>
+       </div>
+
+       <div style={{ width: '100%', overflow: 'hidden' }}>
+          <motion.div 
+            ref={trackRef}
+            className="infinite-scroll-track" 
+            animate={controls}
+            drag="x"
+            dragConstraints={{ left: -trackWidth * (2/3), right: 0 }}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            style={{ gap: '4rem' }}
+          >
+             {[...products, ...products, ...products].map((p, idx) => (
+               <motion.div 
+                 key={`${p.id}-${idx}`} 
+                 initial="initial"
+                 whileHover="hover"
+                 onClick={() => onProductClick(p)}
+                 className="carousel-card"
+               >
+                  <motion.div 
+                    variants={{
+                      initial: { rotate: 0, scale: 1 },
+                      hover: { rotate: 2, scale: 1.02 }
+                    }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    className="carousel-card-inner"
+                  >
+                     <motion.img 
+                       src={p.image} 
+                       variants={{
+                         initial: { scale: 1 },
+                         hover: { scale: 1.1 }
+                       }}
+                       transition={{ duration: 0.8, ease: "easeOut" }}
+                       style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                       alt="" 
+                     />
+                     
+                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)' }}></div>
+                     
+                     <motion.div 
+                       variants={{
+                         initial: { y: 20, opacity: 0.9 },
+                         hover: { y: 0, opacity: 1 }
+                       }}
+                       className="premium-card-blur"
+                       style={{ 
+                         position: 'absolute', bottom: '2rem', left: '2rem', right: '2rem', 
+                         padding: '2.5rem', borderRadius: '30px', display: 'flex', flexDirection: 'column', gap: '0.5rem'
+                       }}
+                     >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <div>
+                            <p style={{ color: 'var(--primary)', fontWeight: 900, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '4px', marginBottom: '0.5rem' }}>{p.category}</p>
+                            <h4 style={{ fontSize: '1.8rem', fontFamily: 'Playfair Display', color: 'white', lineHeight: 1.2 }}>{p.name}</h4>
+                          </div>
+                          <motion.div
+                            variants={{
+                              initial: { scale: 0.8, opacity: 0 },
+                              hover: { scale: 1, opacity: 1 }
+                            }}
+                            style={{ background: 'var(--primary)', padding: '0.8rem', borderRadius: '50%', color: 'white' }}
+                          >
+                            <ArrowRight size={20} />
+                          </motion.div>
                         </div>
-                        <motion.div
+                        
+                        <motion.div 
                           variants={{
-                            initial: { scale: 0.8, opacity: 0 },
-                            hover: { scale: 1, opacity: 1 }
+                            initial: { height: 0, opacity: 0 },
+                            hover: { height: 'auto', opacity: 1 }
                           }}
-                          style={{ background: 'var(--primary)', padding: '0.8rem', borderRadius: '50%', color: 'white' }}
+                          style={{ overflow: 'hidden' }}
                         >
-                          <ArrowRight size={20} />
+                          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1rem' }}>
+                            View Piece Narrative <Sparkles size={14} style={{ marginLeft: '5px', display: 'inline' }} />
+                          </p>
                         </motion.div>
-                      </div>
-                      
-                      <motion.div 
-                        variants={{
-                          initial: { height: 0, opacity: 0 },
-                          hover: { height: 'auto', opacity: 1 }
-                        }}
-                        style={{ overflow: 'hidden' }}
-                      >
-                        <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1rem' }}>
-                          View Piece Narrative <Sparkles size={14} style={{ marginLeft: '5px', display: 'inline' }} />
-                        </p>
-                      </motion.div>
-                   </motion.div>
-                </motion.div>
-             </motion.div>
-           ))}
-        </div>
-     </div>
-  </section>
-);
+                     </motion.div>
+                  </motion.div>
+               </motion.div>
+             ))}
+          </motion.div>
+       </div>
+    </section>
+  );
+};
 
 const LandingPage = () => {
   useSmoothScroll();
