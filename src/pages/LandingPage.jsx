@@ -42,12 +42,12 @@ const BookingModal = ({ isOpen, onClose }) => {
           </div>
           
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-            <input placeholder="Full Name" type="text" required value={formData.customer} onChange={(e) => setFormData({...formData, customer: e.target.value})} style={{ width: '100%', padding: '1.2rem', border: '1px solid #eee', borderRadius: '20px', outline: 'none' }} />
-            <input placeholder="Mobile Number" type="tel" required value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} style={{ width: '100%', padding: '1.2rem', border: '1px solid #eee', borderRadius: '20px', outline: 'none' }} />
+            <input className="appointment-input" placeholder="Full Name" type="text" required value={formData.customer} onChange={(e) => setFormData({...formData, customer: e.target.value})} />
+            <input className="appointment-input" placeholder="Mobile Number" type="tel" required value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <input type="date" required value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} style={{ width: '100%', padding: '1.2rem', border: '1px solid #eee', borderRadius: '20px' }} />
-              <input type="time" required value={formData.time} onChange={(e) => setFormData({...formData, time: e.target.value})} style={{ width: '100%', padding: '1.2rem', border: '1px solid #eee', borderRadius: '20px' }} />
+            <div className="appointment-grid">
+              <input className="appointment-input" type="date" required value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} />
+              <input className="appointment-input" type="time" required value={formData.time} onChange={(e) => setFormData({...formData, time: e.target.value})} />
             </div>
             
             <button type="submit" style={{ marginTop: '1rem', padding: '1.4rem', background: 'var(--secondary)', color: 'white', fontWeight: 700, borderRadius: '20px', border: 'none', cursor: 'pointer' }}>
@@ -110,7 +110,7 @@ const Services = ({ services }) => {
              <h2 style={{ fontSize: 'clamp(3rem, 8vw, 5.5rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1 }}>Pure <br/> Craftsmanship</h2>
              <p style={{ maxWidth: '400px', color: 'var(--text)', opacity: 0.7, fontSize: '1.1rem' }}>We don't just stitch; we sculpt dreams into reality using the finest silks and heritage techniques passed down through generations.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+          <div className="services-grid">
              {services.map((service, idx) => (
                <motion.div 
                  key={service.id} 
@@ -118,21 +118,14 @@ const Services = ({ services }) => {
                  whileInView={{ opacity: 1, y: 0 }}
                  viewport={{ once: true }}
                  transition={{ delay: idx * 0.1 }}
-                 style={{ 
-                   height: '550px', 
-                   borderRadius: '50px', 
-                   overflow: 'hidden', 
-                   position: 'relative',
-                   cursor: 'pointer',
-                   background: 'var(--secondary)'
-                 }}
+                 className="service-card-responsive"
                >
                   <img src={service.image} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transition: '0.8s transform cubic-bezier(0.16, 1, 0.3, 1)' }} className="service-img" alt="" />
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 70%)' }}></div>
-                  <div style={{ position: 'absolute', bottom: '4rem', left: '3rem', right: '3rem' }}>
-                     <span style={{ color: 'var(--primary)', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '4px', fontSize: '0.8rem', display: 'block', marginBottom: '1.2rem' }}>0{idx + 1} — Artistic Service</span>
-                     <h3 style={{ fontSize: '2.8rem', marginBottom: '1.5rem', fontFamily: 'Playfair Display', color: 'white', lineHeight: 1.1 }}>{service.title}</h3>
-                     <p style={{ fontSize: '1.05rem', color: 'white', opacity: 0.8, lineHeight: '1.7', maxWidth: '320px' }}>{service.description}</p>
+                  <div className="service-card-content">
+                     <span style={{ color: 'var(--primary)', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '4px', fontSize: '0.65rem', display: 'block', marginBottom: '1rem' }}>0{idx + 1} — Art</span>
+                     <h3 className="service-card-title">{service.title}</h3>
+                     <p className="service-card-desc">{service.description}</p>
                   </div>
                </motion.div>
              ))}
@@ -149,7 +142,7 @@ const FeaturedCollections = ({ products, onProductClick }) => (
         <h2 style={{ fontSize: 'clamp(3rem, 10vw, 6rem)', color: 'var(--secondary)', fontFamily: 'Playfair Display', marginBottom: '2rem' }}>Icons Only</h2>
         <div style={{ width: '100px', height: '4px', background: 'var(--primary)', margin: '0 auto' }}></div>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem' }}>
+      <div className="featured-grid">
         {products.slice(0, 3).map((product, idx) => (
           <motion.div 
             key={product.id} 
@@ -157,14 +150,14 @@ const FeaturedCollections = ({ products, onProductClick }) => (
             onClick={() => onProductClick(product)}
             style={{ cursor: 'pointer', position: 'relative' }}
           >
-            <div style={{ height: idx % 2 === 0 ? '650px' : '550px', borderRadius: '40px', overflow: 'hidden', boxShadow: '0 40px 80px rgba(0,0,0,0.1)' }}>
+            <div className="featured-image-container">
                 <img src={product.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
             </div>
-            <div style={{ position: 'absolute', bottom: '-40px', right: '40px', background: 'var(--background)', padding: '2.5rem', borderRadius: '30px', boxShadow: '0 20px 50px rgba(0,0,0,0.05)', maxWidth: '280px' }}>
-               <h3 style={{ fontSize: '1.8rem', color: 'var(--secondary)', marginBottom: '0.8rem', fontFamily: 'Playfair Display' }}>{product.name}</h3>
+            <div className="featured-card-info">
+               <h3 className="featured-card-title">{product.name}</h3>
                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <p style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--primary)' }}>₹{product.price.toLocaleString()}</p>
-                  <ArrowRight size={24} color="var(--primary)" />
+                  <p className="featured-card-price">₹{product.price.toLocaleString()}</p>
+                  <ArrowRight size={18} color="var(--primary)" />
                </div>
             </div>
           </motion.div>
