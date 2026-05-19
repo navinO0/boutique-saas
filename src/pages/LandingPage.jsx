@@ -63,7 +63,7 @@ const BookingModal = ({ isOpen, onClose }) => {
 const Hero = ({ onBook }) => (
   <section style={{ minHeight: '100vh', width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', background: 'var(--background)' }}>
     <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'radial-gradient(circle at 10% 20%, var(--accent) 0%, transparent 50%)', opacity: 0.5 }}></div>
-    <div className="container" style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '2rem', alignItems: 'center', zIndex: 10 }}>
+    <div className="container hero-container" style={{ zIndex: 10 }}>
       <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, ease: "circOut" }}>
         <div style={{ padding: '0.6rem 1.2rem', background: 'var(--accent)', borderRadius: '15px', color: 'var(--primary)', width: 'fit-content', fontWeight: 900, letterSpacing: '4px', fontSize: '0.7rem', textTransform: 'uppercase', marginBottom: '2.5rem', boxShadow: '0 10px 20px rgba(0,0,0,0.02)' }}>
            High Couture • 2026 Collection
@@ -90,10 +90,10 @@ const Hero = ({ onBook }) => (
         </div>
       </motion.div>
       <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2 }} style={{ position: 'relative' }}>
-         <div style={{ width: '100%', height: '85vh', borderRadius: '60px', overflow: 'hidden', transform: 'rotate(-2deg)', boxShadow: '0 50px 100px rgba(0,0,0,0.1)' }}>
+          <div className="hero-main-image">
             <img src="https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217783/hero_mzqd33.jpg" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Couture" />
          </div>
-         <div style={{ position: 'absolute', top: '10%', right: '-40px', background: 'var(--primary)', color: 'white', padding: '2rem', borderRadius: '30px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}>
+          <div className="hero-badge">
             <h4 style={{ fontSize: '2rem', fontFamily: 'Playfair Display' }}>100+</h4>
             <p style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px' }}>Custom Fits</p>
          </div>
@@ -110,7 +110,7 @@ const Services = ({ services }) => {
              <h2 style={{ fontSize: 'clamp(3rem, 8vw, 5.5rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1 }}>Pure <br/> Craftsmanship</h2>
              <p style={{ maxWidth: '400px', color: 'var(--text)', opacity: 0.7, fontSize: '1.1rem' }}>We don't just stitch; we sculpt dreams into reality using the finest silks and heritage techniques passed down through generations.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '4rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
              {services.map((service, idx) => (
                <motion.div 
                  key={service.id} 
@@ -149,7 +149,7 @@ const FeaturedCollections = ({ products, onProductClick }) => (
         <h2 style={{ fontSize: 'clamp(3rem, 10vw, 6rem)', color: 'var(--secondary)', fontFamily: 'Playfair Display', marginBottom: '2rem' }}>Icons Only</h2>
         <div style={{ width: '100px', height: '4px', background: 'var(--primary)', margin: '0 auto' }}></div>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '6rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem' }}>
         {products.slice(0, 3).map((product, idx) => (
           <motion.div 
             key={product.id} 
@@ -207,18 +207,81 @@ const CustomCarousel = ({ products, onProductClick }) => (
            {[...products, ...products, ...products].map((p, idx) => (
              <motion.div 
                key={`${p.id}-${idx}`} 
-               whileHover={{ scale: 1.05, rotate: 2 }}
+               initial="initial"
+               whileHover="hover"
                onClick={() => onProductClick(p)}
-               style={{ width: '450px', flexShrink: 0, cursor: 'pointer' }}
+               className="carousel-card"
              >
-                <div style={{ position: 'relative', height: '600px', borderRadius: '50px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)' }}>
-                   <img src={p.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
-                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 50%)' }}></div>
-                   <div style={{ position: 'absolute', bottom: '3rem', left: '3rem' }}>
-                      <p style={{ color: 'var(--primary)', fontWeight: 900, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '4px', marginBottom: '1rem' }}>{p.category}</p>
-                      <h4 style={{ fontSize: '2rem', fontFamily: 'Playfair Display', color: 'white' }}>{p.name}</h4>
-                   </div>
-                </div>
+                <motion.div 
+                  variants={{
+                    initial: { rotate: 0, scale: 1 },
+                    hover: { rotate: 2, scale: 1.02 }
+                  }}
+                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  className="carousel-card-inner"
+                >
+                   <motion.img 
+                     src={p.image} 
+                     variants={{
+                       initial: { scale: 1 },
+                       hover: { scale: 1.1 }
+                     }}
+                     transition={{ duration: 0.8, ease: "easeOut" }}
+                     style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                     alt="" 
+                   />
+                   
+                   {/* Premium Overlay Gradient */}
+                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)' }}></div>
+                   
+                   {/* Glassmorphism Content Panel */}
+                   <motion.div 
+                     variants={{
+                       initial: { y: 20, opacity: 0.9 },
+                       hover: { y: 0, opacity: 1 }
+                     }}
+                     className="premium-card-blur"
+                     style={{ 
+                       position: 'absolute', 
+                       bottom: '2rem', 
+                       left: '2rem', 
+                       right: '2rem', 
+                       padding: '2.5rem', 
+                       borderRadius: '30px',
+                       display: 'flex',
+                       flexDirection: 'column',
+                       gap: '0.5rem'
+                     }}
+                   >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div>
+                          <p style={{ color: 'var(--primary)', fontWeight: 900, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '4px', marginBottom: '0.5rem' }}>{p.category}</p>
+                          <h4 style={{ fontSize: '1.8rem', fontFamily: 'Playfair Display', color: 'white', lineHeight: 1.2 }}>{p.name}</h4>
+                        </div>
+                        <motion.div
+                          variants={{
+                            initial: { scale: 0.8, opacity: 0 },
+                            hover: { scale: 1, opacity: 1 }
+                          }}
+                          style={{ background: 'var(--primary)', padding: '0.8rem', borderRadius: '50%', color: 'white' }}
+                        >
+                          <ArrowRight size={20} />
+                        </motion.div>
+                      </div>
+                      
+                      <motion.div 
+                        variants={{
+                          initial: { height: 0, opacity: 0 },
+                          hover: { height: 'auto', opacity: 1 }
+                        }}
+                        style={{ overflow: 'hidden' }}
+                      >
+                        <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1rem' }}>
+                          View Piece Narrative <Sparkles size={14} style={{ marginLeft: '5px', display: 'inline' }} />
+                        </p>
+                      </motion.div>
+                   </motion.div>
+                </motion.div>
              </motion.div>
            ))}
         </div>
