@@ -166,8 +166,8 @@ export const ShopProvider = ({ children }) => {
   const logoutAdmin = () => setIsAdminLoggedIn(false);
 
   const [catalog, setCatalog] = useState([
-    { id: 'CAT001', name: 'Vintage Rose Bridal', category: 'Bridal', description: 'A masterpiece created for a spring wedding.', images: ['/src/assets/lehenga_bridal.png'], date: '2024-03-15' },
-    { id: 'CAT002', name: 'Azure Silk Affair', category: 'Evening Wear', description: 'Custom hand-embroidery on pure silk.', images: ['/src/assets/saree_silk.png'], date: '2024-04-02' }
+    { id: 'CAT001', name: 'Vintage Rose Bridal', category: 'Bridal', description: 'A masterpiece created for a spring wedding.', images: ['https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217781/lehenga_bridal_rmymce.jpg'], date: '2024-03-15' },
+    { id: 'CAT002', name: 'Azure Silk Affair', category: 'Evening Wear', description: 'Custom hand-embroidery on pure silk.', images: ['https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217783/saree_silk_po1xsi.jpg'], date: '2024-04-02' }
   ]);
 
   const addCatalogItem = (item) => {

@@ -91,7 +91,7 @@ const Hero = ({ onBook }) => (
       </motion.div>
       <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2 }} style={{ position: 'relative' }}>
          <div style={{ width: '100%', height: '85vh', borderRadius: '60px', overflow: 'hidden', transform: 'rotate(-2deg)', boxShadow: '0 50px 100px rgba(0,0,0,0.1)' }}>
-            <img src="/src/assets/hero.png" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Couture" />
+            <img src="https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217783/hero_mzqd33.jpg" style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Couture" />
          </div>
          <div style={{ position: 'absolute', top: '10%', right: '-40px', background: 'var(--primary)', color: 'white', padding: '2rem', borderRadius: '30px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}>
             <h4 style={{ fontSize: '2rem', fontFamily: 'Playfair Display' }}>100+</h4>

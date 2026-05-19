@@ -16,7 +16,7 @@ export const BOUTIQUE_CONFIG = {
       title: "Custom Stitching",
       description: "Perfectly tailored outfits designed to fit you like a second skin. We specialize in precise measurements and faultless finishing for all body types.",
       icon: "Scissors",
-      image: "https://images.unsplash.com/photo-1590736961649-711104e757d5?auto=format&fit=crop&q=80&w=1200",
+      image: "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217779/service_stitching_xglzyk.jpg",
       details: ["Blouse Stitching", "Dress Making", "Saree Fall & Picot", "Alterations"]
     },
     {
@@ -24,7 +24,7 @@ export const BOUTIQUE_CONFIG = {
       title: "Fine Embroidery",
       description: "Intricate thread work, zardozi, and sequence embellishments by master artisans who bring patterns to life on any fabric.",
       icon: "Flower",
-      image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=1200",
+      image: "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217780/service_embroidery_oeixon.jpg",
       details: ["Hand Embroidery", "Machine Work", "Sequence Work", "Thread Art"]
     },
     {
@@ -32,7 +32,7 @@ export const BOUTIQUE_CONFIG = {
       title: "Arya Work (Hand Work)",
       description: "Traditional hand-crafted aari work for a regal touch. Each piece is a masterpiece of patient craftsmanship and cultural heritage.",
       icon: "Sparkles",
-      image: "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=1200",
+      image: "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217780/service_arya_ftn1es.jpg",
       details: ["Bridal Blouses", "Maguam Work", "Bead Work", "Stone Fixing"]
     },
     {
@@ -40,7 +40,7 @@ export const BOUTIQUE_CONFIG = {
       title: "School & Corporate Uniforms",
       description: "High-quality, durable uniforms for schools and businesses. We ensure comfort and professional standards in every stitch.",
       icon: "Briefcase",
-      image: "https://images.unsplash.com/photo-1594932224828-b4b057b7d6ee?auto=format&fit=crop&q=80&w=1200",
+      image: "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217781/service_uniform_olbanw.jpg",
       details: ["School Uniforms", "Hospital Scrubs", "Corporate Blazers", "Hotel Staff Attire"]
     },
     {
@@ -48,15 +48,15 @@ export const BOUTIQUE_CONFIG = {
       title: "Bridal Couture",
       description: "Creating your dream wedding ensemble with ultimate precision. From lehengas to reception gowns, we make you glow.",
       icon: "Heart",
-      image: "https://images.unsplash.com/photo-1594460541534-4611ca84ef9d?auto=format&fit=crop&q=80&w=1200",
+      image: "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217779/service_bridal_ifc8ly.jpg",
       details: ["Bridal Lehengas", "Reception Gowns", "Engagement Sarees", "Bridesmaid Dresses"]
     }
   ],
   categories: [
-    { id: "sarees", name: "Sarees", image: "/src/assets/saree_silk.png" },
-    { id: "lehengas", name: "Lehengas", image: "/src/assets/lehenga_bridal.png" },
-    { id: "frocks", name: "Long Frocks", image: "/src/assets/long_frock.png" },
-    { id: "blouses", name: "Designer Blouses", image: "/src/assets/variation_saree.png" }
+    { id: "sarees", name: "Sarees", image: "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217783/saree_silk_po1xsi.jpg" },
+    { id: "lehengas", name: "Lehengas", image: "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217781/lehenga_bridal_rmymce.jpg" },
+    { id: "frocks", name: "Long Frocks", image: "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217780/variation_lehenga_prs2qt.jpg" },
+    { id: "blouses", name: "Designer Blouses", image: "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217779/variation_saree_y80fby.jpg" }
   ],
   themes: {
     blush: {
@@ -99,10 +99,22 @@ const generateProducts = () => {
   const products = [];
   const categoryKeys = ["sarees", "lehengas", "frocks", "blouses"];
   const images = {
-    sarees: ["/src/assets/saree_silk.png", "/src/assets/variation_saree.png"],
-    lehengas: ["/src/assets/lehenga_bridal.png", "/src/assets/variation_lehenga.png"],
-    frocks: ["/src/assets/long_frock.png", "/src/assets/long_frock.png"],
-    blouses: ["/src/assets/variation_saree.png", "/src/assets/saree_silk.png"]
+    sarees: [
+      "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217783/saree_silk_po1xsi.jpg",
+      "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217779/variation_saree_y80fby.jpg"
+    ],
+    lehengas: [
+      "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217781/lehenga_bridal_rmymce.jpg",
+      "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217780/variation_lehenga_prs2qt.jpg"
+    ],
+    frocks: [
+      "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217780/variation_lehenga_prs2qt.jpg",
+      "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217783/saree_silk_po1xsi.jpg"
+    ],
+    blouses: [
+      "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217779/variation_saree_y80fby.jpg",
+      "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217781/lehenga_bridal_rmymce.jpg"
+    ]
   };
 
   categoryKeys.forEach(cat => {
