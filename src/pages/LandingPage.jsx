@@ -31,7 +31,8 @@ const BookingModal = ({ isOpen, onClose }) => {
           initial={{ y: 50, opacity: 0 }} 
           animate={{ y: 0, opacity: 1 }} 
           exit={{ y: 50, opacity: 0 }}
-          style={{ background: 'white', padding: '3rem 2.5rem', borderRadius: '40px', maxWidth: '500px', width: '90%', position: 'relative', boxShadow: '0 30px 60px rgba(0,0,0,0.1)' }}
+          className="amara-modal"
+          style={{ padding: '3rem 2.5rem', maxWidth: '500px', width: '90%' }}
           onClick={e => e.stopPropagation()}
         >
           <button onClick={onClose} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', color: 'var(--secondary)', background: 'none', border: 'none' }}><X size={24} /></button>

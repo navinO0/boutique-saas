@@ -110,15 +110,8 @@ const ProductDetailModal = ({ isOpen, onClose, product, onAddToCart }) => {
             transition={{ type: 'spring', damping: 30, stiffness: 200 }}
             className="amara-modal"
             style={{ 
-              background: 'white', 
-              borderRadius: '40px 40px 0 0', 
               maxWidth: '1100px', 
               width: '100%', 
-              position: 'fixed', 
-              bottom: 0,
-              maxHeight: '95vh',
-              overflowY: 'auto',
-              boxShadow: '0 -20px 60px rgba(233,163,163,0.2)',
             }}
             onClick={e => e.stopPropagation()}
           >

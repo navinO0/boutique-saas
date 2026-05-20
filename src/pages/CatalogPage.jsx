@@ -17,7 +17,8 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
       >
         <motion.div 
           initial={{ y: 50, scale: 0.95 }} animate={{ y: 0, scale: 1 }} exit={{ y: 50, scale: 0.95 }}
-          style={{ background: 'white', padding: '0', borderRadius: '45px', maxWidth: '1000px', width: '95%', maxHeight: '90vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
+          className="amara-modal"
+          style={{ padding: '0', maxWidth: '1000px', width: '95%' }}
           onClick={e => e.stopPropagation()}
         >
           <div style={{ display: 'flex' }} className="responsive-modal-content">

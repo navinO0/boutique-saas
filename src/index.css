@@ -127,15 +127,25 @@ button {
 .amara-modal {
   position: fixed !important;
   bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
   border-radius: 40px 40px 0 0 !important;
+  margin: 0 auto !important;
+  max-height: 70vh !important;
+  overflow-y: auto !important;
+  background: white !important;
+  z-index: 4000 !important;
 }
 
 @media (min-width: 769px) {
   .amara-modal {
     position: relative !important;
     bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
     border-radius: 40px !important;
     margin: 5vh auto !important;
+    max-height: 90vh !important;
     box-shadow: 0 30px 60px rgba(233,163,163,0.3) !important;
   }
 }

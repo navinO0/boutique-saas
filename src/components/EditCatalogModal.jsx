@@ -65,16 +65,11 @@ const EditCatalogModal = ({ isOpen, onClose, item, onSave }) => {
         >
           <motion.div 
             initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 20 }}
+            className="amara-modal"
             style={{ 
-                background: 'white', 
                 padding: 'clamp(1.5rem, 5vw, 3rem)', 
-                borderRadius: '45px', 
                 maxWidth: '700px', 
                 width: '100%', 
-                position: 'relative', 
-                maxHeight: '90vh', 
-                overflowY: 'auto',
-                boxShadow: '0 30px 60px rgba(233,163,163,0.2)'
             }}
             onClick={e => e.stopPropagation()}
           >
