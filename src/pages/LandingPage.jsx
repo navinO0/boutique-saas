@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useAnimation } from 'framer-motion';
+import { motion, AnimatePresence, useAnimation, useMotionValue, animate } from 'framer-motion';
 import { ShoppingBag, Star, Heart, ArrowRight, Scissors, Sparkles, Briefcase, Phone, Mail, MapPin, Quote, Sparkle, X, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
@@ -183,10 +183,11 @@ const FeaturedCollections = ({ products, onProductClick }) => (
 );
 
 const CustomCarousel = ({ products, onProductClick }) => {
-  const controls = useAnimation();
+  const x = useMotionValue(0);
   const trackRef = React.useRef(null);
   const [trackWidth, setTrackWidth] = useState(0);
   const resumeTimeoutRef = React.useRef(null);
+  const animationRef = React.useRef(null);
 
   useEffect(() => {
     if (trackRef.current) {
@@ -195,16 +196,27 @@ const CustomCarousel = ({ products, onProductClick }) => {
   }, [products]);
 
   const startAnimation = () => {
-    controls.start({
-      x: [0, -trackWidth / 3],
-      transition: {
-        x: {
-          repeat: Infinity,
-          repeatType: "loop",
-          duration: 40,
-          ease: "linear",
-        },
-      },
+    if (animationRef.current) animationRef.current.stop();
+
+    const currentX = x.get();
+    const cycleWidth = trackWidth / 3;
+    
+    // If we've scrolled past one full cycle, wrap around
+    if (currentX <= -cycleWidth) {
+      x.set(currentX + cycleWidth);
+    }
+
+    const targetX = -cycleWidth;
+    const distance = Math.abs(targetX - x.get());
+    const duration = (distance / cycleWidth) * 40;
+
+    animationRef.current = animate(x, targetX, {
+      duration: Math.max(duration, 0.1),
+      ease: "linear",
+      onComplete: () => {
+        x.set(0);
+        startAnimation();
+      }
     });
   };
 
@@ -214,11 +226,12 @@ const CustomCarousel = ({ products, onProductClick }) => {
     }
     return () => {
       if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+      if (animationRef.current) animationRef.current.stop();
     };
   }, [trackWidth]);
 
   const handleDragStart = () => {
-    controls.stop();
+    if (animationRef.current) animationRef.current.stop();
     if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
   };
 
@@ -230,12 +243,15 @@ const CustomCarousel = ({ products, onProductClick }) => {
   };
 
   const handleMouseEnter = () => {
-    controls.stop();
+    if (animationRef.current) animationRef.current.stop();
     if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
   };
 
   const handleMouseLeave = () => {
-    startAnimation();
+    // Only resume if not already in a drag-resume timeout
+    if (!resumeTimeoutRef.current) {
+      startAnimation();
+    }
   };
 
   return (
@@ -263,14 +279,13 @@ const CustomCarousel = ({ products, onProductClick }) => {
           <motion.div 
             ref={trackRef}
             className="infinite-scroll-track" 
-            animate={controls}
+            style={{ x, gap: '4rem' }}
             drag="x"
             dragConstraints={{ left: -trackWidth * (2/3), right: 0 }}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            style={{ gap: '4rem' }}
           >
              {[...products, ...products, ...products].map((p, idx) => (
                <motion.div 
