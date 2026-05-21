@@ -474,35 +474,106 @@ div:hover > .service-img {
   max-width: 320px;
 }
 
-.featured-image-container {
-  height: 600px;
+.featured-lux-card {
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition);
+}
+
+.lux-image-wrapper {
+  height: 650px;
   border-radius: 40px;
   overflow: hidden;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.1);
+  position: relative;
+  box-shadow: 0 40px 100px rgba(74, 55, 55, 0.08);
 }
 
-.featured-card-info {
+.lux-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.featured-lux-card:hover .lux-img {
+  transform: scale(1.08);
+}
+
+.lux-overlay {
   position: absolute;
-  bottom: -40px;
-  right: 40px;
-  background: var(--background);
-  padding: 2.5rem;
-  border-radius: 30px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.05);
-  max-width: 280px;
+  inset: 0;
+  background: linear-gradient(to top, rgba(74, 55, 55, 0.4) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
 }
 
-.featured-card-title {
-  font-size: 1.8rem;
-  color: var(--secondary);
-  margin-bottom: 0.8rem;
+.featured-lux-card:hover .lux-overlay {
+  opacity: 1;
+}
+
+.lux-index {
+  position: absolute;
+  top: 3rem;
+  left: 3rem;
   font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  color: white;
+  opacity: 0.3;
+  line-height: 1;
 }
 
-.featured-card-price {
-  font-size: 1.4rem;
+.lux-hover-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: white;
+  color: var(--secondary);
+  padding: 1.5rem 2.5rem;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.featured-lux-card:hover .lux-hover-btn {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.lux-content {
+  padding: 3rem 1.5rem;
+}
+
+.lux-title {
+  font-size: 2.2rem;
+  color: var(--secondary);
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 0.5rem;
+}
+
+.lux-price-tag {
+  background: var(--primary);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 15px;
   font-weight: 900;
-  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+.lux-description {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  max-width: 90%;
+  opacity: 0.8;
 }
 
 @media (max-width: 768px) {
@@ -530,27 +601,23 @@ div:hover > .service-img {
     overflow: hidden;
   }
   
-  .featured-image-container {
-    height: 220px;
-    border-radius: 20px;
+  .lux-image-wrapper {
+    height: 400px;
+    border-radius: 25px;
   }
-  .featured-card-info {
-    position: relative;
-    bottom: auto;
-    right: auto;
-    padding: 1.2rem;
-    margin-top: -30px;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    border-radius: 20px;
-    max-width: none;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  .lux-index {
+    font-size: 3rem;
+    top: 1.5rem;
+    left: 1.5rem;
   }
-  .featured-card-title {
-    font-size: 1rem;
-    margin-bottom: 0.2rem;
+  .lux-content {
+    padding: 2rem 0;
   }
-  .featured-card-price {
+  .lux-title {
+    font-size: 1.5rem;
+  }
+  .lux-price-tag {
     font-size: 0.9rem;
+    padding: 0.5rem 1rem;
   }
 }

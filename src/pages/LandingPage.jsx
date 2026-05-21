@@ -139,27 +139,41 @@ const Services = ({ services }) => {
 const FeaturedCollections = ({ products, onProductClick }) => (
   <section style={{ padding: '12rem 0', background: 'var(--accent)' }}>
     <div className="container">
-      <div style={{ textAlign: 'center', marginBottom: '8rem' }}>
-        <h2 style={{ fontSize: 'clamp(3rem, 10vw, 6rem)', color: 'var(--secondary)', fontFamily: 'Playfair Display', marginBottom: '2rem' }}>Icons Only</h2>
-        <div style={{ width: '100px', height: '4px', background: 'var(--primary)', margin: '0 auto' }}></div>
+      <div style={{ marginBottom: '8rem' }}>
+        <span style={{ color: 'var(--primary)', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '8px', fontSize: '0.8rem' }}>Curation</span>
+        <h2 style={{ fontSize: 'clamp(3rem, 10vw, 6.5rem)', color: 'var(--secondary)', fontFamily: 'Playfair Display', marginTop: '1rem', lineHeight: 1 }}>Icons Only</h2>
       </div>
       <div className="featured-grid">
         {products.slice(0, 3).map((product, idx) => (
           <motion.div 
             key={product.id} 
-            whileHover={{ y: -20 }} 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: idx * 0.2 }}
             onClick={() => onProductClick(product)}
-            style={{ cursor: 'pointer', position: 'relative' }}
+            className="featured-lux-card"
           >
-            <div className="featured-image-container">
-                <img src={product.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+            <div className="lux-image-wrapper">
+                <img src={product.image} className="lux-img" alt={product.name} />
+                <div className="lux-overlay"></div>
+                <div className="lux-index">0{idx + 1}</div>
+                <motion.div className="lux-hover-btn" whileHover={{ scale: 1.1 }}>
+                  <span>View Details</span>
+                  <ArrowRight size={16} />
+                </motion.div>
             </div>
-            <div className="featured-card-info">
-               <h3 className="featured-card-title">{product.name}</h3>
-               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <p className="featured-card-price">₹{product.price.toLocaleString()}</p>
-                  <ArrowRight size={18} color="var(--primary)" />
+            <div className="lux-content">
+               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+                 <div>
+                   <p style={{ color: 'var(--primary)', fontWeight: 900, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '3px', marginBottom: '0.5rem' }}>Bespoke Collection</p>
+                   <h3 className="lux-title">{product.name}</h3>
+                 </div>
+                 <div className="lux-price-tag">
+                    ₹{product.price.toLocaleString()}
+                 </div>
                </div>
+               <p className="lux-description">A masterpiece of hand-stitched elegance, tailored for those who seek the extraordinary.</p>
             </div>
           </motion.div>
         ))}
@@ -215,6 +229,15 @@ const CustomCarousel = ({ products, onProductClick }) => {
     }, 5000);
   };
 
+  const handleMouseEnter = () => {
+    controls.stop();
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+  };
+
+  const handleMouseLeave = () => {
+    startAnimation();
+  };
+
   return (
     <section style={{ padding: '15rem 0', background: 'var(--secondary)', color: 'var(--background)', overflow: 'hidden', position: 'relative' }}>
        {/* Background Text */}
@@ -245,6 +268,8 @@ const CustomCarousel = ({ products, onProductClick }) => {
             dragConstraints={{ left: -trackWidth * (2/3), right: 0 }}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
             style={{ gap: '4rem' }}
           >
              {[...products, ...products, ...products].map((p, idx) => (
