@@ -142,8 +142,23 @@ const ProductDetailModal = ({ isOpen, onClose, product, onAddToCart }) => {
                   <button 
                     onClick={() => {
                       const phone = import.meta.env.VITE_WHATSAPP_NUMBER || '910000000000';
-                      const text = encodeURIComponent(`Hi! I'm interested in the "${product.name}" design from your boutique. Could you please provide more details?`);
-                      window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+                      const currentImageUrl = product.images[currentImageIndex] || product.image;
+                      
+                      const message = [
+                        `*Inquiry for ${product.name}*`,
+                        '',
+                        `*Details:*`,
+                        `- Category: ${product.category.toUpperCase()}`,
+                        `- Price: ₹${product.discountedPrice.toLocaleString()}`,
+                        `- Description: ${product.description}`,
+                        '',
+                        `*Product Image:* ${currentImageUrl}`,
+                        '',
+                        `Hi! I'm interested in this design from your boutique. Could you please provide more details?`
+                      ].join('\n');
+
+                      const encodedText = encodeURIComponent(message);
+                      window.open(`https://wa.me/${phone}?text=${encodedText}`, '_blank');
                     }} 
                     style={{ 
                       width: '100%', 
