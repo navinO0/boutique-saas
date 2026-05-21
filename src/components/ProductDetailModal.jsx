@@ -144,21 +144,27 @@ const ProductDetailModal = ({ isOpen, onClose, product, onAddToCart }) => {
                       const phone = import.meta.env.VITE_WHATSAPP_NUMBER || '910000000000';
                       const currentImageUrl = product.images[currentImageIndex] || product.image;
                       
+                      const baseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
+                      const productUrl = `${baseUrl}/products/${product.category}?productId=${product.id}`;
+
                       const message = [
                         `*Inquiry for ${product.name}*`,
+                        '',
+                        `${currentImageUrl}`,
+                        '',
+                        `*Product Link:* ${productUrl}`,
                         '',
                         `*Details:*`,
                         `- Category: ${product.category.toUpperCase()}`,
                         `- Price: ₹${product.discountedPrice.toLocaleString()}`,
                         `- Description: ${product.description}`,
                         '',
-                        `*Product Image:* ${currentImageUrl}`,
-                        '',
                         `Hi! I'm interested in this design from your boutique. Could you please provide more details?`
                       ].join('\n');
 
                       const encodedText = encodeURIComponent(message);
                       window.open(`https://wa.me/${phone}?text=${encodedText}`, '_blank');
+                      onClose(); // Returns user to checkout/browsing
                     }} 
                     style={{ 
                       width: '100%', 

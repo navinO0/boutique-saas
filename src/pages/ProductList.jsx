@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ShoppingBag, ArrowLeft, Filter, Heart, Edit2, Trash2, Plus, Eye, Sparkles } from 'lucide-react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { BOUTIQUE_CONFIG } from '../data/config';
 import EditProductModal from '../components/EditProductModal';
@@ -9,12 +9,24 @@ import ProductDetailModal from '../components/ProductDetailModal';
 
 const ProductList = () => {
   const { categoryId } = useParams();
+  const [searchParams] = useSearchParams();
   const { products, addToCart, wishlist, toggleWishlist, isAdminLoggedIn, deleteProduct, updateProduct, addProduct } = useShop();
   const [filter, setFilter] = useState(categoryId || 'all');
   const [editingProduct, setEditingProduct] = useState(null);
   const [viewingProduct, setViewingProduct] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+
+  React.useEffect(() => {
+    const productId = searchParams.get('productId');
+    if (productId && products) {
+      const product = products.find(p => p.id === productId);
+      if (product) {
+        setViewingProduct(product);
+        setIsDetailModalOpen(true);
+      }
+    }
+  }, [searchParams, products]);
 
   const filteredProducts = filter === 'all' 
     ? products 
