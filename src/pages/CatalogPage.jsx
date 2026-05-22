@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useShop } from '../context/ShopContext';
-import { Calendar, Phone, Heart, Sparkles, X, Share2, Scissors, Quote, Plus, Edit2, Trash2 } from 'lucide-react';
+import { Calendar, Phone, Heart, Sparkles, X, Share2, Scissors, Quote, Plus, Edit2, Trash2, MessageSquare } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { useSmoothScroll } from '../hooks/useSmoothScroll';
 import EditCatalogModal from '../components/EditCatalogModal';
 
@@ -37,10 +38,33 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
                 <h2 style={{ fontSize: '2.5rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', margin: '1rem 0' }}>{item.name}</h2>
                 <p style={{ color: 'var(--text-light)', lineHeight: 1.8, marginBottom: '2.5rem' }}>{item.description}</p>
                 <button 
-                  onClick={() => { alert(`Inquiry sent for ${item.name}! ✨`); onClose(); }}
-                  style={{ padding: '1.5rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '35px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}
+                  onClick={() => {
+                    const phone = import.meta.env.VITE_WHATSAPP_NUMBER || '910000000000';
+                    const currentImageUrl = item.images[currentIdx] || item.images[0];
+                    const baseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
+                    const catalogUrl = `${baseUrl}/catalog?catalogId=${item.id}`;
+
+                    const message = [
+                      `*Catalog Inquiry for ${item.name}*`,
+                      '',
+                      `${currentImageUrl}`,
+                      '',
+                      `*Item Link:* ${catalogUrl}`,
+                      '',
+                      `*Details:*`,
+                      `- Category: ${item.category?.toUpperCase() || 'GENERAL'}`,
+                      `- Description: ${item.description}`,
+                      '',
+                      `Hi! I'm interested in having this piece from your catalog recreated/customized. Could we discuss this further?`
+                    ].join('\n');
+
+                    const encodedText = encodeURIComponent(message);
+                    window.open(`https://wa.me/${phone}?text=${encodedText}`, '_blank');
+                    onClose();
+                  }}
+                  style={{ padding: '1.5rem', background: '#25D366', color: 'white', border: 'none', borderRadius: '35px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', boxShadow: '0 10px 20px rgba(37, 211, 102, 0.2)' }}
                 >
-                  <Calendar size={20} /> Request Custom Recreation
+                  <MessageSquare size={20} /> Request Custom Recreation via WhatsApp
                 </button>
              </div>
           </div>
@@ -54,9 +78,20 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
 const CatalogPage = () => {
   useSmoothScroll();
   const { catalog, isAdminLoggedIn, addCatalogItem, updateCatalogItem, deleteCatalogItem } = useShop();
+  const [searchParams] = useSearchParams();
   const [selectedItem, setSelectedItem] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  React.useEffect(() => {
+    const catalogId = searchParams.get('catalogId');
+    if (catalogId && catalog) {
+      const item = catalog.find(i => i.id === catalogId);
+      if (item) {
+        setSelectedItem(item);
+      }
+    }
+  }, [searchParams, catalog]);
 
   const handleAddNew = () => {
     setEditingItem(null);
