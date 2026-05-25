@@ -192,12 +192,11 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  if (!catalog || catalog.length === 0) return null;
-
   // Triple the catalog for a seamless loop in both directions
-  const displayItems = [...catalog, ...catalog, ...catalog];
+  const displayItems = (catalog && catalog.length > 0) ? [...catalog, ...catalog, ...catalog] : [];
 
   useEffect(() => {
+    if (!catalog || catalog.length === 0) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -232,6 +231,8 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
       cancelAnimationFrame(animationFrameId);
     };
   }, [isDown, isPaused, catalog]);
+
+  if (!catalog || catalog.length === 0) return null;
 
   const handleMouseDown = (e) => {
     const container = containerRef.current;
