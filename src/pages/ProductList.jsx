@@ -100,25 +100,23 @@ const ProductList = () => {
         </h2>
         
         {/* Search and Filters */}
-        <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'center', marginTop: '3rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="horizontal-filters">
           {/* Search Bar */}
-          <div style={{ position: 'relative', width: '100%', maxWidth: '400px' }}>
-            <Search size={18} style={{ position: 'absolute', left: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)' }} />
+          <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }}>
+            <Search size={14} style={{ position: 'absolute', left: '0.8rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)' }} />
             <input 
               type="text" 
-              placeholder="Search your dream outfit..." 
+              placeholder="Search..." 
               value={searchInput}
+              className="filter-input-compact"
               onChange={(e) => setSearchInput(e.target.value)}
               style={{ 
                 width: '100%', 
-                padding: '0.8rem 1.2rem 0.8rem 3rem', 
-                borderRadius: '24px', 
                 border: '2px solid #fff0f0', 
                 background: 'white', 
                 fontWeight: 600, 
                 outline: 'none', 
                 color: 'var(--secondary)',
-                fontSize: '0.85rem',
                 boxShadow: '0 5px 15px rgba(233,163,163,0.05)'
               }}
             />
@@ -128,30 +126,32 @@ const ProductList = () => {
           <div style={{ position: 'relative' }}>
             <select 
               value={filter} 
+              className="filter-select-compact"
               onChange={(e) => updateParams({ category: e.target.value })}
-              style={{ padding: '0.8rem 2.8rem 0.8rem 1.2rem', borderRadius: '24px', border: '2px solid #fff0f0', background: 'white', appearance: 'none', fontWeight: 600, outline: 'none', color: 'var(--secondary)', cursor: 'pointer', fontSize: '0.82rem' }}
+              style={{ border: '2px solid #fff0f0', background: 'white', appearance: 'none', fontWeight: 600, outline: 'none', color: 'var(--secondary)', cursor: 'pointer' }}
             >
-              <option value="all">All Styles</option>
+              <option value="all">Styles</option>
               {siteConfig.categories.map(c => (
                 <option key={c.id} value={c.id}>{c.name}</option>
               ))}
             </select>
-            <Filter size={13} style={{ position: 'absolute', right: '1.1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)' }} />
+            <Filter size={10} style={{ position: 'absolute', right: '0.7rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)' }} />
           </div>
 
           {/* Sort Filter */}
           <div style={{ position: 'relative' }}>
             <select 
               value={sortBy} 
+              className="filter-select-compact"
               onChange={(e) => updateParams({ sortBy: e.target.value })}
-              style={{ padding: '0.9rem 3rem 0.9rem 1.5rem', borderRadius: '30px', border: '2px solid #fff0f0', background: 'white', appearance: 'none', fontWeight: 600, outline: 'none', color: 'var(--secondary)', cursor: 'pointer' }}
+              style={{ border: '2px solid #fff0f0', background: 'white', appearance: 'none', fontWeight: 600, outline: 'none', color: 'var(--secondary)', cursor: 'pointer' }}
             >
-              <option value="newest">Newest First</option>
-              <option value="popularity">Most Popular</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
+              <option value="newest">Sort</option>
+              <option value="popularity">Popular</option>
+              <option value="price-low">Low</option>
+              <option value="price-high">High</option>
             </select>
-            <ChevronRight size={14} style={{ position: 'absolute', right: '1.2rem', top: '50%', transform: 'translateY(-50%) rotate(90deg)', color: 'var(--primary)' }} />
+            <ChevronRight size={11} style={{ position: 'absolute', right: '0.7rem', top: '50%', transform: 'translateY(-50%) rotate(90deg)', color: 'var(--primary)' }} />
           </div>
 
           {/* Clear Filters Button */}
@@ -162,21 +162,24 @@ const ProductList = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={clearFilters}
+              className="filter-btn-compact"
               style={{ 
-                padding: '0.8rem 1.5rem', 
-                borderRadius: '24px', 
+                borderRadius: '50%', /* Circular for less congestion */
                 background: '#fff0f0', 
                 color: 'var(--primary)', 
                 fontWeight: 700, 
-                fontSize: '0.82rem',
                 border: 'none',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                cursor: 'pointer'
+                justifyContent: 'center',
+                width: '32px',
+                height: '32px',
+                cursor: 'pointer',
+                flexShrink: 0
               }}
+              title="Clear Filters"
             >
-              <X size={14} /> Clear Filters
+              <X size={14} />
             </motion.button>
           )}
         </div>

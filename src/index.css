@@ -1098,3 +1098,47 @@ div:hover > .service-img {
     border-radius: 22px;
   }
 }
+/* Horizontal Filters for Mobile */
+.horizontal-filters {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .horizontal-filters {
+    justify-content: center;
+    flex-wrap: nowrap; /* Force single line */
+    overflow-x: hidden; /* No scroll */
+    width: 100%;
+    gap: 0.4rem; /* Tighter gaps */
+    padding: 0 0.5rem;
+  }
+  
+  .horizontal-filters > div, 
+  .horizontal-filters > button {
+    flex: 1;
+    min-width: 0; /* Allow shrinking below content width */
+  }
+}
+
+.filter-input-compact {
+  padding: 0.5rem 0.8rem 0.5rem 2.2rem !important; /* Smaller padding */
+  font-size: 0.75rem !important;
+  border-radius: 15px !important;
+}
+
+.filter-select-compact {
+  padding: 0.55rem 1.8rem 0.55rem 0.6rem !important; /* Smaller padding */
+  font-size: 0.75rem !important;
+  border-radius: 15px !important;
+}
+
+.filter-btn-compact {
+  padding: 0.5rem 0.8rem !important;
+  font-size: 0.72rem !important;
+  border-radius: 15px !important;
+}
