@@ -101,12 +101,12 @@ const ProductList = () => {
         
         {/* Search and Filters */}
         <div className="horizontal-filters">
-          {/* Search Bar */}
-          <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }}>
-            <Search size={14} style={{ position: 'absolute', left: '0.8rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)' }} />
+          {/* Search Bar Row */}
+          <div className="search-row-mobile" style={{ position: 'relative', width: '100%', maxWidth: '400px' }}>
+            <Search size={16} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)' }} />
             <input 
               type="text" 
-              placeholder="Search..." 
+              placeholder="Search your collection..." 
               value={searchInput}
               className="filter-input-compact"
               onChange={(e) => setSearchInput(e.target.value)}
@@ -122,66 +122,68 @@ const ProductList = () => {
             />
           </div>
 
-          {/* Category Filter */}
-          <div style={{ position: 'relative' }}>
-            <select 
-              value={filter} 
-              className="filter-select-compact"
-              onChange={(e) => updateParams({ category: e.target.value })}
-              style={{ border: '2px solid #fff0f0', background: 'white', appearance: 'none', fontWeight: 600, outline: 'none', color: 'var(--secondary)', cursor: 'pointer' }}
-            >
-              <option value="all">Styles</option>
-              {siteConfig.categories.map(c => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-            <Filter size={10} style={{ position: 'absolute', right: '0.7rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)' }} />
-          </div>
+          <div className="filter-row-mobile">
+            {/* Category Filter */}
+            <div style={{ position: 'relative' }}>
+              <select 
+                value={filter} 
+                className="filter-select-compact"
+                onChange={(e) => updateParams({ category: e.target.value })}
+                style={{ width: '100%', border: '2px solid #fff0f0', background: 'white', appearance: 'none', fontWeight: 600, outline: 'none', color: 'var(--secondary)', cursor: 'pointer' }}
+              >
+                <option value="all">Styles</option>
+                {siteConfig.categories.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+              <Filter size={12} style={{ position: 'absolute', right: '0.8rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)' }} />
+            </div>
 
-          {/* Sort Filter */}
-          <div style={{ position: 'relative' }}>
-            <select 
-              value={sortBy} 
-              className="filter-select-compact"
-              onChange={(e) => updateParams({ sortBy: e.target.value })}
-              style={{ border: '2px solid #fff0f0', background: 'white', appearance: 'none', fontWeight: 600, outline: 'none', color: 'var(--secondary)', cursor: 'pointer' }}
-            >
-              <option value="newest">Sort</option>
-              <option value="popularity">Popular</option>
-              <option value="price-low">Low</option>
-              <option value="price-high">High</option>
-            </select>
-            <ChevronRight size={11} style={{ position: 'absolute', right: '0.7rem', top: '50%', transform: 'translateY(-50%) rotate(90deg)', color: 'var(--primary)' }} />
-          </div>
+            {/* Sort Filter */}
+            <div style={{ position: 'relative' }}>
+              <select 
+                value={sortBy} 
+                className="filter-select-compact"
+                onChange={(e) => updateParams({ sortBy: e.target.value })}
+                style={{ width: '100%', border: '2px solid #fff0f0', background: 'white', appearance: 'none', fontWeight: 600, outline: 'none', color: 'var(--secondary)', cursor: 'pointer' }}
+              >
+                <option value="newest">Sort</option>
+                <option value="popularity">Popular</option>
+                <option value="price-low">Low</option>
+                <option value="price-high">High</option>
+              </select>
+              <ChevronRight size={13} style={{ position: 'absolute', right: '0.8rem', top: '50%', transform: 'translateY(-50%) rotate(90deg)', color: 'var(--primary)' }} />
+            </div>
 
-          {/* Clear Filters Button */}
-          {hasFilters && (
-            <motion.button 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={clearFilters}
-              className="filter-btn-compact"
-              style={{ 
-                borderRadius: '50%', /* Circular for less congestion */
-                background: '#fff0f0', 
-                color: 'var(--primary)', 
-                fontWeight: 700, 
-                border: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '32px',
-                height: '32px',
-                cursor: 'pointer',
-                flexShrink: 0
-              }}
-              title="Clear Filters"
-            >
-              <X size={14} />
-            </motion.button>
-          )}
+            {/* Clear Filters Button */}
+            {hasFilters && (
+              <motion.button 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={clearFilters}
+                className="filter-btn-compact"
+                style={{ 
+                  borderRadius: '50%', 
+                  background: '#fff0f0', 
+                  color: 'var(--primary)', 
+                  fontWeight: 700, 
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '36px',
+                  height: '36px',
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+                title="Clear Filters"
+              >
+                <X size={16} />
+              </motion.button>
+            )}
+          </div>
         </div>
       </div>
 
