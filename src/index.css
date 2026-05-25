@@ -1059,7 +1059,7 @@ div:hover > .service-img {
 @media (max-width: 480px) {
   .responsive-footer-grid {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: 1.8rem; /* Reduced from 2.5rem for a richer, tighter fit */
     text-align: center;
   }
   .responsive-footer-grid > div {

@@ -23,9 +23,6 @@ export const ShopProvider = ({ children }) => {
   const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
-    fetchProducts();
-    fetchIconProducts();
-    fetchCatalog();
     fetchSiteConfig();
   }, []);
 
@@ -62,6 +59,8 @@ export const ShopProvider = ({ children }) => {
   };
 
   const fetchIconProducts = async () => {
+    setIsLoading(true);
+    setError(null);
     try {
       const response = await axios.get(`${API_BASE_URL}/products/icons`, { 
         headers: getHeaders()
@@ -69,11 +68,15 @@ export const ShopProvider = ({ children }) => {
       setIconProducts(response.data);
     } catch (error) {
       console.error('Error fetching icon products:', error);
+      setError('Could not retrieve featured items. ✨');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const fetchProducts = async (params = {}) => {
     setIsLoading(true);
+    setError(null);
     try {
       const response = await axios.get(`${API_BASE_URL}/products`, { 
         params,
@@ -86,6 +89,7 @@ export const ShopProvider = ({ children }) => {
       });
     } catch (error) {
       console.error('Error fetching products:', error);
+      setError('The collection is currently resting. 🪄');
     } finally {
       setIsLoading(false);
     }
@@ -123,11 +127,16 @@ export const ShopProvider = ({ children }) => {
   };
 
   const fetchCatalog = async () => {
+    setIsLoading(true);
+    setError(null);
     try {
       const resp = await axios.get(`${API_BASE_URL}/catalog`, { headers: getHeaders() });
       setCatalog(resp.data);
     } catch (error) {
       console.error('Error fetching catalog:', error);
+      setError('Atelier stories are temporarily paused. ☁️');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -163,6 +172,7 @@ export const ShopProvider = ({ children }) => {
   };
 
   const loginUser = async (email, password) => {
+    setIsLoading(true);
     try {
       const resp = await axios.post(`${API_BASE_URL}/auth/login`, { email, password });
       const { user, token } = resp.data;
@@ -175,6 +185,8 @@ export const ShopProvider = ({ children }) => {
     } catch (error) {
       showToast(error.response?.data?.message || 'Login failed 🪄');
       return { success: false };
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -227,6 +239,7 @@ export const ShopProvider = ({ children }) => {
 
   const placeOrder = async () => {
     if (!currentUser) return { success: false, message: 'Please login to checkout' };
+    setIsLoading(true);
     try {
       const total = cart.reduce((sum, item) => sum + (item.discountedPrice * item.quantity), 0);
       await axios.post(`${API_BASE_URL}/orders`, 
@@ -239,12 +252,18 @@ export const ShopProvider = ({ children }) => {
     } catch (error) {
       showToast('Order failed... 🪄');
       return { success: false };
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const [error, setError] = useState(null);
+
+  const clearError = () => setError(null);
+
   return (
     <ShopContext.Provider value={{ 
-      products, iconProducts, catalog, isLoading, pagination, fetchProducts, fetchIconProducts,
+      products, iconProducts, catalog, isLoading, error, clearError, pagination, fetchProducts, fetchIconProducts, fetchCatalog,
       addProduct, updateProduct, deleteProduct,
       addCatalogItem, updateCatalogItem, deleteCatalogItem,
       cart, wishlist, addToCart, removeFromCart, updateQuantity, loginUser, logoutUser, currentUser,

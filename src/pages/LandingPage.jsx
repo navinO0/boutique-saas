@@ -357,13 +357,21 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
   );
 };
 
+import ErrorDisplay from '../components/ErrorDisplay';
+
 const LandingPage = () => {
   useSmoothScroll();
   const navigate = useNavigate();
   const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const { products, iconProducts, catalog, isLoading, addToCart, siteConfig } = useShop();
+  const { products, iconProducts, catalog, isLoading, error, fetchIconProducts, fetchProducts, clearError, addToCart, siteConfig } = useShop();
 
-  if (isLoading) return <PookieLoader />;
+  useEffect(() => {
+    fetchIconProducts();
+    fetchProducts({ limit: 12 });
+  }, []);
+
+  if (error) return <ErrorDisplay message={error} onRetry={() => { clearError(); fetchIconProducts(); fetchProducts({ limit: 12 }); }} />;
+  if (isLoading) return <PookieLoader fullScreen={true} />;
 
   return (
     <div style={{ background: 'var(--white)' }}>

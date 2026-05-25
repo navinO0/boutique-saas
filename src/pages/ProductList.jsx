@@ -9,10 +9,12 @@ import EditProductModal from '../components/EditProductModal';
 import PookieLoader from '../components/PookieLoader';
 import { resolveImageUrl } from '../utils/imageUtils';
 
+import ErrorDisplay from '../components/ErrorDisplay';
+
 const ProductList = () => {
   const { categoryId } = useParams();
   const { 
-    products, isLoading, pagination, fetchProducts, 
+    products, isLoading, error, clearError, pagination, fetchProducts, 
     addToCart, wishlist, toggleWishlist, 
     isAdminLoggedIn, updateProduct, deleteProduct, siteConfig 
   } = useShop();
@@ -180,8 +182,10 @@ const ProductList = () => {
         </div>
       </div>
 
+      {error && <ErrorDisplay message={error} onRetry={() => { clearError(); fetchProducts({ category: filter, search: search, sortBy: sortBy, page: page }); }} />}
+
       {isLoading ? (
-        <PookieLoader />
+        <PookieLoader fullScreen={true} />
       ) : (
         <>
           <div style={{ 

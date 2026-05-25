@@ -76,13 +76,20 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
   );
 };
 
+import PookieLoader from '../components/PookieLoader';
+import ErrorDisplay from '../components/ErrorDisplay';
+
 const CatalogPage = () => {
   useSmoothScroll();
-  const { catalog, isAdminLoggedIn, addCatalogItem, updateCatalogItem, deleteCatalogItem } = useShop();
+  const { catalog, isAdminLoggedIn, addCatalogItem, updateCatalogItem, deleteCatalogItem, fetchCatalog, isLoading, error, clearError } = useShop();
   const [searchParams] = useSearchParams();
   const [selectedItem, setSelectedItem] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  React.useEffect(() => {
+    fetchCatalog();
+  }, []);
 
   React.useEffect(() => {
     const catalogId = searchParams.get('catalogId');
@@ -93,6 +100,9 @@ const CatalogPage = () => {
       }
     }
   }, [searchParams, catalog]);
+
+  if (error) return <ErrorDisplay message={error} onRetry={() => { clearError(); fetchCatalog(); }} />;
+  if (isLoading) return <PookieLoader fullScreen={true} />;
 
   const handleAddNew = () => {
     setEditingItem(null);

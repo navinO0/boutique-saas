@@ -3,32 +3,35 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { User, Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import PookieLoader from '../components/PookieLoader';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
-  const { loginUser, registerUser } = useShop();
+  const { loginUser, registerUser, isLoading } = useShop();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     
     if (isLogin) {
-      const success = loginUser(formData.email, formData.password);
-      if (success) navigate('/');
+      const result = await loginUser(formData.email, formData.password);
+      if (result.success) navigate('/');
       else setError('Invalid email or password');
     } else {
-      const result = registerUser(formData);
+      const result = await registerUser(formData);
       if (result.success) navigate('/');
       else setError(result.message);
     }
   };
 
   return (
-    <div className="container" style={{ padding: '6rem 2rem', display: 'flex', justifyContent: 'center' }}>
+    <>
+      {isLoading && <PookieLoader fullScreen={true} />}
+      <div className="container" style={{ padding: '6rem 2rem', display: 'flex', justifyContent: 'center' }}>
       <motion.div 
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
         style={{ background: 'white', padding: '3.5rem', borderRadius: '16px', boxShadow: '0 10px 40px rgba(0,0,0,0.05)', maxWidth: '450px', width: '100%' }}
@@ -100,6 +103,7 @@ const AuthPage = () => {
         </div>
       </motion.div>
     </div>
+    </>
   );
 };
 
