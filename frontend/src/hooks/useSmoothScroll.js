@@ -15,6 +15,8 @@ export const useSmoothScroll = () => {
       infinite: false,
     });
 
+    window.lenis = lenis;
+
     function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
@@ -24,6 +26,7 @@ export const useSmoothScroll = () => {
 
     return () => {
       lenis.destroy();
+      window.lenis = null;
     };
   }, []);
 };

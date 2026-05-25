@@ -1,5 +1,6 @@
 export const BOUTIQUE_CONFIG = {
   name: "Amara Boutique",
+  logo: "/images/logo.png", // Sophisticated signet placeholder
   motto: "Exquisite Custom Stitches for the Modern Woman",
   admin: {
     email: "admin@amara.com",

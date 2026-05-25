@@ -41,10 +41,10 @@ const ProductManager = () => {
     setIsModalOpen(true);
   };
 
-  const filteredProducts = products.filter(p => 
+  const filteredProducts = products?.filter(p => 
     p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
     p.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ) || [];
 
   return (
     <div style={{ background: 'white', padding: '2.5rem', borderRadius: '45px', boxShadow: '0 30px 60px rgba(233,163,163,0.15)' }}>
@@ -87,6 +87,10 @@ const ProductManager = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
                 <p style={{ fontWeight: 900, color: 'var(--primary)' }}>₹{p.discountedPrice.toLocaleString()}</p>
                 <p style={{ fontSize: '0.75rem', fontWeight: 700, color: p.stock === 0 ? '#ffb3b3' : 'var(--text-light)' }}>Stock: {p.stock}</p>
+              </div>
+              <div style={{ marginTop: '1rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {p.colors?.map((c, i) => <div key={i} style={{ width: '12px', height: '12px', background: c, borderRadius: '50%', border: '1px solid #ddd' }} />)}
+                {p.sizes?.map((s, i) => <span key={i} style={{ fontSize: '0.6rem', fontWeight: 800, background: '#fff0f0', padding: '0.2rem 0.4rem', borderRadius: '5px', color: 'var(--primary)' }}>{s}</span>)}
               </div>
             </div>
           </div>
@@ -131,9 +135,9 @@ const CatalogManager = () => {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '2rem' }}>
-        {catalog.map(item => (
+        {catalog?.map(item => (
           <div key={item.id} style={{ background: '#fffcfc', borderRadius: '30px', border: '1px solid #fff0f0', overflow: 'hidden' }}>
-            <img src={item.images[0]} style={{ width: '100%', height: '250px', objectFit: 'cover' }} alt="" />
+            <img src={item.images?.[0]} style={{ width: '100%', height: '250px', objectFit: 'cover' }} alt="" />
             <div style={{ padding: '1.5rem' }}>
               <p style={{ fontSize: '0.65rem', color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase' }}>{item.category}</p>
               <h4 style={{ fontWeight: 800, margin: '0.3rem 0', color: 'var(--secondary)' }}>{item.name}</h4>
@@ -158,24 +162,49 @@ const CatalogManager = () => {
 
 const CollectionsManager = () => {
   const { siteConfig, updateSiteConfig } = useShop();
-  const [categories, setCategories] = useState(siteConfig.categories);
+  const [categories, setCategories] = useState(siteConfig.categories || []);
 
   const handleUpdate = (id, field, value) => {
     const updated = categories.map(c => c.id === id ? { ...c, [field]: value } : c);
     setCategories(updated);
-    updateSiteConfig({ categories: updated });
+  };
+
+  const handleAdd = () => {
+    const newId = `cat-${Date.now()}`;
+    const newCat = { id: newId, name: 'New Passion', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc4033c8?w=800' };
+    setCategories([...categories, newCat]);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm("Remove this collection from your boutique? 🪄")) {
+      setCategories(categories.filter(c => c.id !== id));
+    }
+  };
+
+  const handleSaveAll = () => {
+    updateSiteConfig({ categories });
   };
 
   return (
     <div style={{ background: 'white', padding: '2.5rem', borderRadius: '45px', boxShadow: '0 30px 60px rgba(233,163,163,0.15)' }}>
-      <div style={{ marginBottom: '3rem' }}>
-        <h3 style={{ fontSize: '1.8rem', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>Global Collections 🌍</h3>
-        <p style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>Categorize your magic for easy discovery</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+        <div>
+          <h3 style={{ fontSize: '1.8rem', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>Global Collections 🌍</h3>
+          <p style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>Categorize your magic (Clothing, Beauty, Essentials...)</p>
+        </div>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <button onClick={handleAdd} style={{ padding: '1rem 2rem', background: '#fff0f0', color: 'var(--primary)', borderRadius: '30px', fontWeight: 800, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+            <Plus size={20} /> Add New Space
+          </button>
+          <button onClick={handleSaveAll} style={{ padding: '1rem 2rem', background: 'var(--primary)', color: 'white', borderRadius: '30px', fontWeight: 800, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+            <Save size={20} /> Save Changes
+          </button>
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
         {categories.map((cat) => (
-          <div key={cat.id} style={{ background: '#fff9f9', padding: '2rem', borderRadius: '35px', display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          <div key={cat.id} style={{ background: '#fff9f9', padding: '2rem', borderRadius: '35px', display: 'flex', gap: '1.5rem', alignItems: 'center', position: 'relative' }}>
             <div style={{ position: 'relative', width: '100px', height: '100px', flexShrink: 0 }}>
                <img src={cat.image} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '25px' }} alt="" />
                <div style={{ position: 'absolute', bottom: '-10px', right: '-10px', background: 'white', padding: '0.5rem', borderRadius: '50%', color: 'var(--primary)', boxShadow: '0 5px 10px rgba(0,0,0,0.05)' }}>
@@ -198,6 +227,12 @@ const CollectionsManager = () => {
                  style={{ width: '100%', padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.75rem' }} 
                />
             </div>
+            <button 
+              onClick={() => handleDelete(cat.id)}
+              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'white', border: 'none', borderRadius: '50%', width: '30px', height: '30px', color: '#e9a3a3', cursor: 'pointer', boxShadow: '0 5px 10px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              <Trash2 size={16} />
+            </button>
           </div>
         ))}
       </div>
@@ -329,17 +364,17 @@ const AdminDashboard = () => {
         {activeTab === 'overview' && (
           <motion.div key="overview" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
-              <StatCard title="Orders Placed" value={allOrders.length} icon={ShoppingBag} trend="12%" />
+              <StatCard title="Orders Placed" value={allOrders?.length || 0} icon={ShoppingBag} trend="12%" />
               <StatCard title="Dream Customers" value="1.2k" icon={Users} trend="8%" />
-              <StatCard title="Total Growth" value={`₹${(allOrders.reduce((sum, o) => sum + o.total, 0) / 1000).toFixed(1)}k`} icon={TrendingUp} trend="15%" />
-              <StatCard title="Designs Catalog" value={products.length} icon={Package} trend="2%" />
+              <StatCard title="Total Growth" value={`₹${(allOrders?.reduce((sum, o) => sum + o.total, 0) / 1000 || 0).toFixed(1)}k`} icon={TrendingUp} trend="15%" />
+              <StatCard title="Designs Catalog" value={products?.length || 0} icon={Package} trend="2%" />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem', marginBottom: '4rem' }}>
               <div style={{ background: 'white', padding: '2.5rem', borderRadius: '40px', boxShadow: '0 20px 40px rgba(233,163,163,0.1)', border: '1px solid #fff0f0' }}>
                 <h3 style={{ marginBottom: '2.5rem', fontFamily: 'Playfair Display', fontSize: '1.6rem', color: 'var(--secondary)' }}>Magic Sent ✨</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  {allOrders.slice(0, 5).map((order) => (
+                  {allOrders?.slice(0, 5).map((order) => (
                     <div key={order.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '1rem', borderBottom: '1px dashed #fff0f0' }}>
                        <div>
                           <p style={{ fontWeight: 800, color: 'var(--secondary)', fontSize: '0.9rem' }}>#{order.id}</p>
@@ -354,7 +389,7 @@ const AdminDashboard = () => {
               <div style={{ background: 'white', padding: '2.5rem', borderRadius: '40px', boxShadow: '0 20px 40px rgba(233,163,163,0.1)', border: '1px solid #fff0f0' }}>
                 <h3 style={{ marginBottom: '2.5rem', fontFamily: 'Playfair Display', fontSize: '1.6rem', color: 'var(--secondary)' }}>Needs Love ☁️</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  {products.filter(p => p.stock <= 5).slice(0, 4).map((item, idx) => (
+                  {products?.filter(p => p.stock <= 5).slice(0, 4).map((item, idx) => (
                     <div key={item.id} style={{ display: 'flex', gap: '1.2rem', alignItems: 'center' }}>
                       <img src={item.image} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '20px' }} alt="" />
                       <div>
@@ -370,7 +405,7 @@ const AdminDashboard = () => {
             <div style={{ background: 'white', padding: 'clamp(1.5rem, 5vw, 3rem)', borderRadius: '40px', boxShadow: '0 20px 40px rgba(233,163,163,0.1)', border: '1px solid #fff0f0' }}>
                <h3 style={{ marginBottom: '2.5rem', fontFamily: 'Playfair Display', fontSize: '1.8rem', color: 'var(--secondary)' }}>Upcoming Tea & Designs 🫖</h3>
                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-                  {appointments.map((appt) => (
+                  {appointments?.map((appt) => (
                     <div key={appt.id} style={{ background: '#fffcfc', padding: '1.8rem', borderRadius: '30px', border: '1px solid #fff0f0', position: 'relative', overflow: 'hidden' }}>
                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.2rem' }}>
                           <div style={{ background: 'white', padding: '0.6rem', borderRadius: '15px', color: 'var(--primary)' }}>

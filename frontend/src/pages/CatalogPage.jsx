@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useShop } from '../context/ShopContext';
-import { Calendar, Phone, Heart, Sparkles, X, Share2, Scissors, Quote, Plus, Edit2, Trash2, MessageSquare } from 'lucide-react';
+import { Calendar, Phone, Heart, Sparkles, X, Share2, Scissors, Quote, Plus, Edit2, Trash2, MessageSquare, ArrowRight } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { useSmoothScroll } from '../hooks/useSmoothScroll';
 import EditCatalogModal from '../components/EditCatalogModal';
+import { resolveImageUrl } from '../utils/imageUtils';
 
 const CatalogItemModal = ({ isOpen, onClose, item }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -24,7 +25,7 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
         >
           <div style={{ display: 'flex' }} className="responsive-modal-content">
              <div style={{ flex: 1.2, background: '#fef9f9', height: '100%', position: 'relative' }}>
-                <img src={item.images[currentIdx]} style={{ width: '100%', height: 'clamp(300px, 60vh, 600px)', objectFit: 'cover' }} alt="" />
+                <img src={resolveImageUrl(item.images[currentIdx])} style={{ width: '100%', height: 'clamp(300px, 60vh, 600px)', objectFit: 'contain', borderRadius: '24px', background: '#fef9f9' }} alt="" />
                 {item.images.length > 1 && (
                   <div style={{ position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '10px' }}>
                     {item.images.map((_, i) => (
@@ -33,10 +34,10 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
                   </div>
                 )}
              </div>
-             <div style={{ flex: 1, padding: '3rem 2.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <span style={{ color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', fontSize: '0.7rem', letterSpacing: '3px' }}>{item.category}</span>
-                <h2 style={{ fontSize: '2.5rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', margin: '1rem 0' }}>{item.name}</h2>
-                <p style={{ color: 'var(--text-light)', lineHeight: 1.8, marginBottom: '2.5rem' }}>{item.description}</p>
+             <div style={{ flex: 1, padding: 'clamp(1.5rem, 4vw, 2.5rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <span style={{ color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', fontSize: '0.65rem', letterSpacing: '3px' }}>{item.category}</span>
+                <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', margin: '0.8rem 0', lineHeight: 1.1 }}>{item.name}</h2>
+                <p style={{ color: '#777', lineHeight: 1.9, marginBottom: '2rem', fontSize: '0.92rem', letterSpacing: '0.01em' }}>{item.description}</p>
                 <button 
                   onClick={() => {
                     const phone = import.meta.env.VITE_WHATSAPP_NUMBER || '910000000000';
@@ -62,9 +63,9 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
                     window.open(`https://wa.me/${phone}?text=${encodedText}`, '_blank');
                     onClose();
                   }}
-                  style={{ padding: '1.5rem', background: '#25D366', color: 'white', border: 'none', borderRadius: '35px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', boxShadow: '0 10px 20px rgba(37, 211, 102, 0.2)' }}
+                  style={{ padding: '1rem', background: '#25D366', color: 'white', border: 'none', borderRadius: '28px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.7rem', fontSize: '0.9rem', boxShadow: '0 8px 20px rgba(37, 211, 102, 0.2)' }}
                 >
-                  <MessageSquare size={20} /> Request Custom Recreation via WhatsApp
+                  <MessageSquare size={18} /> Request Custom Recreation
                 </button>
              </div>
           </div>
@@ -130,13 +131,13 @@ const CatalogPage = () => {
          </button>
        )}
 
-       <div style={{ textAlign: 'center', marginBottom: '6rem' }}>
-          <Sparkles size={32} color="var(--primary)" style={{ marginBottom: '1.5rem' }} />
-          <h1 style={{ fontSize: 'clamp(2.5rem, 7vw, 4.5rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>The Atelier <span style={{ color: 'var(--primary)', fontStyle: 'italic' }}>Catalog</span></h1>
-          <p style={{ color: 'var(--text-light)', marginTop: '1rem', maxWidth: '600px', margin: '1rem auto' }}>A showcase of our finest handcrafted creations and past masterpieces. Each piece tells a story of elegance and intricate detail.</p>
+       <div style={{ textAlign: 'center', marginBottom: 'clamp(3rem, 7vw, 5rem)' }}>
+          <Sparkles size={28} color="var(--primary)" style={{ marginBottom: '1.2rem' }} />
+          <h1 style={{ fontSize: 'clamp(2.2rem, 6vw, 4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.1 }}>The Atelier <span style={{ color: 'var(--primary)', fontStyle: 'italic' }}>Catalog</span></h1>
+          <p style={{ color: '#777', marginTop: '0.8rem', maxWidth: '520px', margin: '0.8rem auto', fontSize: '0.92rem', lineHeight: 1.8 }}>A curated showcase of our finest handcrafted legacy. From heritage bridal to modern evening wear, explored and redesigned just for you.</p>
        </div>
 
-       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2.5rem' }}>
+       <div className="responsive-catalog-grid">
           {catalog.map((item, idx) => (
              <motion.div 
                key={item.id}
@@ -147,7 +148,7 @@ const CatalogPage = () => {
                onClick={() => setSelectedItem(item)}
                style={{ cursor: 'pointer', position: 'relative' }}
              >
-                <div style={{ height: '500px', borderRadius: '40px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(233,163,163,0.1)', position: 'relative' }}>
+                <div className="catalog-item-card-inner">
                     {isAdminLoggedIn && (
                       <div style={{ position: 'absolute', top: '1.2rem', right: '1.2rem', zIndex: 10, display: 'flex', gap: '0.6rem' }}>
                         <button 
@@ -164,13 +165,13 @@ const CatalogPage = () => {
                         </button>
                       </div>
                     )}
-                    <img src={item.images[0]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+                    <img src={resolveImageUrl(item.images[0])} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '24px', background: '#fef9f9' }} alt="" />
                 </div>
-                <div style={{ padding: '2rem 1.5rem', textAlign: 'center' }}>
-                   <p style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.5rem' }}>{item.category}</p>
-                   <h3 style={{ fontSize: '1.5rem', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>{item.name}</h3>
-                   <div style={{ width: '40px', height: '2px', background: '#ffe4e1', margin: '1.2rem auto' }}></div>
-                   <p style={{ fontSize: '0.85rem', color: '#999', fontStyle: 'italic' }}>Details Attached ✨</p>
+                <div style={{ padding: '1.5rem 1rem', textAlign: 'center' }}>
+                   <p style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '3px', marginBottom: '0.4rem' }}>{item.category}</p>
+                   <h3 style={{ fontSize: '1.3rem', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>{item.name}</h3>
+                   <div style={{ width: '30px', height: '1.5px', background: '#ffe4e1', margin: '1rem auto' }}></div>
+                   <p style={{ fontSize: '0.78rem', color: '#aaa', fontStyle: 'italic', letterSpacing: '0.5px' }}>Artisan Details</p>
                 </div>
              </motion.div>
           ))}
@@ -186,11 +187,11 @@ const CatalogPage = () => {
        />
 
        {/* Portfolio Story Section */}
-       <section style={{ marginTop: '10rem', background: 'var(--accent)', padding: '6rem 2rem', borderRadius: '60px', textAlign: 'center' }}>
-          <Quote size={40} color="var(--primary)" style={{ opacity: 0.2, marginBottom: '2rem' }} />
-          <h2 style={{ fontSize: '2.2rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '2rem' }}>Every design is a conversation, <br/> every stitch is a promise.</h2>
-          <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--text-light)', lineHeight: 1.8 }}>Our catalog represents years of artisanal excellence. Whether you want a recreation of a past masterpiece or a completely new vision, our atelier is ready to bring your dream to life.</p>
-          <button style={{ marginTop: '3rem', padding: '1.2rem 3rem', background: 'var(--secondary)', color: 'white', borderRadius: '35px', border: 'none', fontWeight: 800 }}>Explore Customizations</button>
+       <section style={{ marginTop: '7rem', background: 'var(--accent)', padding: 'clamp(3rem, 8vw, 5rem) 2rem', borderRadius: '48px', textAlign: 'center' }}>
+          <Quote size={30} color="var(--primary)" style={{ opacity: 0.15, marginBottom: '1.5rem' }} />
+          <h2 style={{ fontSize: 'clamp(1.7rem, 4vw, 2.5rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '1.5rem', lineHeight: 1.1 }}>Every design is a conversation, <br/> every stitch is a promise.</h2>
+          <p style={{ maxWidth: '520px', margin: '0 auto', color: '#777', lineHeight: 1.8, fontSize: '0.92rem' }}>Our catalog represents years of artisanal excellence. Whether you want a recreation of a past masterpiece or a completely new vision, our atelier is ready to bring your dream to life.</p>
+          <button style={{ marginTop: '2.5rem', padding: '1rem 2.5rem', background: 'var(--secondary)', color: 'white', borderRadius: '28px', border: 'none', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', boxShadow: '0 12px 24px rgba(74,55,55,0.15)' }}>Explore Customizations</button>
        </section>
     </div>
   );
