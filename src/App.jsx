@@ -153,20 +153,13 @@ const Footer = () => {
           </div>
         </div>
         <div>
-           <h4 style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', marginBottom: '1.5rem' }}>Dreamy Links</h4>
+           <h4 style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', marginBottom: '1.5rem' }}>The Collection</h4>
            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.8rem', opacity: 0.8, fontSize: '0.9rem' }}>
-              <li><Link to="/">Home</Link></li>
-              <li><Link to="/products">Shop Collections</Link></li>
-              <li><Link to="/catalog">Atelier Catalog</Link></li>
-              <li><Link to="/about">About Us</Link></li>
-              <li><Link to="/contact">Contact Us</Link></li>
-           </ul>
-        </div>
-        <div>
-           <h4 style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary)', marginBottom: '1.5rem' }}>Help Corner</h4>
-           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.8rem', opacity: 0.8, fontSize: '0.9rem' }}>
-             <li><Link to="/tracking">Track Magic</Link></li>
-             <li><Link to="/auth">My Account</Link></li>
+              <li><Link to="/">Home Gallery</Link></li>
+              <li><Link to="/products">Shop All</Link></li>
+              <li><Link to="/catalog">Atelier Stories</Link></li>
+              <li><Link to="/tracking">Track Magic</Link></li>
+              <li><Link to="/contact">Help Corner</Link></li>
            </ul>
         </div>
         <div>

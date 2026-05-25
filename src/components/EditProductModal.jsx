@@ -15,7 +15,8 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
     images: [],
     colors: [],
     sizes: [],
-    description: ''
+    description: '',
+    isIcon: false
   });
 
   const [imageUrlInput, setImageUrlInput] = useState('');
@@ -28,7 +29,8 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
         ...product,
         images: product.images || [product.image],
         colors: product.colors || [],
-        sizes: product.sizes || []
+        sizes: product.sizes || [],
+        isIcon: product.isIcon || false
       });
     } else {
       setFormData({
@@ -265,6 +267,19 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
               <div>
                 <label style={{ display: 'block', fontSize: '0.68rem', fontWeight: 800, marginBottom: '0.4rem', color: 'var(--primary)', textTransform: 'uppercase' }}>Design Story (Description)</label>
                 <textarea rows="3" required value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} placeholder="Describe the soul of this design..." style={{ width: '100%', padding: '0.85rem 1rem', border: 'none', background: '#fff9f9', borderRadius: '18px', outline: 'none', resize: 'none', fontSize: '0.88rem' }} />
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.5rem' }}>
+                <input 
+                  type="checkbox" 
+                  id="isIcon"
+                  checked={formData.isIcon} 
+                  onChange={(e) => setFormData({...formData, isIcon: e.target.checked})}
+                  style={{ width: '20px', height: '20px', accentColor: 'var(--primary)', cursor: 'pointer' }}
+                />
+                <label htmlFor="isIcon" style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--secondary)', cursor: 'pointer' }}>
+                  Show on Landing Page (Icons Section) ✨
+                </label>
               </div>
 
               <button type="submit" style={{ width: '100%', padding: '1rem', background: 'var(--secondary)', color: 'white', fontWeight: 700, borderRadius: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', border: 'none', cursor: 'pointer', fontSize: '0.9rem', boxShadow: '0 8px 20px rgba(74,55,55,0.2)' }}>

@@ -361,7 +361,7 @@ const LandingPage = () => {
   useSmoothScroll();
   const navigate = useNavigate();
   const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const { products, catalog, isLoading, addToCart, siteConfig } = useShop();
+  const { products, iconProducts, catalog, isLoading, addToCart, siteConfig } = useShop();
 
   if (isLoading) return <PookieLoader />;
 
@@ -380,13 +380,13 @@ const LandingPage = () => {
             </div>
             
             <div className="featured-grid">
-               {products.slice(0, 3).map((p, idx) => (
+               {iconProducts.map((p, idx) => (
                  <motion.div 
                     key={p.id} 
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: idx * 0.2 }}
+                    transition={{ delay: idx * 0.1 }}
                     whileHover={{ y: -15 }}
                     onClick={() => navigate(`/product/${p.id}`)} 
                     style={{ cursor: 'pointer', background: 'white', borderRadius: 'clamp(24px, 4vw, 50px)', padding: '1.2rem', boxShadow: '0 30px 60px rgba(233,163,163,0.15)' }}

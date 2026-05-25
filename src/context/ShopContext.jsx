@@ -9,6 +9,7 @@ export const useShop = () => useContext(ShopContext);
 
 export const ShopProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
+  const [iconProducts, setIconProducts] = useState([]);
   const [catalog, setCatalog] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1 });
@@ -23,6 +24,7 @@ export const ShopProvider = ({ children }) => {
 
   useEffect(() => {
     fetchProducts();
+    fetchIconProducts();
     fetchCatalog();
     fetchSiteConfig();
   }, []);
@@ -57,6 +59,17 @@ export const ShopProvider = ({ children }) => {
   const showToast = (message) => {
     setToast(message);
     setTimeout(() => setToast(null), 3000);
+  };
+
+  const fetchIconProducts = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/products/icons`, { 
+        headers: getHeaders()
+      });
+      setIconProducts(response.data);
+    } catch (error) {
+      console.error('Error fetching icon products:', error);
+    }
   };
 
   const fetchProducts = async (params = {}) => {
@@ -231,7 +244,7 @@ export const ShopProvider = ({ children }) => {
 
   return (
     <ShopContext.Provider value={{ 
-      products, catalog, isLoading, pagination, fetchProducts,
+      products, iconProducts, catalog, isLoading, pagination, fetchProducts, fetchIconProducts,
       addProduct, updateProduct, deleteProduct,
       addCatalogItem, updateCatalogItem, deleteCatalogItem,
       cart, wishlist, addToCart, removeFromCart, updateQuantity, loginUser, logoutUser, currentUser,

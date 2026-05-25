@@ -554,8 +554,8 @@ div:hover > .service-img {
     gap: 0.8rem;
   }
   .featured-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.5rem !important;
   }
 }
 
@@ -958,15 +958,15 @@ div:hover > .service-img {
 
 @media (max-width: 768px) {
   .similar-dreams-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(3, 1fr) !important;
     gap: 1.5rem !important;
   }
 }
 
 @media (max-width: 480px) {
   .similar-dreams-grid {
-    grid-template-columns: 1fr !important;
-    gap: 1.5rem !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
   }
 }
 
@@ -1045,7 +1045,7 @@ div:hover > .service-img {
 /* Responsive Footer Grid */
 .responsive-footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  grid-template-columns: 2fr 1fr 1.5fr;
   gap: 4rem;
 }
 
