@@ -229,7 +229,32 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                 <motion.button 
                   variants={itemVariants}
                   whileHover={{ y: -3 }}
-                  onClick={() => window.open(`https://wa.me/910000000000?text=I'm in love with ${product.name}!`, '_blank')}
+                  onClick={() => {
+                    const phone = import.meta.env.VITE_WHATSAPP_NUMBER || '910000000000';
+                    const baseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
+                    const productUrl = `${baseUrl}/product/${product.id}`;
+                    const imageUrl = resolveImageUrl(product.images?.[currentImageIndex] || product.image);
+                    
+                    const message = [
+                      `*Inquiry for ${product.name}*`,
+                      '',
+                      `${imageUrl}`,
+                      '',
+                      `*Item Details:*`,
+                      `- Category: ${product.category?.toUpperCase() || 'GENERAL'}`,
+                      selectedSize ? `- Selection: Size ${selectedSize}${selectedColor ? `, Color ${selectedColor}` : ''}` : (selectedColor ? `- Selection: Color ${selectedColor}` : ''),
+                      `- Price: ₹${parseFloat(product.discountedPrice).toLocaleString()}${product.discount > 0 ? ` (₹${parseFloat(product.price).toLocaleString()} - ${product.discount}% OFF)` : ''}`,
+                      '',
+                      `*Description:*`,
+                      `${product.description}`,
+                      '',
+                      `*Product Link:* ${productUrl}`,
+                      '',
+                      `Hi! I'm interested in this handcrafted piece. Could you provide more details?`
+                    ].filter(line => line !== '').join('\n');
+
+                    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                  }}
                   style={{ width: '100%', marginTop: '0.8rem', padding: 'clamp(0.8rem, 2vw, 1.1rem)', background: 'transparent', border: '1.5px solid #25D366', color: '#25D366', borderRadius: '24px', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', fontSize: 'clamp(0.75rem, 2vw, 0.88rem)', letterSpacing: '0.3px' }}>
                   <MessageSquare size={17} /> Chat with Designer
                 </motion.button>

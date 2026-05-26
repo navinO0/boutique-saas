@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Instagram, Facebook, Send, Sparkles } from 'lucide-react';
 
+import { BOUTIQUE_CONFIG } from '../data/config';
+
 const ContactPage = () => {
   return (
     <div className="container" style={{ padding: 'clamp(5rem, 10vw, 8rem) 1rem 4rem' }}>
@@ -18,7 +20,7 @@ const ContactPage = () => {
         {/* Info Column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
           {[
-            { icon: Phone, label: 'Call Us', value: '+91 98765 43210' },
+            { icon: Phone, label: 'Call Us', value: BOUTIQUE_CONFIG.contact.phone },
             { icon: Mail, label: 'Email Us', value: 'hello@amaraboutique.com' },
             { icon: MapPin, label: 'Visit Us', value: '123 Elegance St, Bangalore' }
           ].map((item, i) => (

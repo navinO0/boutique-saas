@@ -7,7 +7,7 @@ export const BOUTIQUE_CONFIG = {
     password: "password123"
   },
   contact: {
-    phone: "+91 98765 43210",
+    phone: import.meta.env.VITE_WHATSAPP_NUMBER || "+91 98765 43210",
     email: "contact@amaraboutique.com",
     address: "123 Elegance St, Fashion District, Bangalore"
   },
