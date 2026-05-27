@@ -195,7 +195,6 @@ const ProductList = () => {
         <>
           <div style={{ 
             display: 'grid', 
-            gridTemplateColumns: 'repeat(4, 1fr)', 
             gap: 'clamp(1rem, 2.5vw, 2.5rem)',
           }} className="amara-product-grid">
             {products.map((product) => (
@@ -209,14 +208,14 @@ const ProductList = () => {
                   position: 'relative', 
                   cursor: 'pointer',
                   background: 'white',
-                  borderRadius: '35px',
-                  padding: '0.8rem',
+                  borderRadius: '28px',
+                  padding: '0.6rem',
                   border: '1px solid #fff0f0',
-                  boxShadow: '0 15px 35px rgba(233,163,163,0.05)',
+                  boxShadow: '0 10px 25px rgba(233,163,163,0.05)',
                   transition: 'all 0.4s cubic-bezier(0.19, 1, 0.22, 1)'
                 }}
               >
-                <div style={{ position: 'relative', height: 'clamp(200px, 40vw, 360px)', overflow: 'hidden', borderRadius: '28px', background: '#fefafa' }}>
+                <div style={{ position: 'relative', height: 'clamp(160px, 35vw, 300px)', overflow: 'hidden', borderRadius: '22px', background: '#fefafa' }}>
                   <img 
                     src={resolveImageUrl(product.images?.[0] || product.image)} 
                     alt={product.name} 
@@ -276,17 +275,15 @@ const ProductList = () => {
                   </motion.button>
                 </div>
 
-                <div style={{ padding: '1.2rem 0.5rem 0.8rem', textAlign: 'left' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                    <div>
-                      <p style={{ color: 'var(--primary)', fontSize: '0.6rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.3rem' }}>{product.category}</p>
-                      <h3 style={{ fontSize: '1rem', color: 'var(--secondary)', fontFamily: 'Playfair Display', fontWeight: 700 }}>{product.name}</h3>
-                    </div>
+                <div style={{ padding: '1rem 0.5rem 0.6rem', textAlign: 'left', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '0.6rem' }}>
+                    <p style={{ color: 'var(--primary)', fontSize: '0.52rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '0.3rem', opacity: 0.8 }}>{product.category}</p>
+                    <h3 style={{ fontSize: '0.88rem', color: 'var(--secondary)', fontFamily: 'Playfair Display', fontWeight: 700, lineHeight: 1.3, minHeight: '2.5rem', display: 'flex', alignItems: 'center' }}>{product.name}</h3>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <p style={{ fontWeight: 900, color: 'var(--primary)', fontSize: '1.1rem' }}>₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
-                    <div style={{ display: 'flex', gap: '4px' }}>
-                      {[...Array(5)].map((_, i) => <Star key={i} size={10} fill={i < 4 ? "var(--primary)" : "none"} color={i < 4 ? "var(--primary)" : "#eee"} />)}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '0.8rem', borderTop: '1px solid #f9f0f0' }}>
+                    <p style={{ fontWeight: 900, color: 'var(--primary)', fontSize: '1rem' }}>₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
+                    <div style={{ display: 'flex', gap: '3px' }}>
+                      {[...Array(5)].map((_, i) => <Star key={i} size={9} fill={i < 4 ? "var(--primary)" : "none"} color={i < 4 ? "var(--primary)" : "#eee"} />)}
                     </div>
                   </div>
                 </div>

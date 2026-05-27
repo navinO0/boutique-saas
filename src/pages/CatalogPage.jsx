@@ -9,68 +9,179 @@ import { resolveImageUrl } from '../utils/imageUtils';
 
 const CatalogItemModal = ({ isOpen, onClose, item }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
   if (!item || !isOpen) return null;
 
   return (
     <AnimatePresence>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-        style={{ position: 'fixed', inset: 0, background: 'rgba(255, 245, 245, 0.6)', zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(15px)' }}
+        style={{ position: 'fixed', inset: 0, background: 'rgba(255, 245, 245, 0.4)', zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(15px)' }}
         onClick={onClose}
       >
         <motion.div 
-          initial={{ y: 50, scale: 0.95 }} animate={{ y: 0, scale: 1 }} exit={{ y: 50, scale: 0.95 }}
-          className="amara-modal"
-          style={{ padding: '0', maxWidth: '1000px', width: '95%' }}
+          initial={{ y: 100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 100, opacity: 0 }}
+          className="amara-modal modal-full-screen"
+          style={{ 
+            padding: '0', 
+            background: 'white',
+            display: 'flex',
+            flexDirection: 'column'
+          }}
           onClick={e => e.stopPropagation()}
         >
-          <div style={{ display: 'flex' }} className="responsive-modal-content">
-             <div style={{ flex: 1.2, background: '#fef9f9', height: '100%', position: 'relative' }}>
-                <img src={resolveImageUrl(item.images[currentIdx])} style={{ width: '100%', height: 'clamp(300px, 60vh, 600px)', objectFit: 'contain', borderRadius: '24px', background: '#fef9f9' }} alt="" />
-                {item.images.length > 1 && (
-                  <div style={{ position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '10px' }}>
-                    {item.images.map((_, i) => (
-                      <div key={i} onClick={() => setCurrentIdx(i)} style={{ width: i === currentIdx ? '30px' : '10px', height: '10px', background: 'white', borderRadius: '5px', cursor: 'pointer' }} />
-                    ))}
+          {/* Close Button */}
+          <button 
+            onClick={onClose} 
+            style={{ 
+              position: 'fixed', 
+              top: '1.5rem', 
+              right: '1.5rem', 
+              background: 'white', 
+              borderRadius: '50%', 
+              width: '45px', 
+              height: '45px', 
+              border: 'none', 
+              boxShadow: '0 10px 25px rgba(0,0,0,0.1)', 
+              zIndex: 100,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <X size={24} />
+          </button>
+
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto' }} className="hide-scrollbar">
+            {/* Image Section */}
+            <div style={{ position: 'relative', width: '100%', background: '#fffcfc', flexShrink: 0 }}>
+               {/* Mobile/Tablet Scrollable Carousel */}
+               <div 
+                 className="mobile-image-carousel"
+                 onScroll={(e) => {
+                   const index = Math.round(e.target.scrollLeft / e.target.clientWidth);
+                   if (index !== currentIdx) setCurrentIdx(index);
+                 }}
+               >
+                 {item.images.map((img, i) => (
+                   <div key={i} className="carousel-item" style={{ width: '100vw', height: 'clamp(350px, 65vh, 600px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <img 
+                        src={resolveImageUrl(img)} 
+                        onClick={() => setIsFullScreen(true)}
+                        style={{ width: '100%', height: '100%', objectFit: 'contain', cursor: 'zoom-in' }} 
+                        alt="" 
+                      />
+                   </div>
+                 ))}
+               </div>
+
+               {item.images.length > 1 && (
+                 <div style={{ position: 'absolute', bottom: '25px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', zIndex: 10 }}>
+                   {item.images.map((_, i) => (
+                     <div key={i} style={{ width: i === currentIdx ? '25px' : '8px', height: '8px', background: i === currentIdx ? 'var(--primary)' : 'rgba(0,0,0,0.1)', borderRadius: '4px', transition: '0.3s' }} />
+                   ))}
+                 </div>
+               )}
+            </div>
+
+            {/* Content Section */}
+            <div style={{ padding: '2.5rem 1.5rem 5rem', background: 'white', flex: 1 }}>
+               <div className="container" style={{ padding: 0, maxWidth: '800px' }}>
+                  <motion.span 
+                    initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+                    style={{ color: 'var(--primary)', fontWeight: 900, textTransform: 'uppercase', fontSize: '0.7rem', letterSpacing: '4px', display: 'block', marginBottom: '1rem' }}
+                  >
+                    {item.category}
+                  </motion.span>
+                  
+                  <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '1.5rem', lineHeight: 1.15 }}>{item.name}</h2>
+                  
+                  <div style={{ width: '40px', height: '3px', background: 'var(--primary)', marginBottom: '2rem', borderRadius: '2px' }} />
+                  
+                  <p style={{ color: '#666', lineHeight: 2, marginBottom: '3rem', fontSize: '1.05rem', fontStyle: 'italic' }}>"{item.description}"</p>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
+                    <button 
+                      onClick={() => {
+                        const phone = import.meta.env.VITE_WHATSAPP_NUMBER || '910000000000';
+                        const currentImageUrl = item.images[currentIdx] || item.images[0];
+                        const baseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
+                        const catalogUrl = `${baseUrl}/catalog?catalogId=${item.id}`;
+
+                        const message = [
+                          `*Catalog Inquiry for ${item.name}*`,
+                          '',
+                          `${currentImageUrl}`,
+                          '',
+                          `*Item Link:* ${catalogUrl}`,
+                          '',
+                          `Hi Amara! I absolutely love this piece from your catalog. Could we discuss recreating this for me?`
+                        ].join('\n');
+
+                        window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                      }}
+                      style={{ padding: '1.3rem', background: '#25D366', color: 'white', border: 'none', borderRadius: '22px', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.8rem', fontSize: '1rem', boxShadow: '0 15px 35px rgba(37, 211, 102, 0.25)' }}
+                    >
+                      <MessageSquare size={22} /> Bespoke Recreation
+                    </button>
+                    
+                    <button 
+                      onClick={() => {
+                        if (navigator.share) {
+                          navigator.share({
+                            title: `Amara Catalog: ${item.name}`,
+                            text: item.description,
+                            url: `${window.location.origin}/catalog?catalogId=${item.id}`
+                          });
+                        }
+                      }}
+                      style={{ padding: '1.3rem', background: '#fdfdfd', color: 'var(--secondary)', border: '1px solid #eee', borderRadius: '22px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.8rem', fontSize: '0.95rem' }}
+                    >
+                      <Share2 size={20} /> Share Work
+                    </button>
                   </div>
-                )}
-             </div>
-             <div style={{ flex: 1, padding: 'clamp(1.5rem, 4vw, 2.5rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <span style={{ color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', fontSize: '0.65rem', letterSpacing: '3px' }}>{item.category}</span>
-                <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', margin: '0.8rem 0', lineHeight: 1.1 }}>{item.name}</h2>
-                <p style={{ color: '#777', lineHeight: 1.9, marginBottom: '2rem', fontSize: '0.92rem', letterSpacing: '0.01em' }}>{item.description}</p>
-                <button 
-                  onClick={() => {
-                    const phone = import.meta.env.VITE_WHATSAPP_NUMBER || '910000000000';
-                    const currentImageUrl = item.images[currentIdx] || item.images[0];
-                    const baseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
-                    const catalogUrl = `${baseUrl}/catalog?catalogId=${item.id}`;
-
-                    const message = [
-                      `*Catalog Inquiry for ${item.name}*`,
-                      '',
-                      `${currentImageUrl}`,
-                      '',
-                      `*Item Link:* ${catalogUrl}`,
-                      '',
-                      `*Details:*`,
-                      `- Category: ${item.category?.toUpperCase() || 'GENERAL'}`,
-                      `- Description: ${item.description}`,
-                      '',
-                      `Hi! I'm interested in having this piece from your catalog recreated/customized. Could we discuss this further?`
-                    ].join('\n');
-
-                    const encodedText = encodeURIComponent(message);
-                    window.open(`https://wa.me/${phone}?text=${encodedText}`, '_blank');
-                    onClose();
-                  }}
-                  style={{ padding: '1rem', background: '#25D366', color: 'white', border: 'none', borderRadius: '28px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.7rem', fontSize: '0.9rem', boxShadow: '0 8px 20px rgba(37, 211, 102, 0.2)' }}
-                >
-                  <MessageSquare size={18} /> Request Custom Recreation
-                </button>
-             </div>
+               </div>
+            </div>
           </div>
-          <button onClick={onClose} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'white', borderRadius: '50%', width: '40px', height: '40px', border: 'none', boxShadow: '0 5px 15px rgba(0,0,0,0.1)' }}><X /></button>
         </motion.div>
+
+        {/* Full Screen Zoom Overlay */}
+        <AnimatePresence>
+          {isFullScreen && (
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              style={{ position: 'fixed', inset: 0, background: 'black', zIndex: 6000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              onClick={() => setIsFullScreen(false)}
+            >
+               <button 
+                 onClick={() => setIsFullScreen(false)}
+                 style={{ position: 'absolute', top: '2rem', right: '2rem', background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', padding: '0.8rem', borderRadius: '50%', cursor: 'pointer' }}
+               >
+                 <X size={26} />
+               </button>
+
+               <div 
+                 className="no-scrollbar"
+                 style={{ width: '100%', height: '100%', overflowX: 'auto', display: 'flex', scrollSnapType: 'x mandatory' }}
+                 onScroll={(e) => {
+                   const index = Math.round(e.target.scrollLeft / window.innerWidth);
+                   if (index !== currentIdx) setCurrentIdx(index);
+                 }}
+               >
+                 {item.images.map((img, i) => (
+                   <div key={i} style={{ minWidth: '100vw', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', scrollSnapAlign: 'center' }}>
+                      <img src={resolveImageUrl(img)} style={{ maxWidth: '100%', maxHeight: '90vh', objectFit: 'contain' }} alt="" />
+                   </div>
+                 ))}
+               </div>
+
+               <div style={{ position: 'absolute', bottom: '3rem', color: 'white', textAlign: 'center', width: '100%' }}>
+                  <p style={{ fontSize: '0.7rem', letterSpacing: '4px', textTransform: 'uppercase', opacity: 0.6 }}>{currentIdx + 1} / {item.images.length}</p>
+                  <p style={{ fontSize: '0.6rem', marginTop: '1rem', color: 'var(--primary)', fontWeight: 800, letterSpacing: '2px' }}>Swipe to explore</p>
+               </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </AnimatePresence>
   );

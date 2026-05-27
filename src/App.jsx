@@ -45,16 +45,15 @@ const Navbar = ({ onOpenCart }) => {
       className="main-navbar"
       style={{ 
         position: 'fixed', 
-        left: '50%', transform: 'translateX(-50%)', 
-        width: '95%', maxWidth: '1400px', zIndex: 1000, 
+        left: 0, right: 0, margin: '0 auto',
+        width: '95%', maxWidth: '1400px', zIndex: 2500, 
         padding: isScrolled ? '0.6rem 1.5rem' : '1rem 2rem', 
         transition: '0.4s cubic-bezier(0.19, 1, 0.22, 1)',
-        background: isScrolled ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.45)',
+        background: isScrolled ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.8)',
         backdropFilter: 'blur(22px)',
         borderRadius: '32px',
-        boxShadow: isScrolled ? '0 12px 35px rgba(233,163,163,0.12)' : 'none',
+        boxShadow: isScrolled ? '0 12px 35px rgba(233,163,163,0.15)' : '0 8px 32px rgba(0,0,0,0.05)',
         border: '1px solid rgba(255,255,255,0.4)',
-        // Dynamic positioning via CSS class for clean media queries
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -102,39 +101,39 @@ const Navbar = ({ onOpenCart }) => {
         </div>
 
         {/* Mobile Navbar Items */}
-        <div style={{ display: 'none', width: '100%', justifyContent: 'space-between', alignItems: 'center' }} className="mobile-only">
-          <Link to="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)' }}>
+        <div style={{ display: 'none', width: '100%', justifyContent: 'space-around', alignItems: 'center', padding: '0.3rem 0 calc(0.6rem + env(safe-area-inset-bottom))' }} className="mobile-only">
+          <Link to="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1 }}>
             <motion.div whileTap={{ scale: 0.8 }}><ShoppingBag size={20} color="var(--primary)" /></motion.div>
-            <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' }}>Home</span>
+            <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Home</span>
           </Link>
-          <Link to="/products" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)' }}>
+          <Link to="/products" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1 }}>
             <motion.div whileTap={{ scale: 0.8 }}><Sparkles size={20} /></motion.div>
-            <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' }}>Shop</span>
+            <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Shop</span>
           </Link>
-          <Link to="/catalog" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)' }}>
+          <Link to="/catalog" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1 }}>
             <motion.div whileTap={{ scale: 0.8 }}><Instagram size={20} /></motion.div>
-            <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' }}>Gallery</span>
+            <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Gallery</span>
           </Link>
-          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)' }} onClick={onOpenCart}>
+          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, cursor: 'pointer' }} onClick={onOpenCart}>
             <motion.div whileTap={{ scale: 0.8 }}>
               <ShoppingCart size={20} color="var(--primary)" />
               {cart.length > 0 && (
-                <span style={{ position: 'absolute', top: '-5px', right: '0', background: 'var(--primary)', color: 'white', fontSize: '0.55rem', width: '14px', height: '14px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>
+                <span style={{ position: 'absolute', top: '-5px', right: '15%', background: 'var(--primary)', color: 'white', fontSize: '0.55rem', width: '14px', height: '14px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
                   {cart.length}
                 </span>
               )}
             </motion.div>
-            <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' }}>Bag</span>
+            <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Bag</span>
           </div>
           {currentUser ? (
-            <Link to={isAdminUser ? "/admin" : "/orders"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)' }}>
+            <Link to={isAdminUser ? "/admin" : "/orders"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1 }}>
               <motion.div whileTap={{ scale: 0.8 }}><User size={20} /></motion.div>
-              <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' }}>Account</span>
+              <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Account</span>
             </Link>
           ) : (
-            <Link to="/auth" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)' }}>
+            <Link to="/auth" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1 }}>
               <motion.div whileTap={{ scale: 0.8 }}><User size={20} /></motion.div>
-              <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' }}>Login</span>
+              <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Login</span>
             </Link>
           )}
         </div>

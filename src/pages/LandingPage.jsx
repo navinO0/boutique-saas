@@ -91,7 +91,7 @@ const Hero = ({ onBook }) => {
     padding: 'clamp(2.5rem, 6vw, 5rem)',
     maxWidth: '800px',
     position: 'relative',
-    marginLeft: '-2rem' // Nudge it further left
+    marginLeft: window.innerWidth < 768 ? '0' : '-2rem'
   };
 
   return (
@@ -271,7 +271,8 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
             position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', 
             fontSize: '25vw', fontWeight: 900, color: 'var(--primary)', opacity: 0.03, 
             whiteSpace: 'nowrap', zIndex: 0, fontFamily: 'Playfair Display', pointerEvents: 'none',
-            userSelect: 'none'
+            userSelect: 'none',
+            maxWidth: '100vw'
           }}
        >
           ATELIER ATELIER ATELIER
@@ -375,7 +376,7 @@ const LandingPage = () => {
   if (isLoading) return <PookieLoader fullScreen={true} />;
 
   return (
-    <div style={{ background: 'var(--white)' }}>
+    <div style={{ background: 'var(--white)', overflow: 'hidden' }}>
       <Hero onBook={() => setIsBookingOpen(true)} />
       
       <Services services={siteConfig.services} />
@@ -401,13 +402,13 @@ const LandingPage = () => {
                      style={{ 
                         cursor: 'pointer', 
                         background: 'white', 
-                        borderRadius: 'clamp(24px, 4vw, 50px)', 
-                        padding: '1.2rem', 
-                        boxShadow: '0 25px 60px rgba(233,163,163,0.12)',
+                        borderRadius: 'clamp(20px, 3vw, 40px)', 
+                        padding: 'clamp(0.4rem, 2vw, 0.8rem)', 
+                        boxShadow: '0 20px 50px rgba(233,163,163,0.1)',
                         border: '1px solid #fff5f5'
                      }}
                   >
-                     <div style={{ height: 'clamp(220px, 40vw, 420px)', borderRadius: 'clamp(18px, 3vw, 40px)', overflow: 'hidden', position: 'relative', background: '#fefafa' }}>
+                     <div style={{ height: 'clamp(180px, 35vw, 380px)', borderRadius: 'clamp(15px, 2vw, 32px)', overflow: 'hidden', position: 'relative', background: '#fefafa' }}>
                         <img 
                           src={resolveImageUrl(p.images?.[0] || p.image)} 
                           style={{ width: '100%', height: '100%', objectFit: 'contain', transition: '0.6s' }} 
@@ -423,13 +424,13 @@ const LandingPage = () => {
                            <ArrowRight size={20} />
                         </div>
                      </div>
-                     <div style={{ padding: 'clamp(1.2rem, 3vw, 2.2rem) 0.8rem 0.5rem' }}>
-                        <p style={{ color: 'var(--primary)', fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '3px', marginBottom: '0.5rem' }}>{p.category}</p>
-                        <h3 style={{ fontSize: 'clamp(1.1rem, 3vw, 1.8rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.2 }}>{p.name}</h3>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.2rem' }}>
-                           <p style={{ color: 'var(--primary)', fontWeight: 900, fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
-                           <div style={{ display: 'flex', gap: '4px' }}>
-                             {[...Array(5)].map((_, i) => <Star key={i} size={12} fill={i < 5 ? "var(--primary)" : "none"} color={i < 5 ? "var(--primary)" : "#eee"} />)}
+                     <div style={{ padding: 'clamp(1rem, 2.5vw, 1.8rem) 0.6rem 0.5rem', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                        <p style={{ color: 'var(--primary)', fontSize: '0.55rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '2.5px', marginBottom: '0.4rem', borderLeft: '2px solid var(--primary)', paddingLeft: '8px' }}>{p.category}</p>
+                        <h3 style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.3, minHeight: '3.2rem', display: 'flex', alignItems: 'center' }}>{p.name}</h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid #f9f0f0' }}>
+                           <p style={{ color: 'var(--primary)', fontWeight: 900, fontSize: 'clamp(0.95rem, 2.2vw, 1.25rem)' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
+                           <div style={{ display: 'flex', gap: '3px' }}>
+                             {[...Array(5)].map((_, i) => <Star key={i} size={11} fill={i < 5 ? "var(--primary)" : "none"} color={i < 5 ? "var(--primary)" : "#eee"} />)}
                            </div>
                         </div>
                      </div>

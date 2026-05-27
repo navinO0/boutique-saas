@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:wght@100..900&display=swap');
 
 :root {
   /* Signature Aesthetic Palette */
@@ -30,7 +30,7 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Roboto', sans-serif;
   background-color: var(--background);
   color: var(--text);
   line-height: 1.6;
@@ -184,35 +184,75 @@ button {
     border-radius: 40px !important;
     margin: 5vh auto !important;
     max-height: 90vh !important;
+    width: 95% !important;
+    max-width: 1200px !important;
     box-shadow: 0 30px 60px rgba(233,163,163,0.3) !important;
   }
 }
 
-/* Responsive Product Grid Overrides */
+@media (max-width: 768px) {
+  .modal-full-screen {
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    width: 100vw !important;
+    bottom: 0 !important;
+    top: 0 !important;
+  }
+}
+
 .amara-product-grid {
+  display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
+  gap: 2.5rem !important;
+}
+
+@media (max-width: 1200px) {
+  .amara-product-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .amara-product-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .amara-product-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
+  }
+  .container {
+    padding: 0 0.8rem !important;
+  }
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 4rem;
 }
 
 @media (max-width: 1024px) {
-  .amara-product-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
+  .featured-grid {
+    gap: 2rem;
   }
 }
 
-@media (max-width: 640px) {
-  .amara-product-grid {
+@media (max-width: 768px) {
+  .featured-grid {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1rem !important;
-  }
-  
-  .responsive-modal-content {
-    flex-direction: column !important;
+    gap: 0.6rem !important;
   }
 }
 
-@media (min-width: 769px) {
-  .responsive-modal-content {
-    flex-direction: row !important;
+@media (max-width: 480px) {
+  .featured-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
   }
 }
 
@@ -1183,10 +1223,15 @@ div:hover > .service-img {
 @media (max-width: 768px) {
   .main-navbar {
     top: auto !important;
-    bottom: 15px !important;
-    padding: 0.8rem 1.2rem !important;
-    border-radius: 24px !important;
-    width: 92% !important;
+    bottom: 12px !important;
+    padding: 0.3rem !important;
+    border-radius: 16px !important;
+    width: calc(100% - 16px) !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
   }
   
   .main-navbar > div > a:first-child {

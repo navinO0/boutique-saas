@@ -81,18 +81,13 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
             variants={containerVariants}
             initial="hidden" animate="visible" exit="exit"
             style={{ 
-              maxWidth: '1200px', 
-              width: '100%', 
-              maxHeight: '92vh',
               background: 'white',
-              borderRadius: '40px',
-              overflowY: 'auto',
               position: 'relative',
-              boxShadow: '0 40px 100px rgba(233,163,163,0.3)',
-              border: '2px solid white'
+              display: 'flex',
+              flexDirection: 'column'
             }}
             onClick={e => e.stopPropagation()}
-            className="hide-scrollbar"
+            className="hide-scrollbar amara-modal modal-full-screen"
           >
             <button onClick={onClose} style={{ position: 'sticky', top: '1.2rem', float: 'right', marginRight: '1.2rem', zIndex: 30, background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '50%', width: '46px', height: '46px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 20px rgba(233,163,163,0.4)', flexShrink: 0 }}>
               <X size={20} />
