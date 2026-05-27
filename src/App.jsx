@@ -41,17 +41,22 @@ const Navbar = ({ onOpenCart }) => {
   const isAdminUser = isAdminLoggedIn;
 
   return (
-    <nav style={{ 
-      position: 'fixed', top: '15px', left: '50%', transform: 'translateX(-50%)', 
-      width: '95%', maxWidth: '1400px', zIndex: 1000, 
-      padding: isScrolled ? '0.6rem 1.5rem' : '1rem 2rem', 
-      transition: '0.4s cubic-bezier(0.19, 1, 0.22, 1)',
-      background: isScrolled ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.45)',
-      backdropFilter: 'blur(22px)',
-      borderRadius: '32px',
-      boxShadow: isScrolled ? '0 12px 35px rgba(233,163,163,0.12)' : 'none',
-      border: '1px solid rgba(255,255,255,0.4)'
-    }}>
+    <nav 
+      className="main-navbar"
+      style={{ 
+        position: 'fixed', 
+        left: '50%', transform: 'translateX(-50%)', 
+        width: '95%', maxWidth: '1400px', zIndex: 1000, 
+        padding: isScrolled ? '0.6rem 1.5rem' : '1rem 2rem', 
+        transition: '0.4s cubic-bezier(0.19, 1, 0.22, 1)',
+        background: isScrolled ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.45)',
+        backdropFilter: 'blur(22px)',
+        borderRadius: '32px',
+        boxShadow: isScrolled ? '0 12px 35px rgba(233,163,163,0.12)' : 'none',
+        border: '1px solid rgba(255,255,255,0.4)',
+        // Dynamic positioning via CSS class for clean media queries
+      }}
+    >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', textDecoration: 'none', minWidth: 0 }}>
            {siteConfig.logo ? (
@@ -96,14 +101,42 @@ const Navbar = ({ onOpenCart }) => {
           </div>
         </div>
 
-        {/* Mobile Icons */}
-        <div style={{ display: 'none', gap: '1rem', alignItems: 'center' }} className="mobile-only">
-          <div style={{ position: 'relative', background: '#fff0f0', padding: '0.6rem', borderRadius: '50%' }} onClick={onOpenCart}>
-            <ShoppingCart size={18} color="var(--primary)" />
+        {/* Mobile Navbar Items */}
+        <div style={{ display: 'none', width: '100%', justifyContent: 'space-between', alignItems: 'center' }} className="mobile-only">
+          <Link to="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)' }}>
+            <motion.div whileTap={{ scale: 0.8 }}><ShoppingBag size={20} color="var(--primary)" /></motion.div>
+            <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' }}>Home</span>
+          </Link>
+          <Link to="/products" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)' }}>
+            <motion.div whileTap={{ scale: 0.8 }}><Sparkles size={20} /></motion.div>
+            <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' }}>Shop</span>
+          </Link>
+          <Link to="/catalog" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)' }}>
+            <motion.div whileTap={{ scale: 0.8 }}><Instagram size={20} /></motion.div>
+            <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' }}>Gallery</span>
+          </Link>
+          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)' }} onClick={onOpenCart}>
+            <motion.div whileTap={{ scale: 0.8 }}>
+              <ShoppingCart size={20} color="var(--primary)" />
+              {cart.length > 0 && (
+                <span style={{ position: 'absolute', top: '-5px', right: '0', background: 'var(--primary)', color: 'white', fontSize: '0.55rem', width: '14px', height: '14px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>
+                  {cart.length}
+                </span>
+              )}
+            </motion.div>
+            <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' }}>Bag</span>
           </div>
-          <button onClick={() => setIsOpen(!isOpen)} style={{ background: 'none', border: 'none', color: 'var(--secondary)' }}>
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {currentUser ? (
+            <Link to={isAdminUser ? "/admin" : "/orders"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)' }}>
+              <motion.div whileTap={{ scale: 0.8 }}><User size={20} /></motion.div>
+              <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' }}>Account</span>
+            </Link>
+          ) : (
+            <Link to="/auth" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)' }}>
+              <motion.div whileTap={{ scale: 0.8 }}><User size={20} /></motion.div>
+              <span style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase' }}>Login</span>
+            </Link>
+          )}
         </div>
       </div>
 

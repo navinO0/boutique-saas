@@ -321,13 +321,18 @@ const ConfigForm = ({ siteConfig, onUpdate }) => {
 };
 
 const AdminDashboard = () => {
-  const { isAdminLoggedIn, logoutAdmin, appointments, allOrders, products, siteConfig, updateSiteConfig } = useShop();
+  const { isAdminLoggedIn, logoutUser, appointments, allOrders, products, siteConfig, updateSiteConfig } = useShop();
   const [activeTab, setActiveTab] = useState('overview');
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isAdminLoggedIn) navigate('/login');
   }, [isAdminLoggedIn, navigate]);
+
+  const handleLogout = () => {
+    logoutUser();
+    navigate('/');
+  };
 
   if (!isAdminLoggedIn) return null;
 
@@ -354,7 +359,7 @@ const AdminDashboard = () => {
           <button onClick={() => setActiveTab('settings')} style={{ padding: '1rem 2rem', background: activeTab === 'settings' ? 'var(--primary)' : 'transparent', color: activeTab === 'settings' ? 'white' : 'var(--primary)', border: 'none', borderRadius: '30px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <Settings size={18} /> Customize
           </button>
-          <button onClick={logoutAdmin} style={{ padding: '1rem 2rem', background: '#fff0f0', color: 'var(--primary)', border: 'none', borderRadius: '30px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <button onClick={handleLogout} style={{ padding: '1rem 2rem', background: '#fff0f0', color: 'var(--primary)', border: 'none', borderRadius: '30px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <LogOut size={18} />
           </button>
         </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Heart, ShoppingBag, MessageSquare, Sparkles, ArrowLeft, Star, Share2 } from 'lucide-react';
+import { X, Heart, ShoppingBag, MessageSquare, Sparkles, ArrowLeft, Star, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
 import { useShop } from '../context/ShopContext';
@@ -75,75 +75,101 @@ const ProductDetailPage = () => {
         <div className="responsive-full-grid">
           {/* Left Column: Images */}
           <div>
-            <motion.div 
-               initial={{ opacity: 0, scale: 0.95 }}
-               animate={{ opacity: 1, scale: 1 }}
-               className="product-main-image-container"
-               style={{ borderRadius: '50px', overflow: 'hidden', position: 'relative', boxShadow: '0 40px 100px rgba(233,163,163,0.2)' }}
-            >
-               <AnimatePresence mode="wait">
-                 <motion.img 
-                   key={currentImageIndex}
-                   initial={{ opacity: 0, x: 20 }}
-                   animate={{ opacity: 1, x: 0 }}
-                   exit={{ opacity: 0, x: -20 }}
-                   src={resolveImageUrl(product.images?.[currentImageIndex] || product.image)} 
-                   onClick={() => setIsFullScreen(true)}
-                   style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '24px', cursor: 'zoom-in' }} 
-                 />
-               </AnimatePresence>
-               <div style={{ 
-                 position: 'absolute', 
-                 top: 'clamp(1rem, 4vw, 2rem)', 
-                 left: 'clamp(1rem, 4vw, 2rem)', 
-                 background: 'white', 
-                 padding: 'clamp(0.4rem, 2vw, 0.6rem) clamp(0.8rem, 3vw, 1.2rem)', 
-                 borderRadius: '25px', 
-                 display: 'flex', 
-                 alignItems: 'center', 
-                 gap: '0.6rem', 
-                 fontWeight: 900, 
-                 color: 'var(--primary)', 
-                 boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                 fontSize: 'clamp(0.65rem, 2vw, 0.8rem)'
-               }}>
-                  <Sparkles size={15} /> Exclusive Masterpiece
-               </div>
-            </motion.div>
+            {/* Desktop View */}
+            <div className="desktop-only" style={{ flexDirection: 'column' }}>
+              <motion.div 
+                 initial={{ opacity: 0, scale: 0.95 }}
+                 animate={{ opacity: 1, scale: 1 }}
+                 className="product-main-image-container"
+                 style={{ borderRadius: '50px', overflow: 'hidden', position: 'relative', boxShadow: '0 40px 100px rgba(233,163,163,0.2)', width: '100%' }}
+              >
+                 <AnimatePresence mode="wait">
+                   <motion.img 
+                     key={currentImageIndex}
+                     initial={{ opacity: 0, x: 20 }}
+                     animate={{ opacity: 1, x: 0 }}
+                     exit={{ opacity: 0, x: -20 }}
+                     src={resolveImageUrl(product.images?.[currentImageIndex] || product.image)} 
+                     onClick={() => setIsFullScreen(true)}
+                     style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '24px', cursor: 'zoom-in' }} 
+                   />
+                 </AnimatePresence>
+                 <div style={{ 
+                   position: 'absolute', 
+                   top: '2rem', 
+                   left: '2rem', 
+                   background: 'white', 
+                   padding: '0.6rem 1.2rem', 
+                   borderRadius: '25px', 
+                   display: 'flex', 
+                   alignItems: 'center', 
+                   gap: '0.6rem', 
+                   fontWeight: 900, 
+                   color: 'var(--primary)', 
+                   boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                   fontSize: '0.8rem'
+                 }}>
+                    <Sparkles size={15} /> Exclusive Masterpiece
+                 </div>
+              </motion.div>
 
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', overflowX: 'auto', paddingBottom: '0.5rem' }} className="hide-scrollbar">
-               {product.images?.map((img, idx) => (
-                 <motion.img 
-                   key={idx} 
-                   whileHover={{ scale: 1.05 }}
-                   src={resolveImageUrl(img)} 
-                   onClick={() => setCurrentImageIndex(idx)}
-                   style={{ width: 'clamp(60px, 15vw, 100px)', height: 'clamp(60px, 15vw, 100px)', borderRadius: '24px', objectFit: 'contain', background: '#fef5f5', cursor: 'pointer', flexShrink: 0, border: idx === currentImageIndex ? '3px solid var(--primary)' : '3px solid transparent', transition: '0.3s' }} 
-                 />
-               ))}
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', overflowX: 'auto', paddingBottom: '0.5rem' }} className="hide-scrollbar">
+                 {product.images?.map((img, idx) => (
+                   <motion.img 
+                     key={idx} 
+                     whileHover={{ scale: 1.05 }}
+                     src={resolveImageUrl(img)} 
+                     onClick={() => setCurrentImageIndex(idx)}
+                     style={{ width: '100px', height: '100px', borderRadius: '24px', objectFit: 'contain', background: '#fef5f5', cursor: 'pointer', flexShrink: 0, border: idx === currentImageIndex ? '3px solid var(--primary)' : '3px solid transparent', transition: '0.3s' }} 
+                   />
+                 ))}
+              </div>
+            </div>
+
+            {/* Mobile/Tablet View */}
+            <div className="mobile-only" style={{ flexDirection: 'column' }}>
+              <div className="mobile-image-carousel" style={{ borderRadius: '40px', background: '#fef5f5', overflow: 'hidden' }}>
+                 {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
+                   <div key={idx} className="carousel-item" style={{ height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                     <img 
+                       src={resolveImageUrl(img)} 
+                       alt="" 
+                       style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                       onClick={() => { setCurrentImageIndex(idx); setIsFullScreen(true); }}
+                     />
+                   </div>
+                 ))}
+              </div>
+              {product.images?.length > 1 && (
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', marginTop: '1.2rem' }}>
+                  {product.images.map((_, idx) => (
+                    <div key={idx} style={{ width: '8px', height: '8px', borderRadius: '50%', background: currentImageIndex === idx ? 'var(--primary)' : '#ddd', transition: '0.3s' }} />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
           {/* Right Column: Details */}
-          <div>
+          <div style={{ padding: '0 0.5rem' }}>
             <motion.div initial="hidden" animate="visible" transition={{ staggerChildren: 0.1 }}>
-              <motion.span variants={itemVariants} style={{ color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '5px', display: 'block', marginBottom: '1rem', fontSize: '0.7rem' }}>{product.category}</motion.span>
-              <motion.h1 variants={itemVariants} className="product-title">{product.name}</motion.h1>
+              <motion.span variants={itemVariants} style={{ color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '5px', display: 'block', marginBottom: '0.5rem', fontSize: '0.7rem' }}>{product.category}</motion.span>
+              <motion.h1 variants={itemVariants} className="product-title" style={{ marginBottom: '0.8rem' }}>{product.name}</motion.h1>
               
-              <motion.div variants={itemVariants} style={{ display: 'flex', alignItems: 'center', gap: 'clamp(1rem, 4vw, 2.5rem)', marginBottom: 'clamp(1.5rem, 4vw, 3.5rem)', flexWrap: 'wrap' }}>
+              <motion.div variants={itemVariants} style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
                 <p className="product-price">₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
                 {product.discount > 0 && (
                    <div style={{ textAlign: 'left' }}>
-                      <p style={{ textDecoration: 'line-through', color: '#bbb', fontSize: '1.2rem' }}>₹{parseFloat(product.price).toLocaleString()}</p>
-                      <p style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.9rem' }}>Save {product.discount}% Today</p>
+                      <p style={{ textDecoration: 'line-through', color: '#bbb', fontSize: '1rem' }}>₹{parseFloat(product.price).toLocaleString()}</p>
+                      <p style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.8rem' }}>Save {product.discount}% Today</p>
                    </div>
                 )}
               </motion.div>
 
-              <motion.p variants={itemVariants} style={{ fontSize: 'clamp(0.82rem, 1.8vw, 0.98rem)', color: '#777', lineHeight: 2, marginBottom: 'clamp(1.5rem, 3vw, 3rem)', letterSpacing: '0.01em' }}>{product.description}</motion.p>
+              <motion.p variants={itemVariants} style={{ fontSize: 'clamp(0.82rem, 1.8vw, 0.98rem)', color: '#777', lineHeight: 1.7, marginBottom: '1.5rem', letterSpacing: '0.01em' }}>{product.description}</motion.p>
 
               {/* Selection Sections */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(1.5rem, 4vw, 3.5rem)', marginBottom: 'clamp(2rem, 5vw, 5rem)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.8rem', marginBottom: '2.5rem' }}>
                 {product.sizes?.length > 0 && (
                   <motion.div variants={itemVariants}>
                     <p style={{ fontWeight: 900, color: 'var(--secondary)', marginBottom: '1.2rem', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.8rem' }}>Tailoring Size:</p>
@@ -284,25 +310,63 @@ const ProductDetailPage = () => {
             <motion.button 
                whileHover={{ scale: 1.1, rotate: 90 }}
                whileTap={{ scale: 0.9 }}
-               style={{ position: 'absolute', top: '2rem', right: '2rem', background: 'white', border: 'none', borderRadius: '50%', width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', cursor: 'pointer' }}
+               style={{ position: 'absolute', top: '2rem', right: '2rem', background: 'white', border: 'none', borderRadius: '50%', width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.3)', cursor: 'pointer', zIndex: 5010 }}
                onClick={(e) => { e.stopPropagation(); setIsFullScreen(false); }}
             >
                <X size={24} color="#000" />
             </motion.button>
             
-            <motion.img 
-              initial={{ scale: 0.9, y: 50, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: 50, opacity: 0 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              src={resolveImageUrl(product.images?.[currentImageIndex] || product.image)} 
-              style={{ maxWidth: '95%', maxHeight: '92vh', objectFit: 'contain', borderRadius: '12px' }} 
+            <div 
+              style={{ 
+                width: '100%', 
+                height: '100%', 
+                overflowX: 'auto', 
+                overflowY: 'hidden', 
+                display: 'flex', 
+                scrollSnapType: 'x mandatory',
+                alignItems: 'center',
+                scrollbarWidth: 'none',
+              }}
+              className="no-scrollbar full-screen-carousel"
               onClick={(e) => e.stopPropagation()}
-            />
+              onScroll={(e) => {
+                const index = Math.round(e.target.scrollLeft / window.innerWidth);
+                if (index !== currentImageIndex) setCurrentImageIndex(index);
+              }}
+            >
+              {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
+                <div 
+                  key={idx} 
+                  style={{ 
+                    minWidth: '100vw', 
+                    height: '100vh', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    scrollSnapAlign: 'center',
+                    padding: '1rem'
+                  }}
+                >
+                  <motion.img 
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    src={resolveImageUrl(img)} 
+                    style={{ 
+                      maxWidth: '100%', 
+                      maxHeight: '90vh', 
+                      objectFit: 'contain', 
+                      borderRadius: '12px',
+                      boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
+                    }} 
+                  />
+                </div>
+              ))}
+            </div>
 
-            <div style={{ position: 'absolute', bottom: '2rem', textAlign: 'center', color: 'white' }}>
+            <div style={{ position: 'absolute', bottom: '3rem', textAlign: 'center', color: 'white', zIndex: 5010, pointerEvents: 'none' }}>
                <p style={{ fontSize: '1.2rem', fontFamily: 'Playfair Display', letterSpacing: '1px' }}>{product.name}</p>
                <p style={{ opacity: 0.6, fontSize: '0.8rem', marginTop: '0.5rem', letterSpacing: '4px', textTransform: 'uppercase' }}>{currentImageIndex + 1} / {product.images?.length || 1}</p>
+               <p style={{ fontSize: '0.65rem', marginTop: '1.5rem', color: 'var(--primary)', fontWeight: 800, letterSpacing: '2px' }}>DRAG TO BROWSE</p>
             </div>
           </motion.div>
         )}

@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useShop } from '../context/ShopContext';
-import { Package, ArrowLeft, Clock, MapPin, ExternalLink, ChevronRight } from 'lucide-react';
+import { Package, ArrowLeft, Clock, MapPin, ExternalLink, ChevronRight, LogOut } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const UserOrdersPage = () => {
-  const { allOrders, currentUser } = useShop();
+  const { allOrders, currentUser, logoutUser } = useShop();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -14,21 +14,46 @@ const UserOrdersPage = () => {
 
   if (!currentUser) return null;
 
+  const handleLogout = () => {
+    logoutUser();
+    navigate('/');
+  };
+
   // Filter orders for the current user
   const userOrders = allOrders.filter(order => order.email === currentUser.email);
 
   return (
-    <div className="container" style={{ padding: '4rem 2rem' }}>
+    <div className="container" style={{ padding: '6rem 2rem' }}>
       <div style={{ marginBottom: '4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <Link to="/products" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#666', marginBottom: '1rem' }}>
             <ArrowLeft size={16} /> Continue Shopping
           </Link>
-          <h2 style={{ fontSize: '3rem' }}>Account History</h2>
+          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontFamily: 'Playfair Display' }}>Account History</h2>
         </div>
-        <div style={{ textAlign: 'right' }}>
-          <p style={{ fontWeight: 600 }}>{currentUser.name}</p>
-          <p style={{ color: '#999', fontSize: '0.9rem' }}>{currentUser.email}</p>
+        <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+          <div>
+            <p style={{ fontWeight: 600 }}>{currentUser.name}</p>
+            <p style={{ color: '#999', fontSize: '0.9rem' }}>{currentUser.email}</p>
+          </div>
+          <button 
+            onClick={handleLogout}
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '0.5rem', 
+              background: '#fff0f0', 
+              color: 'var(--primary)', 
+              padding: '0.6rem 1.2rem', 
+              borderRadius: '20px', 
+              border: 'none', 
+              fontWeight: 800, 
+              fontSize: '0.8rem',
+              cursor: 'pointer'
+            }}
+          >
+            <LogOut size={16} /> Logout
+          </button>
         </div>
       </div>
 

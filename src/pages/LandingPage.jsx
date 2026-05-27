@@ -390,31 +390,51 @@ const LandingPage = () => {
             
             <div className="featured-grid">
                {iconProducts.map((p, idx) => (
-                 <motion.div 
-                    key={p.id} 
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    whileHover={{ y: -15 }}
-                    onClick={() => navigate(`/product/${p.id}`)} 
-                    style={{ cursor: 'pointer', background: 'white', borderRadius: 'clamp(24px, 4vw, 50px)', padding: '1.2rem', boxShadow: '0 30px 60px rgba(233,163,163,0.15)' }}
-                 >
-                    <div style={{ height: 'clamp(220px, 40vw, 500px)', borderRadius: 'clamp(18px, 3vw, 40px)', overflow: 'hidden', position: 'relative' }}>
-                       <img src={resolveImageUrl(p.images?.[0] || p.image)} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '24px', background: '#fef5f5' }} alt={p.name} />
-                       <div style={{ position: 'absolute', top: '1.2rem', right: '1.2rem', background: 'var(--primary)', color: 'white', padding: '0.5rem 1rem', borderRadius: '15px', fontWeight: 900, fontSize: '0.75rem' }}>0{idx + 1}</div>
-                    </div>
-                    <div style={{ padding: 'clamp(1rem, 3vw, 2rem) 0.8rem 0.5rem' }}>
-                       <h3 style={{ fontSize: 'clamp(1.1rem, 3vw, 1.8rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>{p.name}</h3>
-                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.8rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                          <p style={{ color: 'var(--primary)', fontWeight: 900, fontSize: 'clamp(1rem, 2.5vw, 1.2rem)' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
-                          <motion.div whileHover={{ x: 10 }} style={{ color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 800, fontSize: '0.7rem', textTransform: 'uppercase' }}>
-                             View Details <ArrowRight size={14} />
-                          </motion.div>
-                       </div>
-                    </div>
-                 </motion.div>
-               ))}
+                  <motion.div 
+                     key={p.id} 
+                     initial={{ opacity: 0, y: 50 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true }}
+                     transition={{ delay: idx * 0.1 }}
+                     whileHover={{ y: -15 }}
+                     onClick={() => navigate(`/product/${p.id}`)} 
+                     style={{ 
+                        cursor: 'pointer', 
+                        background: 'white', 
+                        borderRadius: 'clamp(24px, 4vw, 50px)', 
+                        padding: '1.2rem', 
+                        boxShadow: '0 25px 60px rgba(233,163,163,0.12)',
+                        border: '1px solid #fff5f5'
+                     }}
+                  >
+                     <div style={{ height: 'clamp(220px, 40vw, 420px)', borderRadius: 'clamp(18px, 3vw, 40px)', overflow: 'hidden', position: 'relative', background: '#fefafa' }}>
+                        <img 
+                          src={resolveImageUrl(p.images?.[0] || p.image)} 
+                          style={{ width: '100%', height: '100%', objectFit: 'contain', transition: '0.6s' }} 
+                          alt={p.name} 
+                          className="product-card-image"
+                        />
+                        <div style={{ position: 'absolute', top: '1.2rem', right: '1.2rem', background: 'var(--primary)', color: 'white', padding: '0.4rem 1rem', borderRadius: '15px', fontWeight: 900, fontSize: '0.7rem', display: 'flex', alignItems: 'center', gap: '0.4rem', boxShadow: '0 8px 20px rgba(233,163,163,0.3)' }}>
+                           <Sparkles size={12} /> ICON {idx + 1}
+                        </div>
+
+                        {/* Quick View Icon */}
+                        <div style={{ position: 'absolute', bottom: '1.2rem', right: '1.2rem', background: 'white', color: 'var(--primary)', width: '45px', height: '45px', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }}>
+                           <ArrowRight size={20} />
+                        </div>
+                     </div>
+                     <div style={{ padding: 'clamp(1.2rem, 3vw, 2.2rem) 0.8rem 0.5rem' }}>
+                        <p style={{ color: 'var(--primary)', fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '3px', marginBottom: '0.5rem' }}>{p.category}</p>
+                        <h3 style={{ fontSize: 'clamp(1.1rem, 3vw, 1.8rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.2 }}>{p.name}</h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.2rem' }}>
+                           <p style={{ color: 'var(--primary)', fontWeight: 900, fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
+                           <div style={{ display: 'flex', gap: '4px' }}>
+                             {[...Array(5)].map((_, i) => <Star key={i} size={12} fill={i < 5 ? "var(--primary)" : "none"} color={i < 5 ? "var(--primary)" : "#eee"} />)}
+                           </div>
+                        </div>
+                     </div>
+                  </motion.div>
+                ))}
             </div>
          </div>
       </section>

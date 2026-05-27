@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, ArrowLeft, Filter, Heart, Search, ChevronLeft, ChevronRight, Sparkles, Edit2, Trash2, X } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, Filter, Heart, Search, ChevronLeft, ChevronRight, Sparkles, Edit2, Trash2, X, Star } from 'lucide-react';
 import { Link, useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { BOUTIQUE_CONFIG } from '../data/config';
@@ -203,72 +203,95 @@ const ProductList = () => {
                 key={product.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -10 }}
+                whileHover={{ y: -8 }}
                 onClick={() => handleProductClick(product.id)}
-                style={{ position: 'relative', cursor: 'pointer' }}
+                style={{ 
+                  position: 'relative', 
+                  cursor: 'pointer',
+                  background: 'white',
+                  borderRadius: '35px',
+                  padding: '0.8rem',
+                  border: '1px solid #fff0f0',
+                  boxShadow: '0 15px 35px rgba(233,163,163,0.05)',
+                  transition: 'all 0.4s cubic-bezier(0.19, 1, 0.22, 1)'
+                }}
               >
-                <div style={{ position: 'absolute', top: '0.8rem', right: '0.8rem', zIndex: 10, display: 'flex', gap: '0.5rem' }}>
-                  {isAdminLoggedIn && (
-                    <>
+                <div style={{ position: 'relative', height: 'clamp(200px, 40vw, 360px)', overflow: 'hidden', borderRadius: '28px', background: '#fefafa' }}>
+                  <img 
+                    src={resolveImageUrl(product.images?.[0] || product.image)} 
+                    alt={product.name} 
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', transition: '0.6s' }} 
+                    className="product-card-image"
+                  />
+                  
+                  {/* Actions Overlay */}
+                  <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 10, display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); toggleWishlist(product.id); }}
+                      style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(10px)', border: 'none', width: '36px', height: '36px', borderRadius: '50%', boxShadow: '0 5px 15px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    >
+                      <Heart size={16} fill={wishlist.includes(product.id) ? 'var(--primary)' : 'none'} color={wishlist.includes(product.id) ? 'var(--primary)' : '#ffccd2'} />
+                    </button>
+                    {isAdminLoggedIn && (
                       <button 
                         onClick={(e) => { e.stopPropagation(); setEditingProduct(product); setIsEditModalOpen(true); }}
-                        style={{ background: 'white', border: 'none', width: '38px', height: '38px', borderRadius: '50%', boxShadow: '0 8px 20px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--secondary)' }}
+                        style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(10px)', border: 'none', width: '36px', height: '36px', borderRadius: '50%', boxShadow: '0 5px 15px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--secondary)' }}
                       >
-                        <Edit2 size={16} />
+                        <Edit2 size={15} />
                       </button>
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); deleteProduct(product.id); }}
-                        style={{ background: 'white', border: 'none', width: '38px', height: '38px', borderRadius: '50%', boxShadow: '0 8px 20px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)' }}
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </>
+                    )}
+                  </div>
+
+                  {product.stock === 0 && (
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.4)', backdropFilter: 'blur(2px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 5 }}>
+                      <span style={{ background: 'white', padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 800, fontSize: '0.7rem', color: '#999', textTransform: 'uppercase', letterSpacing: '1px' }}>Sold Out</span>
+                    </div>
                   )}
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); toggleWishlist(product.id); }}
-                    style={{ background: 'white', border: 'none', width: '38px', height: '38px', borderRadius: '50%', boxShadow: '0 6px 16px rgba(233,163,163,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+
+                  {/* Add to Bag on Hover (Desktop) / Visible Icon (Mobile) */}
+                  <motion.button 
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={(e) => { e.stopPropagation(); addToCart(product); }}
+                    disabled={product.stock === 0}
+                    style={{ 
+                      position: 'absolute', 
+                      bottom: '1rem', 
+                      right: '1rem', 
+                      background: 'var(--primary)', 
+                      color: 'white', 
+                      width: '42px', 
+                      height: '42px', 
+                      borderRadius: '16px', 
+                      border: 'none', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      boxShadow: '0 8px 20px rgba(233,163,163,0.3)',
+                      zIndex: 10,
+                      opacity: product.stock === 0 ? 0.5 : 1
+                    }}
                   >
-                    <Heart size={17} fill={wishlist.includes(product.id) ? 'var(--primary)' : 'none'} color={wishlist.includes(product.id) ? 'var(--primary)' : '#ffccd2'} />
-                  </button>
+                    <ShoppingBag size={18} />
+                  </motion.button>
                 </div>
 
-                <div style={{ height: 'clamp(220px, 45vw, 400px)', overflow: 'hidden', borderRadius: '30px', marginBottom: '1.2rem', background: '#fef5f5' }}>
-                  <img src={resolveImageUrl(product.images?.[0] || product.image)} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '24px' }} />
-                </div>
-
-                <div style={{ textAlign: 'center', padding: '0 0.8rem' }}>
-                  <p style={{ color: 'var(--primary)', fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2.5px', marginBottom: '0.4rem' }}>{product.category}</p>
-                  <h3 style={{ fontSize: '1.05rem', color: 'var(--secondary)', marginBottom: '0.4rem', fontFamily: 'Playfair Display' }}>{product.name}</h3>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.7rem' }}>
-                    <p style={{ fontWeight: 800, color: 'var(--primary)', fontSize: '1rem' }}>₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
+                <div style={{ padding: '1.2rem 0.5rem 0.8rem', textAlign: 'left' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
+                    <div>
+                      <p style={{ color: 'var(--primary)', fontSize: '0.6rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.3rem' }}>{product.category}</p>
+                      <h3 style={{ fontSize: '1rem', color: 'var(--secondary)', fontFamily: 'Playfair Display', fontWeight: 700 }}>{product.name}</h3>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <p style={{ fontWeight: 900, color: 'var(--primary)', fontSize: '1.1rem' }}>₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
+                    <div style={{ display: 'flex', gap: '4px' }}>
+                      {[...Array(5)].map((_, i) => <Star key={i} size={10} fill={i < 4 ? "var(--primary)" : "none"} color={i < 4 ? "var(--primary)" : "#eee"} />)}
+                    </div>
                   </div>
                 </div>
-
-                <button 
-                  onClick={(e) => { e.stopPropagation(); addToCart(product); }}
-                  disabled={product.stock === 0}
-                  className="add-to-bag-btn"
-                  style={{ 
-                    width: '100%', 
-                    marginTop: '1.2rem', 
-                    padding: '0.85rem', 
-                    background: product.stock === 0 ? '#f0f0f0' : 'var(--primary)', 
-                    color: 'white', 
-                    fontWeight: 700,
-                    borderRadius: '20px',
-                    border: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.6rem',
-                    fontSize: '0.88rem',
-                    cursor: product.stock === 0 ? 'not-allowed' : 'pointer'
-                  }}
-                >
-                  <ShoppingBag size={17} /> {product.stock === 0 ? 'Sold Out' : 'Add to Bag'}
-                </button>
               </motion.div>
-            ))}
+             ))}
           </div>
 
           {/* Pagination */}

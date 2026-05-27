@@ -135,7 +135,23 @@ const CatalogPage = () => {
        {isAdminLoggedIn && (
          <button 
            onClick={handleAddNew}
-           style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 2000, background: 'var(--secondary)', color: 'white', padding: '1.2rem 2.5rem', borderRadius: '40px', border: 'none', fontWeight: 800, boxShadow: '0 10px 30px rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}
+           className="add-new-work-fixed"
+           style={{ 
+             position: 'fixed', 
+             bottom: '2rem', 
+             right: '2rem', 
+             zIndex: 2000, 
+             background: 'var(--secondary)', 
+             color: 'white', 
+             padding: '1.2rem 2.5rem', 
+             borderRadius: '40px', 
+             border: 'none', 
+             fontWeight: 800, 
+             boxShadow: '0 10px 30px rgba(0,0,0,0.2)', 
+             display: 'flex', 
+             alignItems: 'center', 
+             gap: '0.8rem' 
+           }}
          >
            <Plus size={24} /> Add New Work
          </button>
