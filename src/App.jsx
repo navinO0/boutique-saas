@@ -101,39 +101,39 @@ const Navbar = ({ onOpenCart }) => {
         </div>
 
         {/* Mobile Navbar Items */}
-        <div style={{ display: 'none', width: '100%', justifyContent: 'space-around', alignItems: 'center', padding: '0.3rem 0 calc(0.6rem + env(safe-area-inset-bottom))' }} className="mobile-only">
-          <Link to="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1 }}>
+        <div style={{ display: 'none', width: '100%', justifyContent: 'space-around', alignItems: 'center', padding: '0.3rem 0.2rem calc(0.6rem + env(safe-area-inset-bottom))', overflow: 'hidden' }} className="mobile-only">
+          <Link to="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
             <motion.div whileTap={{ scale: 0.8 }}><ShoppingBag size={20} color="var(--primary)" /></motion.div>
-            <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Home</span>
+            <span style={{ fontSize: '0.55rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Home</span>
           </Link>
-          <Link to="/products" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1 }}>
+          <Link to="/products" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
             <motion.div whileTap={{ scale: 0.8 }}><Sparkles size={20} /></motion.div>
-            <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Shop</span>
+            <span style={{ fontSize: '0.55rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Shop</span>
           </Link>
-          <Link to="/catalog" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1 }}>
+          <Link to="/catalog" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
             <motion.div whileTap={{ scale: 0.8 }}><Instagram size={20} /></motion.div>
-            <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Gallery</span>
+            <span style={{ fontSize: '0.55rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Gallery</span>
           </Link>
-          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, cursor: 'pointer' }} onClick={onOpenCart}>
+          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, minWidth: 0, cursor: 'pointer' }} onClick={onOpenCart}>
             <motion.div whileTap={{ scale: 0.8 }}>
               <ShoppingCart size={20} color="var(--primary)" />
               {cart.length > 0 && (
-                <span style={{ position: 'absolute', top: '-5px', right: '15%', background: 'var(--primary)', color: 'white', fontSize: '0.55rem', width: '14px', height: '14px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
+                <span style={{ position: 'absolute', top: '-5px', right: '5%', background: 'var(--primary)', color: 'white', fontSize: '0.5rem', width: '13px', height: '13px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
                   {cart.length}
                 </span>
               )}
             </motion.div>
-            <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Bag</span>
+            <span style={{ fontSize: '0.55rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Bag</span>
           </div>
           {currentUser ? (
-            <Link to={isAdminUser ? "/admin" : "/orders"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1 }}>
+            <Link to={isAdminUser ? "/admin" : "/orders"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
               <motion.div whileTap={{ scale: 0.8 }}><User size={20} /></motion.div>
-              <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Account</span>
+              <span style={{ fontSize: '0.55rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Account</span>
             </Link>
           ) : (
-            <Link to="/auth" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1 }}>
+            <Link to="/auth" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
               <motion.div whileTap={{ scale: 0.8 }}><User size={20} /></motion.div>
-              <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Login</span>
+              <span style={{ fontSize: '0.55rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Login</span>
             </Link>
           )}
         </div>

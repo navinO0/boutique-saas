@@ -208,14 +208,14 @@ const ProductList = () => {
                   position: 'relative', 
                   cursor: 'pointer',
                   background: 'white',
-                  borderRadius: '28px',
-                  padding: '0.6rem',
+                  borderRadius: '20px',
+                  padding: '0.4rem',
                   border: '1px solid #fff0f0',
-                  boxShadow: '0 10px 25px rgba(233,163,163,0.05)',
+                  boxShadow: '0 8px 25px rgba(233,163,163,0.05)',
                   transition: 'all 0.4s cubic-bezier(0.19, 1, 0.22, 1)'
                 }}
               >
-                <div style={{ position: 'relative', height: 'clamp(160px, 35vw, 300px)', overflow: 'hidden', borderRadius: '22px', background: '#fefafa' }}>
+                <div style={{ position: 'relative', height: 'clamp(140px, 32vw, 300px)', overflow: 'hidden', borderRadius: '16px', background: '#fefafa' }}>
                   <img 
                     src={resolveImageUrl(product.images?.[0] || product.image)} 
                     alt={product.name} 
@@ -224,19 +224,19 @@ const ProductList = () => {
                   />
                   
                   {/* Actions Overlay */}
-                  <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 10, display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                  <div style={{ position: 'absolute', top: '0.6rem', right: '0.6rem', zIndex: 10, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
                     <button 
                       onClick={(e) => { e.stopPropagation(); toggleWishlist(product.id); }}
-                      style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(10px)', border: 'none', width: '36px', height: '36px', borderRadius: '50%', boxShadow: '0 5px 15px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(10px)', border: 'none', width: '30px', height: '30px', borderRadius: '50%', boxShadow: '0 5px 15px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     >
-                      <Heart size={16} fill={wishlist.includes(product.id) ? 'var(--primary)' : 'none'} color={wishlist.includes(product.id) ? 'var(--primary)' : '#ffccd2'} />
+                      <Heart size={14} fill={wishlist.includes(product.id) ? 'var(--primary)' : 'none'} color={wishlist.includes(product.id) ? 'var(--primary)' : '#ffccd2'} />
                     </button>
                     {isAdminLoggedIn && (
                       <button 
                         onClick={(e) => { e.stopPropagation(); setEditingProduct(product); setIsEditModalOpen(true); }}
-                        style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(10px)', border: 'none', width: '36px', height: '36px', borderRadius: '50%', boxShadow: '0 5px 15px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--secondary)' }}
+                        style={{ background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(10px)', border: 'none', width: '30px', height: '30px', borderRadius: '50%', boxShadow: '0 5px 15px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--secondary)' }}
                       >
-                        <Edit2 size={15} />
+                        <Edit2 size={13} />
                       </button>
                     )}
                   </div>
@@ -255,35 +255,35 @@ const ProductList = () => {
                     disabled={product.stock === 0}
                     style={{ 
                       position: 'absolute', 
-                      bottom: '1rem', 
-                      right: '1rem', 
+                      bottom: '0.6rem', 
+                      right: '0.6rem', 
                       background: 'var(--primary)', 
                       color: 'white', 
-                      width: '42px', 
-                      height: '42px', 
-                      borderRadius: '16px', 
+                      width: '32px', 
+                      height: '32px', 
+                      borderRadius: '12px', 
                       border: 'none', 
                       display: 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'center',
-                      boxShadow: '0 8px 20px rgba(233,163,163,0.3)',
+                      boxShadow: '0 5px 15px rgba(233,163,163,0.3)',
                       zIndex: 10,
                       opacity: product.stock === 0 ? 0.5 : 1
                     }}
                   >
-                    <ShoppingBag size={18} />
+                    <ShoppingBag size={14} />
                   </motion.button>
                 </div>
 
-                <div style={{ padding: '1rem 0.5rem 0.6rem', textAlign: 'left', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '0.6rem' }}>
-                    <p style={{ color: 'var(--primary)', fontSize: '0.52rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '0.3rem', opacity: 0.8 }}>{product.category}</p>
-                    <h3 style={{ fontSize: '0.88rem', color: 'var(--secondary)', fontFamily: 'Playfair Display', fontWeight: 700, lineHeight: 1.3, minHeight: '2.5rem', display: 'flex', alignItems: 'center' }}>{product.name}</h3>
+                <div style={{ padding: '0.8rem 0.35rem 0.45rem', textAlign: 'left', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '0.4rem' }}>
+                    <p style={{ color: 'var(--primary)', fontSize: '0.48rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.2rem', opacity: 0.8 }}>{product.category}</p>
+                    <h3 style={{ fontSize: '0.82rem', color: 'var(--secondary)', fontFamily: 'Playfair Display', fontWeight: 700, lineHeight: 1.3, minHeight: '2.1rem', display: 'flex', alignItems: 'center' }}>{product.name}</h3>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '0.8rem', borderTop: '1px solid #f9f0f0' }}>
                     <p style={{ fontWeight: 900, color: 'var(--primary)', fontSize: '1rem' }}>₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
-                    <div style={{ display: 'flex', gap: '3px' }}>
-                      {[...Array(5)].map((_, i) => <Star key={i} size={9} fill={i < 4 ? "var(--primary)" : "none"} color={i < 4 ? "var(--primary)" : "#eee"} />)}
+                    <div style={{ display: 'flex', gap: '2px' }}>
+                      {[...Array(5)].map((_, i) => <Star key={i} size={8} fill={i < 4 ? "var(--primary)" : "none"} color={i < 4 ? "var(--primary)" : "#eee"} />)}
                     </div>
                   </div>
                 </div>

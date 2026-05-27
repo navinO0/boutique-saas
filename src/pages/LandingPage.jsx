@@ -91,7 +91,7 @@ const Hero = ({ onBook }) => {
     padding: 'clamp(2.5rem, 6vw, 5rem)',
     maxWidth: '800px',
     position: 'relative',
-    marginLeft: window.innerWidth < 768 ? '0' : '-2rem'
+    marginLeft: 0
   };
 
   return (
@@ -272,7 +272,8 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
             fontSize: '25vw', fontWeight: 900, color: 'var(--primary)', opacity: 0.03, 
             whiteSpace: 'nowrap', zIndex: 0, fontFamily: 'Playfair Display', pointerEvents: 'none',
             userSelect: 'none',
-            maxWidth: '100vw'
+            maxWidth: '100vw',
+            overflow: 'hidden'
           }}
        >
           ATELIER ATELIER ATELIER

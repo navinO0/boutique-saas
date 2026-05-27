@@ -29,12 +29,19 @@
   box-sizing: border-box;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden !important;
+  position: relative;
+}
+
 body {
   font-family: 'Roboto', sans-serif;
   background-color: var(--background);
   color: var(--text);
   line-height: 1.6;
-  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -223,10 +230,10 @@ button {
 @media (max-width: 480px) {
   .amara-product-grid {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.6rem !important;
+    gap: 0.5rem !important;
   }
   .container {
-    padding: 0 0.8rem !important;
+    padding: 0 0.5rem !important;
   }
 }
 
@@ -245,7 +252,7 @@ button {
 @media (max-width: 768px) {
   .featured-grid {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.6rem !important;
+    gap: 0.5rem !important;
   }
 }
 
@@ -1224,12 +1231,16 @@ div:hover > .service-img {
   .main-navbar {
     top: auto !important;
     bottom: 12px !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
     padding: 0.3rem !important;
     border-radius: 16px !important;
-    width: calc(100% - 16px) !important;
+    width: calc(100% - 32px) !important;
+    max-width: 500px !important;
     background: rgba(255, 255, 255, 0.25) !important;
-    backdrop-filter: blur(20px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
     box-shadow: 0 4px 20px rgba(0,0,0,0.03) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
   }
