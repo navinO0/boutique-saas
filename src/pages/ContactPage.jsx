@@ -9,7 +9,7 @@ const ContactPage = () => {
     <div className="container" style={{ padding: 'clamp(5rem, 10vw, 8rem) 1rem 4rem' }}>
       <div style={{ textAlign: 'center', marginBottom: 'clamp(2.5rem, 6vw, 5rem)' }}>
         <h1 style={{ fontSize: 'clamp(2.2rem, 6vw, 4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '0.8rem' }}>
-          Connect with <span style={{ color: 'var(--primary)' }}>Amara</span> ✨
+          Connect with <span style={{ color: 'var(--primary)' }}>Amara</span>
         </h1>
         <p style={{ fontSize: 'clamp(0.85rem, 1.8vw, 1rem)', color: '#777', maxWidth: '520px', margin: '0 auto', lineHeight: 1.7 }}>
           Every dream outfit begins with a conversation. Let's create something magical together.
@@ -24,7 +24,7 @@ const ContactPage = () => {
             { icon: Mail, label: 'Email Us', value: 'hello@amaraboutique.com' },
             { icon: MapPin, label: 'Visit Us', value: '123 Elegance St, Bangalore' }
           ].map((item, i) => (
-            <motion.div 
+            <motion.div
               key={i}
               whileHover={{ y: -4 }}
               style={{ background: 'white', padding: '1.5rem', borderRadius: '24px', boxShadow: '0 12px 32px rgba(233,163,163,0.08)', border: '1px solid #fff0f0' }}
@@ -45,7 +45,7 @@ const ContactPage = () => {
         {/* Form Column */}
         <div style={{ background: 'white', padding: 'clamp(1.5rem, 4vw, 2.5rem)', borderRadius: '32px', boxShadow: '0 24px 56px rgba(233,163,163,0.12)', position: 'relative', overflow: 'hidden' }}>
           <Sparkles size={100} style={{ position: 'absolute', top: '-10px', right: '-10px', opacity: 0.04, color: 'var(--primary)' }} />
-          
+
           <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} onSubmit={(e) => e.preventDefault()}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>

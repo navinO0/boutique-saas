@@ -30,12 +30,12 @@ const CartSidebar = ({ isOpen, onClose }) => {
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={onClose}
             style={{ position: 'fixed', inset: 0, background: 'rgba(233,163,163,0.3)', backdropFilter: 'blur(5px)', zIndex: 3000 }}
           />
-          <motion.div 
+          <motion.div
             initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             style={{ position: 'fixed', right: 0, top: 0, height: '100vh', width: '100%', maxWidth: '440px', background: 'white', zIndex: 3001, display: 'flex', flexDirection: 'column', padding: 'clamp(1.2rem, 4vw, 2.2rem)', borderRadius: '32px 0 0 32px', boxShadow: '-24px 0 64px rgba(233,163,163,0.12)' }}
@@ -52,7 +52,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
               {cart.length === 0 ? (
                 <div style={{ textAlign: 'center', marginTop: '8rem', color: 'var(--text-light)' }}>
                   <Heart size={60} fill="var(--soft-pink)" color="var(--primary)" style={{ opacity: 0.3, marginBottom: '2rem' }} />
-                  <p>Your bag is feeling lonely... Let's add some magic! ✨</p>
+                  <p>Your bag is feeling lonely... Let's add some magic!  </p>
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
@@ -97,11 +97,11 @@ const CartSidebar = ({ isOpen, onClose }) => {
                   <span style={{ fontSize: '1rem', fontWeight: 700, color: '#666' }}>Grand Total</span>
                   <span style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--primary)' }}>₹{total.toLocaleString()}</span>
                 </div>
-                <button 
+                <button
                   onClick={handleCheckout}
                   style={{ width: '100%', padding: '1rem', background: 'var(--secondary)', color: 'white', fontWeight: 700, borderRadius: '22px', boxShadow: '0 12px 28px rgba(74,55,55,0.18)', cursor: 'pointer', border: 'none', fontSize: '0.95rem' }}
                 >
-                  Confirm Orders ✨
+                  Confirm Orders
                 </button>
               </div>
             )}

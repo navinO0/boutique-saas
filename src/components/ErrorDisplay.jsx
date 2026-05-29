@@ -4,11 +4,11 @@ import { RefreshCw, CloudOff, Sparkles } from 'lucide-react';
 
 const ErrorDisplay = ({ message = "The magic was interrupted...", onRetry }) => {
   return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      justifyContent: 'center', 
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
       padding: '6rem 2rem',
       minHeight: '400px',
       textAlign: 'center'
@@ -52,23 +52,23 @@ const ErrorDisplay = ({ message = "The magic was interrupted...", onRetry }) => 
         />
       </div>
 
-      <h2 style={{ 
-        fontFamily: 'Playfair Display', 
-        fontSize: '2rem', 
+      <h2 style={{
+        fontFamily: 'Playfair Display',
+        fontSize: '2rem',
         color: 'var(--secondary)',
         marginBottom: '1rem'
       }}>
         {message}
       </h2>
-      
-      <p style={{ 
-        color: '#999', 
-        maxWidth: '400px', 
-        lineHeight: 1.8, 
+
+      <p style={{
+        color: '#999',
+        maxWidth: '400px',
+        lineHeight: 1.8,
         marginBottom: '2.5rem',
         fontSize: '0.95rem'
       }}>
-        Regrettably, even the finest dreams encounter a brief pause. May we suggest refreshing the page to invite the inspiration back? ✨
+        Regrettably, even the finest dreams encounter a brief pause. May we suggest refreshing the page to invite the inspiration back?
       </p>
 
       {onRetry && (
@@ -76,16 +76,16 @@ const ErrorDisplay = ({ message = "The magic was interrupted...", onRetry }) => 
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={onRetry}
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '0.8rem', 
-            padding: '1rem 2.5rem', 
-            background: 'var(--secondary)', 
-            color: 'white', 
-            border: 'none', 
-            borderRadius: '30px', 
-            fontWeight: 700, 
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.8rem',
+            padding: '1rem 2.5rem',
+            background: 'var(--secondary)',
+            color: 'white',
+            border: 'none',
+            borderRadius: '30px',
+            fontWeight: 700,
             cursor: 'pointer',
             boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
           }}

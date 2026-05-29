@@ -42,4 +42,4 @@ add_item "Midnight Magnolia Gown" "Evening Wear" "https://images.unsplash.com/ph
 add_item "Crimson Heritage Saree Blouse" "Handwork" "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1200" "Fine aari work on heritage raw silk. Each bead was hand-picked to match the customer's ancestral necklace."
 add_item "Ethereal Beauty Artistry" "Beauty" "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1200" "Custom beauty curation and artistry for the 'Modern Goddess' collection. Focusing on glass-skin aesthetics and artisanal pigments."
 
-echo "Seeding complete! ✨"
+echo "Seeding complete!  "

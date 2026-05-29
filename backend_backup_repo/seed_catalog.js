@@ -37,10 +37,10 @@ async function seed() {
       email: 'admin@amara.com',
       password: 'password123'
     });
-    
+
     const token = loginResp.data.token;
     console.log('Login successful.');
-    
+
     for (const item of catalogItems) {
       await axios.post(`${API_BASE_URL}/catalog`, item, {
         headers: {
@@ -50,7 +50,7 @@ async function seed() {
       });
       console.log(`Added: ${item.name}`);
     }
-    console.log('Seeding complete! ✨');
+    console.log('Seeding complete!  ');
   } catch (error) {
     if (error.response) {
       console.error('Seeding failed with response:', error.response.status, error.response.data);
