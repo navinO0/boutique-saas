@@ -1,2 +1,24 @@
+# Main node_modules
 node_modules/
+
+# Frontend builds
 dist/
+build/
+
+# Backend logs/temp
+backend/logs/
+backend/temp/
+
+# Environment files
+.env
+.env.local
+frontend/.env
+backend/.env
+
+# Dependencies (covered by subdirectories but good to have)
+**/node_modules/
+**/dist/
+
+# OS files
+.DS_Store
+Thumbs.db

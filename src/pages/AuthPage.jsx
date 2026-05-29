@@ -88,8 +88,26 @@ const AuthPage = () => {
 
           {error && <p style={{ color: '#dc2626', fontSize: '0.85rem', marginBottom: '1.5rem', textAlign: 'center' }}>{error}</p>}
 
-          <button type="submit" style={{ width: '100%', padding: '1rem', background: 'var(--secondary)', color: 'white', fontWeight: 600, borderRadius: '8px', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-            {isLogin ? 'Login' : 'Create Account'} <ArrowRight size={18} />
+          <button 
+            type="submit" 
+            disabled={isLoading}
+            style={{ 
+              width: '100%', 
+              padding: '1rem', 
+              background: 'var(--secondary)', 
+              color: 'white', 
+              fontWeight: 600, 
+              borderRadius: '8px', 
+              border: 'none', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: '0.5rem', 
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              opacity: isLoading ? 0.7 : 1
+            }}
+          >
+            {isLoading ? 'Verifying...' : (isLogin ? 'Login' : 'Create Account')} {!isLoading && <ArrowRight size={18} />}
           </button>
         </form>
 

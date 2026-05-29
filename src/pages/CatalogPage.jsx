@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useShop } from '../context/ShopContext';
-import { Calendar, Phone, Heart, Sparkles, X, Share2, Scissors, Quote, Plus, Edit2, Trash2, MessageSquare, ArrowRight } from 'lucide-react';
+import { Calendar, Phone, Heart, Sparkles, X, Share2, Scissors, Quote, Plus, Edit2, Trash2, MessageSquare, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { useSmoothScroll } from '../hooks/useSmoothScroll';
 import EditCatalogModal from '../components/EditCatalogModal';
@@ -10,6 +10,14 @@ import { resolveImageUrl } from '../utils/imageUtils';
 const CatalogItemModal = ({ isOpen, onClose, item }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const carouselRef = React.useRef(null);
+  const fullScreenCarouselRef = React.useRef(null);
+
+  useEffect(() => {
+    if (isFullScreen && fullScreenCarouselRef.current) {
+      fullScreenCarouselRef.current.scrollTo({ left: currentIdx * window.innerWidth, behavior: 'instant' });
+    }
+  }, [isFullScreen]);
 
   if (!item || !isOpen) return null;
 
@@ -57,6 +65,7 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
             <div style={{ position: 'relative', width: '100%', background: '#fffcfc', flexShrink: 0 }}>
               {/* Mobile/Tablet Scrollable Carousel */}
               <div
+                ref={carouselRef}
                 className="mobile-image-carousel"
                 onScroll={(e) => {
                   const index = Math.round(e.target.scrollLeft / e.target.clientWidth);
@@ -68,7 +77,7 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
                     <img
                       src={resolveImageUrl(img)}
                       onClick={() => setIsFullScreen(true)}
-                      style={{ width: '100%', height: '100%', objectFit: 'contain', cursor: 'zoom-in' }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'zoom-in' }}
                       alt=""
                     />
                   </div>
@@ -80,8 +89,9 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
                 <div className="desktop-only">
                   <button 
                     onClick={() => {
-                      const container = document.querySelector('.mobile-image-carousel');
-                      container.scrollLeft -= container.clientWidth;
+                      if (carouselRef.current) {
+                        carouselRef.current.scrollLeft -= carouselRef.current.clientWidth;
+                      }
                     }}
                     style={{ position: 'absolute', left: '1.5rem', top: '50%', transform: 'translateY(-50%)', background: 'white', border: 'none', borderRadius: '50%', width: '45px', height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', cursor: 'pointer', zIndex: 10 }}
                   >
@@ -89,12 +99,14 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
                   </button>
                   <button 
                     onClick={() => {
-                      const container = document.querySelector('.mobile-image-carousel');
-                      const maxScroll = container.scrollWidth - container.clientWidth;
-                      if (container.scrollLeft >= maxScroll - 10) {
-                        container.scrollLeft = 0; // Infinite loop
-                      } else {
-                        container.scrollLeft += container.clientWidth;
+                      if (carouselRef.current) {
+                        const container = carouselRef.current;
+                        const maxScroll = container.scrollWidth - container.clientWidth;
+                        if (container.scrollLeft >= maxScroll - 10) {
+                          container.scrollLeft = 0; // Infinite loop
+                        } else {
+                          container.scrollLeft += container.clientWidth;
+                        }
                       }
                     }}
                     style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', background: 'white', border: 'none', borderRadius: '50%', width: '45px', height: '45px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', cursor: 'pointer', zIndex: 10 }}
@@ -190,6 +202,7 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
               </button>
 
               <div
+                ref={fullScreenCarouselRef}
                 className="no-scrollbar"
                 style={{ width: '100%', height: '100%', overflowX: 'auto', display: 'flex', scrollSnapType: 'x mandatory' }}
                 onScroll={(e) => {
@@ -203,6 +216,35 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
                   </div>
                 ))}
               </div>
+
+              {item.images.length > 1 && (
+                <>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (fullScreenCarouselRef.current) {
+                        const newIdx = (currentIdx - 1 + item.images.length) % item.images.length;
+                        fullScreenCarouselRef.current.scrollTo({ left: newIdx * window.innerWidth, behavior: 'smooth' });
+                      }
+                    }}
+                    style={{ position: 'absolute', left: '2rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', width: '55px', height: '55px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 6010, backdropFilter: 'blur(10px)' }}
+                  >
+                    <ChevronLeft size={30} />
+                  </button>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (fullScreenCarouselRef.current) {
+                        const newIdx = (currentIdx + 1) % item.images.length;
+                        fullScreenCarouselRef.current.scrollTo({ left: newIdx * window.innerWidth, behavior: 'smooth' });
+                      }
+                    }}
+                    style={{ position: 'absolute', right: '2rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', border: 'none', color: 'white', width: '55px', height: '55px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 6010, backdropFilter: 'blur(10px)' }}
+                  >
+                    <ChevronRight size={30} />
+                  </button>
+                </>
+              )}
 
               <div style={{ position: 'absolute', bottom: '3rem', color: 'white', textAlign: 'center', width: '100%' }}>
                 <p style={{ fontSize: '0.7rem', letterSpacing: '4px', textTransform: 'uppercase', opacity: 0.6 }}>{currentIdx + 1} / {item.images.length}</p>

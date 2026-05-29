@@ -23,6 +23,8 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
   const [colorInput, setColorInput] = useState('');
   const [sizeInput, setSizeInput] = useState('');
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     if (product) {
       setFormData({
@@ -48,21 +50,28 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
     }
   }, [product, isOpen]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.images.length === 0) {
       alert("Please add at least one image of your beautiful work!  ");
       return;
     }
-    onSave({
-      ...formData,
-      price: Number(formData.price),
-      discount: Number(formData.discount || 0),
-      discountedPrice: Number(formData.price) * (1 - (Number(formData.discount || 0) / 100)),
-      stock: Number(formData.stock),
-      image: formData.images[0]
-    });
-    onClose();
+    setIsSubmitting(true);
+    try {
+      await onSave({
+        ...formData,
+        price: Number(formData.price),
+        discount: Number(formData.discount || 0),
+        discountedPrice: Number(formData.price) * (1 - (Number(formData.discount || 0) / 100)),
+        stock: Number(formData.stock),
+        image: formData.images[0]
+      });
+      onClose();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const addImage = () => {
@@ -282,8 +291,12 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
                 </label>
               </div>
 
-              <button type="submit" style={{ width: '100%', padding: '1rem', background: 'var(--secondary)', color: 'white', fontWeight: 700, borderRadius: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', border: 'none', cursor: 'pointer', fontSize: '0.9rem', boxShadow: '0 8px 20px rgba(74,55,55,0.2)' }}>
-                <Save size={17} /> {product ? 'Save Design Changes' : 'Publish My Work  '}
+              <button 
+                type="submit" 
+                disabled={isSubmitting}
+                style={{ width: '100%', padding: '1rem', background: 'var(--secondary)', color: 'white', fontWeight: 700, borderRadius: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer', fontSize: '0.9rem', boxShadow: '0 8px 20px rgba(74,55,55,0.2)', opacity: isSubmitting ? 0.7 : 1 }}
+              >
+                <Save size={17} /> {isSubmitting ? 'Processing...' : (product ? 'Save Design Changes' : 'Publish My Work  ')}
               </button>
             </form>
           </motion.div>

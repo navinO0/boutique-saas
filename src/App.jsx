@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { Menu, X, ShoppingBag, User, Instagram, Facebook, Phone, ShoppingCart, Heart, LogOut, ArrowRight, Sparkles, Cloud, Heart as HeartIcon } from 'lucide-react';
+import { Menu, X, ShoppingBag, User, Instagram, Facebook, Phone, ShoppingCart, Heart, LogOut, ArrowRight, Sparkles, Cloud, Heart as HeartIcon, Info, MessageCircle } from 'lucide-react';
 import { useShop } from './context/ShopContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import CartSidebar from './components/CartSidebar';
@@ -101,39 +101,47 @@ const Navbar = ({ onOpenCart }) => {
         </div>
 
         {/* Mobile Navbar Items */}
-        <div style={{ display: 'none', width: '100%', justifyContent: 'space-around', alignItems: 'center', padding: '0.3rem 0.2rem calc(0.6rem + env(safe-area-inset-bottom))', overflow: 'hidden' }} className="mobile-only">
-          <Link to="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
-            <motion.div whileTap={{ scale: 0.8 }}><ShoppingBag size={20} color="var(--primary)" /></motion.div>
-            <span style={{ fontSize: '0.55rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Home</span>
+        <div style={{ display: 'none', width: '100%', justifyContent: 'space-around', alignItems: 'center', padding: '0.3rem 0.1rem calc(0.6rem + env(safe-area-inset-bottom))', overflow: 'hidden' }} className="mobile-only">
+          <Link to="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
+            <motion.div whileTap={{ scale: 0.8 }}><ShoppingBag size={18} color="var(--primary)" /></motion.div>
+            <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Home</span>
           </Link>
-          <Link to="/products" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
-            <motion.div whileTap={{ scale: 0.8 }}><Sparkles size={20} /></motion.div>
-            <span style={{ fontSize: '0.55rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Shop</span>
+          <Link to="/products" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
+            <motion.div whileTap={{ scale: 0.8 }}><Sparkles size={18} /></motion.div>
+            <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Shop</span>
           </Link>
-          <Link to="/catalog" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
-            <motion.div whileTap={{ scale: 0.8 }}><Instagram size={20} /></motion.div>
-            <span style={{ fontSize: '0.55rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Gallery</span>
+          <Link to="/catalog" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
+            <motion.div whileTap={{ scale: 0.8 }}><Instagram size={18} /></motion.div>
+            <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Gallery</span>
           </Link>
-          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, minWidth: 0, cursor: 'pointer' }} onClick={onOpenCart}>
+          <Link to="/about" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
+            <motion.div whileTap={{ scale: 0.8 }}><Info size={18} /></motion.div>
+            <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>About</span>
+          </Link>
+          <Link to="/contact" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
+            <motion.div whileTap={{ scale: 0.8 }}><MessageCircle size={18} /></motion.div>
+            <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Contact</span>
+          </Link>
+          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0, cursor: 'pointer' }} onClick={onOpenCart}>
             <motion.div whileTap={{ scale: 0.8 }}>
-              <ShoppingCart size={20} color="var(--primary)" />
+              <ShoppingCart size={18} color="var(--primary)" />
               {cart.length > 0 && (
-                <span style={{ position: 'absolute', top: '-5px', right: '5%', background: 'var(--primary)', color: 'white', fontSize: '0.5rem', width: '13px', height: '13px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
+                <span style={{ position: 'absolute', top: '-5px', right: '2%', background: 'var(--primary)', color: 'white', fontSize: '0.45rem', width: '12px', height: '12px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
                   {cart.length}
                 </span>
               )}
             </motion.div>
-            <span style={{ fontSize: '0.55rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Bag</span>
+            <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Bag</span>
           </div>
           {currentUser ? (
-            <Link to={isAdminUser ? "/admin" : "/orders"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
-              <motion.div whileTap={{ scale: 0.8 }}><User size={20} /></motion.div>
-              <span style={{ fontSize: '0.55rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Account</span>
+            <Link to={isAdminUser ? "/admin" : "/orders"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
+              <motion.div whileTap={{ scale: 0.8 }}><User size={18} /></motion.div>
+              <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Account</span>
             </Link>
           ) : (
-            <Link to="/auth" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
-              <motion.div whileTap={{ scale: 0.8 }}><User size={20} /></motion.div>
-              <span style={{ fontSize: '0.55rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Login</span>
+            <Link to="/auth" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
+              <motion.div whileTap={{ scale: 0.8 }}><User size={18} /></motion.div>
+              <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Login</span>
             </Link>
           )}
         </div>
@@ -215,23 +223,31 @@ const Toast = () => {
   return (
     <AnimatePresence>
       {toast && (
-        <motion.div
-          initial={{ opacity: 0, y: -50, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9, y: -20 }}
-          style={{
-            position: 'fixed', top: '100px', left: '50%', transform: 'translateX(-50%)',
-            zIndex: 5000, background: 'white', padding: '0.6rem 1.2rem',
-            borderRadius: '20px', boxShadow: '0 12px 32px rgba(233,163,163,0.25)',
-            display: 'flex', alignItems: 'center', gap: '0.7rem', border: '1px solid #fff0f0',
-            maxWidth: 'calc(100vw - 3rem)', width: 'max-content'
-          }}
-        >
-          <div style={{ background: 'var(--primary)', padding: '0.5rem', borderRadius: '50%', display: 'flex', flexShrink: 0 }}>
-            <Sparkles size={14} color="white" />
-          </div>
-          <span style={{ fontWeight: 800, color: 'var(--secondary)', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>{toast}</span>
-        </motion.div>
+        <div style={{ 
+          position: 'fixed', top: '2rem', left: 0, right: 0, 
+          zIndex: 9999, display: 'flex', justifyContent: 'center', 
+          padding: '0 1.5rem', pointerEvents: 'none' 
+        }}>
+          <motion.div
+            initial={{ opacity: 0, y: -40, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9, y: -40 }}
+            style={{
+              background: 'white', padding: '0.8rem 1.5rem',
+              borderRadius: '25px', boxShadow: '0 15px 40px rgba(233,163,163,0.3)',
+              display: 'flex', alignItems: 'center', gap: '0.8rem', 
+              border: '1.5px solid #fff0f0', maxWidth: '100%',
+              pointerEvents: 'auto'
+            }}
+          >
+            <div style={{ background: 'var(--primary)', padding: '0.5rem', borderRadius: '50%', display: 'flex', flexShrink: 0 }}>
+              <Sparkles size={14} color="white" />
+            </div>
+            <span style={{ fontWeight: 800, color: 'var(--secondary)', fontSize: '0.85rem', lineHeight: 1.4, wordBreak: 'break-word' }}>
+              {toast}
+            </span>
+          </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );

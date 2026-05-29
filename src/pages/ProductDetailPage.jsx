@@ -17,19 +17,28 @@ const ProductDetailPage = () => {
   const [similarProducts, setSimilarProducts] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const scrollRef = useRef(null);
+  const fullScreenScrollRef = useRef(null);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
+    // Normal view scroll
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
         left: currentImageIndex * scrollRef.current.clientWidth,
         behavior: 'smooth'
       });
     }
-  }, [currentImageIndex]);
+    // Full screen view scroll
+    if (fullScreenScrollRef.current) {
+      fullScreenScrollRef.current.scrollTo({
+        left: currentImageIndex * window.innerWidth,
+        behavior: 'smooth'
+      });
+    }
+  }, [currentImageIndex, isFullScreen]);
 
   useEffect(() => {
     fetchProductDetails(id);
@@ -350,9 +359,9 @@ const ProductDetailPage = () => {
               <X size={24} color="#000" />
             </motion.button>
 
-            {/* Overlay Navigation Arrows */}
+            {/* Overlay Navigation Arrows - Desktop Only */}
             {product.images?.length > 1 && (
-              <>
+              <div className="desktop-only">
                 <button 
                   onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(prev => (prev - 1 + product.images.length) % product.images.length); }}
                   style={{ position: 'absolute', left: '2rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: '50%', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white', zIndex: 5010 }}
@@ -365,10 +374,11 @@ const ProductDetailPage = () => {
                 >
                   <ChevronRight size={32} />
                 </button>
-              </>
+              </div>
             )}
 
             <div
+              ref={fullScreenScrollRef}
               style={{
                 width: '100%',
                 height: '100%',

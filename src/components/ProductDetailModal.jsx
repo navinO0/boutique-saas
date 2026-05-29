@@ -15,6 +15,15 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
   const [isLoading, setIsLoading] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const { wishlist, toggleWishlist } = useShop();
+  const carouselRef = React.useRef(null);
+  const fullScreenCarouselRef = React.useRef(null);
+
+  useEffect(() => {
+    if (isFullScreen && fullScreenCarouselRef.current) {
+      const carousel = fullScreenCarouselRef.current;
+      carousel.scrollTo({ left: currentImageIndex * window.innerWidth, behavior: 'instant' });
+    }
+  }, [isFullScreen]);
 
   useEffect(() => {
     if (isOpen && initialProduct?.id) {
@@ -101,7 +110,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                   <motion.div 
                     layoutId={`product-image-${product.id}`}
                     className="modal-main-image"
-                    style={{ width: '100%' }}
+                    style={{ width: '100%', position: 'relative', aspectRatio: '3/4', overflow: 'hidden', borderRadius: '24px' }}
                   >
                     <AnimatePresence mode="wait">
                       <motion.img 
@@ -112,9 +121,33 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                         transition={{ duration: 0.5 }}
                         src={resolveImageUrl(product.images?.[currentImageIndex] || product.image)} 
                         onClick={(e) => { e.stopPropagation(); setIsFullScreen(true); }} 
-                        style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '24px', background: '#fef5f5', cursor: 'zoom-in' }} 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', background: '#fef5f5', cursor: 'zoom-in' }} 
                       />
                     </AnimatePresence>
+
+                    {product.images?.length > 1 && (
+                      <>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCurrentImageIndex(prev => (prev - 1 + product.images.length) % product.images.length);
+                          }}
+                          style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.7)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, backdropFilter: 'blur(5px)' }}
+                        >
+                          <ChevronLeft size={20} color="var(--primary)" />
+                        </button>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCurrentImageIndex(prev => (prev + 1) % product.images.length);
+                          }}
+                          style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.7)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, backdropFilter: 'blur(5px)' }}
+                        >
+                          <ChevronRight size={20} color="var(--primary)" />
+                        </button>
+                      </>
+                    )}
+
                     <div style={{ 
                       position: 'absolute', 
                       top: '1.5rem', 
@@ -348,6 +381,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
             </motion.button>
 
             <div 
+              ref={fullScreenCarouselRef}
               style={{ 
                 width: '100%', 
                 height: '100%', 
@@ -393,6 +427,41 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                 </div>
               ))}
             </div>
+
+            {product.images?.length > 1 && (
+              <>
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (fullScreenCarouselRef.current) {
+                      const newIndex = (currentImageIndex - 1 + (product.images?.length || 1)) % (product.images?.length || 1);
+                      fullScreenCarouselRef.current.scrollTo({ 
+                        left: newIndex * window.innerWidth, 
+                        behavior: 'smooth' 
+                      });
+                    }
+                  }}
+                  style={{ position: 'absolute', left: '2rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '50%', width: '55px', height: '55px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 6010, backdropFilter: 'blur(10px)' }}
+                >
+                  <ChevronLeft size={30} color="white" />
+                </button>
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (fullScreenCarouselRef.current) {
+                      const newIndex = (currentImageIndex + 1) % (product.images?.length || 1);
+                      fullScreenCarouselRef.current.scrollTo({ 
+                        left: newIndex * window.innerWidth, 
+                        behavior: 'smooth' 
+                      });
+                    }
+                  }}
+                  style={{ position: 'absolute', right: '2rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '50%', width: '55px', height: '55px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 6010, backdropFilter: 'blur(10px)' }}
+                >
+                  <ChevronRight size={30} color="white" />
+                </button>
+              </>
+            )}
 
             <div style={{ position: 'absolute', bottom: '3rem', textAlign: 'center', color: 'white', zIndex: 6010, pointerEvents: 'none' }}>
                <p style={{ fontSize: '1.2rem', fontFamily: 'Playfair Display', letterSpacing: '1px' }}>{product.name}</p>

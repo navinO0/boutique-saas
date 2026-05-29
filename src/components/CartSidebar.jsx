@@ -4,10 +4,12 @@ import { X, ShoppingBag, Trash2, Plus, Minus, Heart } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useNavigate } from 'react-router-dom';
 import { resolveImageUrl } from '../utils/imageUtils';
+import CheckoutModal from './CheckoutModal';
 
 const CartSidebar = ({ isOpen, onClose }) => {
   const { cart, removeFromCart, updateQuantity, placeOrder, currentUser } = useShop();
   const navigate = useNavigate();
+  const [isCheckoutOpen, setIsCheckoutOpen] = React.useState(false);
 
   const total = cart.reduce((sum, item) => sum + (item.discountedPrice * item.quantity), 0);
 
@@ -17,13 +19,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
       navigate('/auth');
       return;
     }
-    const result = placeOrder();
-    if (result.success) {
-      onClose();
-      navigate('/orders');
-    } else {
-      alert(result.message);
-    }
+    setIsCheckoutOpen(true);
   };
 
   return (
@@ -76,7 +72,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
                             </div>
                           )}
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.8rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.8rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'white', padding: '0.3rem 0.8rem', borderRadius: '15px', border: '1px solid #ffefef' }}>
                             <button onClick={() => updateQuantity(item.id, -1, item.selectedSize, item.selectedColor)} style={{ color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex' }}><Minus size={12} /></button>
                             <span style={{ fontWeight: 700, fontSize: '0.85rem' }}>{item.quantity}</span>
@@ -108,6 +104,11 @@ const CartSidebar = ({ isOpen, onClose }) => {
           </motion.div>
         </>
       )}
+      <CheckoutModal 
+        isOpen={isCheckoutOpen} 
+        onClose={() => { setIsCheckoutOpen(false); onClose(); }} 
+        total={total} 
+      />
     </AnimatePresence>
   );
 };

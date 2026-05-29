@@ -14,6 +14,8 @@ const EditCatalogModal = ({ isOpen, onClose, item, onSave }) => {
 
   const [imageUrlInput, setImageUrlInput] = useState('');
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     if (item) {
       setFormData(item);
@@ -28,14 +30,21 @@ const EditCatalogModal = ({ isOpen, onClose, item, onSave }) => {
     }
   }, [item, isOpen]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.images.length === 0) {
       alert("Please add at least one image of your work portfolio!  ");
       return;
     }
-    onSave(formData);
-    onClose();
+    setIsSubmitting(true);
+    try {
+      await onSave(formData);
+      onClose();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const addImage = () => {
@@ -130,8 +139,12 @@ const EditCatalogModal = ({ isOpen, onClose, item, onSave }) => {
                 <textarea rows="4" required value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Describe the craftsmanship..." style={{ width: '100%', padding: '1.2rem', border: 'none', background: '#fff9f9', borderRadius: '25px', outline: 'none', resize: 'none' }} />
               </div>
 
-              <button type="submit" style={{ width: '100%', padding: '1.5rem', background: 'var(--secondary)', color: 'white', fontWeight: 800, borderRadius: '35px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.8rem', border: 'none', cursor: 'pointer', boxShadow: '0 15px 30px rgba(74,55,55,0.2)' }}>
-                <Save size={20} /> {item ? 'Save Catalog Updates' : 'Publish to Portfolio  '}
+              <button 
+                type="submit" 
+                disabled={isSubmitting}
+                style={{ width: '100%', padding: '1.5rem', background: 'var(--secondary)', color: 'white', fontWeight: 800, borderRadius: '35px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.8rem', border: 'none', cursor: isSubmitting ? 'not-allowed' : 'pointer', boxShadow: '0 15px 30px rgba(74,55,55,0.2)', opacity: isSubmitting ? 0.7 : 1 }}
+              >
+                <Save size={20} /> {isSubmitting ? 'Processing...' : (item ? 'Save Catalog Updates' : 'Publish to Portfolio  ')}
               </button>
             </form>
           </motion.div>

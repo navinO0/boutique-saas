@@ -9,10 +9,12 @@ export const useShop = () => useContext(ShopContext);
 
 export const ShopProvider = ({ children }) => {
  const [products, setProducts] = useState([]);
+ const [adminProducts, setAdminProducts] = useState([]);
  const [iconProducts, setIconProducts] = useState([]);
  const [catalog, setCatalog] = useState([]);
  const [isLoading, setIsLoading] = useState(false);
  const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1 });
+ const [adminPagination, setAdminPagination] = useState({ currentPage: 1, totalPages: 1 });
  const [cart, setCart] = useState([]);
  const [wishlist, setWishlist] = useState([]);
  const [siteConfig, setSiteConfig] = useState(BOUTIQUE_CONFIG);
@@ -20,7 +22,9 @@ export const ShopProvider = ({ children }) => {
  const [token, setToken] = useState(localStorage.getItem('token') || '');
  const [toast, setToast] = useState(null);
  const [allOrders, setAllOrders] = useState([]);
+ const [myOrders, setMyOrders] = useState([]);
  const [appointments, setAppointments] = useState([]);
+ const [userAddresses, setUserAddresses] = useState(JSON.parse(localStorage.getItem('addresses')) || []);
 
  useEffect(() => {
   fetchSiteConfig();
@@ -95,11 +99,31 @@ export const ShopProvider = ({ children }) => {
   }
  };
 
+ const fetchAdminProducts = async (params = {}) => {
+  setIsLoading(true);
+  try {
+   const response = await axios.get(`${API_BASE_URL}/products`, {
+    params,
+    headers: getHeaders()
+   });
+   setAdminProducts(response.data.products);
+   setAdminPagination({
+    currentPage: response.data.currentPage,
+    totalPages: response.data.totalPages
+   });
+  } catch (error) {
+   console.error('Error fetching admin products:', error);
+   showToast('Inventory fetch failed ');
+  } finally {
+   setIsLoading(false);
+  }
+ };
+
  const addProduct = async (data) => {
   try {
    await axios.post(`${API_BASE_URL}/products`, data, { headers: getHeaders() });
    showToast('Product added successfully! ');
-   fetchProducts();
+   fetchAdminProducts();
   } catch (error) {
    showToast('Failed to add product ');
   }
@@ -109,7 +133,7 @@ export const ShopProvider = ({ children }) => {
   try {
    await axios.put(`${API_BASE_URL}/products/${data.id}`, data, { headers: getHeaders() });
    showToast('Product updated! ');
-   fetchProducts();
+   fetchAdminProducts();
   } catch (error) {
    showToast('Update failed ');
   }
@@ -120,7 +144,7 @@ export const ShopProvider = ({ children }) => {
   try {
    await axios.delete(`${API_BASE_URL}/products/${id}`, { headers: getHeaders() });
    showToast('Product removed ');
-   fetchProducts();
+   fetchAdminProducts();
   } catch (error) {
    showToast('Delete failed ');
   }
@@ -171,6 +195,28 @@ export const ShopProvider = ({ children }) => {
   }
  };
 
+ const registerUser = async (userData) => {
+    setIsLoading(true);
+    try {
+      const resp = await axios.post(`${API_BASE_URL}/auth/register`, { 
+        ...userData, 
+        companyId: siteConfig.companyId || 1 
+      });
+      const { user, token } = resp.data;
+      setCurrentUser(user);
+      setToken(token);
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('token', token);
+      showToast(`Welcome to the atelier, ${user.name}! `);
+      return { success: true };
+    } catch (error) {
+      showToast(error.response?.data?.message || 'Registration failed ');
+      return { success: false, message: error.response?.data?.message || 'Registration failed' };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
  const loginUser = async (email, password) => {
   setIsLoading(true);
   try {
@@ -190,13 +236,47 @@ export const ShopProvider = ({ children }) => {
   }
  };
 
- const logoutUser = () => {
-  setCurrentUser(null);
-  setToken('');
-  localStorage.removeItem('user');
-  localStorage.removeItem('token');
-  showToast('Magical exit... see you soon! ');
- };
+  const fetchCart = async () => {
+    try {
+      const resp = await axios.get(`${API_BASE_URL}/cart`, { headers: getHeaders() });
+      setCart(resp.data);
+    } catch (error) {
+      console.error('Error fetching cart');
+    }
+  };
+
+  const syncCart = async (cartItems) => {
+    if (!currentUser) return;
+    try {
+      await axios.post(`${API_BASE_URL}/cart/sync`, { items: cartItems }, { headers: getHeaders() });
+    } catch (error) {
+      console.error('Error syncing cart');
+    }
+  };
+
+  useEffect(() => {
+    if (currentUser) {
+      const timer = setTimeout(() => {
+        syncCart(cart);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [cart, currentUser]);
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchCart();
+    }
+  }, [currentUser]);
+
+  const logoutUser = () => {
+    setCurrentUser(null);
+    setToken('');
+    setCart([]);
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    showToast('Magical exit... see you soon! ');
+  };
 
  const addToCart = (product) => {
   if (product.stock === 0) return;
@@ -237,38 +317,123 @@ export const ShopProvider = ({ children }) => {
   }));
  };
 
- const placeOrder = async () => {
+ const placeOrder = async (orderDetails) => {
   if (!currentUser) return { success: false, message: 'Please login to checkout' };
   setIsLoading(true);
   try {
    const total = cart.reduce((sum, item) => sum + (item.discountedPrice * item.quantity), 0);
-   await axios.post(`${API_BASE_URL}/orders`,
-    { items: cart, total },
+   const resp = await axios.post(`${API_BASE_URL}/orders`,
+    { 
+      items: cart, 
+      total,
+      address: orderDetails.address,
+      transactionId: orderDetails.transactionId,
+      paymentMethod: 'UPI_QR'
+    },
     { headers: getHeaders() }
    );
    setCart([]);
-   showToast('Order placed! Magic is on its way. ');
-   return { success: true };
+   showToast('Payment submitted! Magic is being verified. ');
+   return { success: true, orderId: resp.data.id };
   } catch (error) {
-   showToast('Order failed... ');
+   showToast('Submission failed... ');
    return { success: false };
   } finally {
    setIsLoading(false);
   }
  };
 
+ const fetchAllOrders = async () => {
+    try {
+      const resp = await axios.get(`${API_BASE_URL}/admin/orders`, { headers: getHeaders() });
+      setAllOrders(resp.data);
+    } catch (error) {
+      console.error('Error fetching all orders');
+    }
+  };
+
+  const fetchMyOrders = async () => {
+    setIsLoading(true);
+    try {
+      const resp = await axios.get(`${API_BASE_URL}/orders/my`, { headers: getHeaders() });
+      setMyOrders(resp.data);
+    } catch (error) {
+      console.error('Error fetching my orders');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const approveOrder = async (orderId) => {
+    try {
+      await axios.patch(`${API_BASE_URL}/admin/orders/${orderId}/approve`, {}, { headers: getHeaders() });
+      showToast('Order confirmed! ');
+      fetchAllOrders();
+    } catch (error) {
+      showToast('Approval failed ');
+    }
+  };
+
+  const toggleWishlist = (id) => {
+    setWishlist(prev =>
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+    showToast(wishlist.includes(id) ? 'Removed from wishlist' : 'Added to wishlist');
+  };
+
+  const addAddress = (address) => {
+    const newAddresses = [...userAddresses, { ...address, id: Date.now() }];
+    setUserAddresses(newAddresses);
+    localStorage.setItem('addresses', JSON.stringify(newAddresses));
+    showToast('Address added! ');
+  };
+
  const [error, setError] = useState(null);
 
  const clearError = () => setError(null);
 
+  // --- INQUIRIES ---
+  const submitInquiry = async (inquiryData) => {
+    try {
+      await axios.post(`${API_BASE_URL}/inquiries`, inquiryData, { headers: getHeaders() });
+      showToast('Magic Dust Sent! We\'ll be in touch soon. ');
+      return { success: true };
+    } catch (error) {
+      showToast('Failed to send magic dust. Try again. ');
+      return { success: false };
+    }
+  };
+
+  const fetchInquiries = async () => {
+    try {
+      const resp = await axios.get(`${API_BASE_URL}/inquiries/admin`, { headers: getHeaders() });
+      return resp.data;
+    } catch (error) {
+      console.error('Error fetching inquiries:', error);
+      return [];
+    }
+  };
+
+  const updateInquiryStatus = async (id, status) => {
+    try {
+      await axios.patch(`${API_BASE_URL}/inquiries/admin/${id}/status`, { status }, { headers: getHeaders() });
+      showToast(`Inquiry marked as ${status} `);
+    } catch (error) {
+      showToast('Failed to update inquiry status ');
+    }
+  };
+
  return (
   <ShopContext.Provider value={{
-   products, iconProducts, catalog, isLoading, error, clearError, pagination, fetchProducts, fetchIconProducts, fetchCatalog,
+   products, adminProducts, iconProducts, catalog, isLoading, error, clearError, 
+   pagination, adminPagination, fetchProducts, fetchAdminProducts, fetchIconProducts, fetchCatalog,
    addProduct, updateProduct, deleteProduct,
    addCatalogItem, updateCatalogItem, deleteCatalogItem,
-   cart, wishlist, addToCart, removeFromCart, updateQuantity, loginUser, logoutUser, currentUser,
+   cart, wishlist, toggleWishlist, addToCart, removeFromCart, updateQuantity, loginUser, logoutUser, registerUser, currentUser,
    placeOrder, siteConfig, updateSiteConfig, toast, showToast,
-   allOrders, appointments,
+   allOrders, myOrders, appointments, fetchAllOrders, fetchMyOrders, approveOrder,
+   userAddresses, addAddress,
+   submitInquiry, fetchInquiries, updateInquiryStatus,
    isAdminLoggedIn: currentUser?.role === 'admin'
   }}>
    {children}
