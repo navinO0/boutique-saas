@@ -18,7 +18,7 @@ import EmptyState from '../components/EmptyState';
 import PookieLoader from '../components/PookieLoader';
 
 const AttentionRequiredView = ({ onEditProduct }) => {
-  const { products, fetchInquiries, updateInquiryStatus, allOrders, getHeaders, fetchProducts } = useShop();
+  const { products, fetchInquiries, updateInquiryStatus, allOrders, getHeaders, fetchProducts, fetchAllOrders } = useShop();
   const [inquiries, setInquiries] = useState([]);
   const [outOfStock, setOutOfStock] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -28,18 +28,16 @@ const AttentionRequiredView = ({ onEditProduct }) => {
     const loadData = async () => {
       setLoading(true);
       try {
-        const inquiryData = await fetchInquiries();
-        setInquiries(inquiryData);
-        
-        // Fetch products to satisfy "Total Pieces" stat
-        await fetchProducts({ limit: 1000 }); // Large limit for admin stats
-
-        // Explicitly fetch only out-of-stock items for this dashboard view
-        const stockResp = await axios.get(`${API_BASE_URL}/products`, {
-          params: { stockStatus: 'outOfStock', limit: 100 },
-          headers: getHeaders ? getHeaders() : {}
-        });
-        setOutOfStock(stockResp.data.products || []);
+        // Parallel fetch for dashboard stats
+        await Promise.all([
+          fetchInquiries().then(data => setInquiries(data)),
+          fetchProducts({ limit: 1000 }),
+          fetchAllOrders(),
+          axios.get(`${API_BASE_URL}/products`, {
+            params: { stockStatus: 'outOfStock', limit: 100 },
+            headers: getHeaders ? getHeaders() : {}
+          }).then(resp => setOutOfStock(resp.data.products || []))
+        ]);
       } catch (error) {
         console.error('Error loading dashboard data:', error);
       } finally {
@@ -47,7 +45,7 @@ const AttentionRequiredView = ({ onEditProduct }) => {
       }
     };
     loadData();
-  }, [fetchInquiries, getHeaders, fetchProducts]);
+  }, [fetchInquiries, getHeaders, fetchProducts, fetchAllOrders]);
 
   const newInquiries = (inquiries || []).filter(i => i?.status === 'new');
   const readInquiries = (inquiries || []).filter(i => i?.status !== 'new');
