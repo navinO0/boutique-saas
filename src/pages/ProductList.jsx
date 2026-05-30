@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, ArrowLeft, Filter, Heart, Search, ChevronLeft, ChevronRight, Sparkles, Edit2, Trash2, X, Star, Plus } from 'lucide-react';
 import { Link, useParams, useNavigate, useSearchParams } from 'react-router-dom';
@@ -11,6 +12,70 @@ import { resolveImageUrl } from '../utils/imageUtils';
 
 import ErrorDisplay from '../components/ErrorDisplay';
 import EmptyState from '../components/EmptyState';
+
+// --- PERFORMANCE: MEMOIZED PRODUCT CARD ---
+const ProductCard = React.memo(({ product, wishlist, toggleWishlist, addToCart, onClick }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -8 }}
+      onClick={() => onClick(product.id)}
+      style={{
+        position: 'relative',
+        cursor: 'pointer',
+        background: 'white',
+        borderRadius: '20px',
+        padding: '0.4rem',
+        border: '1px solid #fff0f0',
+        boxShadow: '0 8px 25px rgba(233,163,163,0.05)',
+        transition: 'all 0.4s'
+      }}
+    >
+      <div style={{ position: 'relative', height: 'clamp(140px, 32vw, 300px)', overflow: 'hidden', borderRadius: '16px', background: '#fefafa' }}>
+        <img
+          src={resolveImageUrl(product.images?.[0] || product.image)}
+          alt={product.name}
+          loading="lazy"
+          style={{ width: '100%', height: '100%', objectFit: 'contain', opacity: product.stock === 0 ? 0.6 : 1 }}
+        />
+        {product.stock === 0 && (
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.4)', backdropFilter: 'blur(2px)' }}>
+            <span style={{ background: 'var(--secondary)', color: 'white', padding: '0.4rem 0.8rem', borderRadius: '12px', fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '2px' }}>Sold Out</span>
+          </div>
+        )}
+        <div style={{ position: 'absolute', top: '0.6rem', right: '0.6rem', zIndex: 10, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+          <button
+            onClick={(e) => { e.stopPropagation(); toggleWishlist(product.id); }}
+            style={{ background: 'rgba(255,255,255,0.9)', border: 'none', width: '30px', height: '30px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <Heart size={14} fill={wishlist.includes(product.id) ? 'var(--primary)' : 'none'} color={wishlist.includes(product.id) ? 'var(--primary)' : '#ffccd2'} />
+          </button>
+        </div>
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={(e) => { e.stopPropagation(); addToCart(product); }}
+          disabled={product.stock === 0}
+          style={{ position: 'absolute', bottom: '0.6rem', right: '0.6rem', background: 'var(--primary)', color: 'white', width: '32px', height: '32px', borderRadius: '10px', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <ShoppingBag size={14} />
+        </motion.button>
+      </div>
+
+      <div style={{ padding: '0.8rem 0.4rem', textAlign: 'left' }}>
+        <p style={{ color: 'var(--primary)', fontSize: '0.5rem', fontWeight: 950, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.2rem' }}>{product.category}</p>
+        <h3 style={{ fontSize: '0.85rem', color: 'var(--secondary)', fontFamily: 'Playfair Display', fontWeight: 700, minHeight: '2.2rem' }}>{product.name}</h3>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.8rem', paddingTop: '0.8rem', borderTop: '1px solid #f9f0f0' }}>
+          <p style={{ fontWeight: 950, color: 'var(--primary)', fontSize: '0.95rem' }}>₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
+          <div style={{ display: 'flex', gap: '2px' }}>
+            {[...Array(5)].map((_, i) => <Star key={i} size={8} fill={i < 4 ? "var(--primary)" : "none"} color={i < 4 ? "var(--primary)" : "#eee"} />)}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+});
+
 
 const ProductList = () => {
   const { categoryId } = useParams();
@@ -313,60 +378,17 @@ const ProductList = () => {
           ) : (
             <div className="amara-product-grid">
               {products.map((product) => (
-                <motion.div
+                <ProductCard
                   key={product.id}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -8 }}
-                  onClick={() => handleProductClick(product.id)}
-                  style={{
-                    position: 'relative',
-                    cursor: 'pointer',
-                    background: 'white',
-                    borderRadius: '20px',
-                    padding: '0.4rem',
-                    border: '1px solid #fff0f0',
-                    boxShadow: '0 8px 25px rgba(233,163,163,0.05)',
-                    transition: 'all 0.4s'
-                  }}
-                >
-                  <div style={{ position: 'relative', height: 'clamp(140px, 32vw, 300px)', overflow: 'hidden', borderRadius: '16px', background: '#fefafa' }}>
-                    <img
-                      src={resolveImageUrl(product.images?.[0] || product.image)}
-                      alt={product.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
-                    <div style={{ position: 'absolute', top: '0.6rem', right: '0.6rem', zIndex: 10, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); toggleWishlist(product.id); }}
-                        style={{ background: 'rgba(255,255,255,0.9)', border: 'none', width: '30px', height: '30px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                      >
-                        <Heart size={14} fill={wishlist.includes(product.id) ? 'var(--primary)' : 'none'} color={wishlist.includes(product.id) ? 'var(--primary)' : '#ffccd2'} />
-                      </button>
-                    </div>
-                    <motion.button
-                      whileTap={{ scale: 0.9 }}
-                      onClick={(e) => { e.stopPropagation(); addToCart(product); }}
-                      disabled={product.stock === 0}
-                      style={{ position: 'absolute', bottom: '0.6rem', right: '0.6rem', background: 'var(--primary)', color: 'white', width: '32px', height: '32px', borderRadius: '10px', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                    >
-                      <ShoppingBag size={14} />
-                    </motion.button>
-                  </div>
-
-                  <div style={{ padding: '0.8rem 0.4rem', textAlign: 'left' }}>
-                    <p style={{ color: 'var(--primary)', fontSize: '0.5rem', fontWeight: 950, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.2rem' }}>{product.category}</p>
-                    <h3 style={{ fontSize: '0.85rem', color: 'var(--secondary)', fontFamily: 'Playfair Display', fontWeight: 700, minHeight: '2.2rem' }}>{product.name}</h3>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.8rem', paddingTop: '0.8rem', borderTop: '1px solid #f9f0f0' }}>
-                      <p style={{ fontWeight: 950, color: 'var(--primary)', fontSize: '0.95rem' }}>₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
-                      <div style={{ display: 'flex', gap: '2px' }}>
-                        {[...Array(5)].map((_, i) => <Star key={i} size={8} fill={i < 4 ? "var(--primary)" : "none"} color={i < 4 ? "var(--primary)" : "#eee"} />)}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
+                  product={product}
+                  wishlist={wishlist}
+                  toggleWishlist={toggleWishlist}
+                  addToCart={addToCart}
+                  onClick={handleProductClick}
+                />
               ))}
             </div>
+
           )}
 
           {pagination.totalPages > 1 && (

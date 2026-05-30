@@ -24,23 +24,6 @@ const ProductDetailPage = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
 
   useEffect(() => {
-    // Normal view scroll
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({
-        left: currentImageIndex * scrollRef.current.clientWidth,
-        behavior: 'smooth'
-      });
-    }
-    // Full screen view scroll
-    if (fullScreenScrollRef.current) {
-      fullScreenScrollRef.current.scrollTo({
-        left: currentImageIndex * window.innerWidth,
-        behavior: 'smooth'
-      });
-    }
-  }, [currentImageIndex, isFullScreen]);
-
-  useEffect(() => {
     fetchProductDetails(id);
   }, [id]);
 
@@ -63,18 +46,31 @@ const ProductDetailPage = () => {
     }
   };
 
+  const handleNextImage = (e) => {
+    if (e) e.stopPropagation();
+    const images = product?.images?.length > 0 ? product.images : [product.image];
+    setCurrentImageIndex(prev => (prev + 1) % images.length);
+  };
+
+  const handlePrevImage = (e) => {
+    if (e) e.stopPropagation();
+    const images = product?.images?.length > 0 ? product.images : [product.image];
+    setCurrentImageIndex(prev => (prev - 1 + images.length) % images.length);
+  };
+
   // Auto-scroll images
   useEffect(() => {
     if (!product?.images?.length || product.images.length <= 1 || isFullScreen) return;
 
     const interval = setInterval(() => {
       setCurrentImageIndex(prev => (prev + 1) % product.images.length);
-    }, 4000); // Change image every 4 seconds
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [product, isFullScreen]);
 
   if (isLoading || !product) return <PookieLoader />;
+
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -118,9 +114,8 @@ const ProductDetailPage = () => {
                 
 
                 {/* Desktop Dots Overlay */}
-                {product.images?.length > 1 && (
                   <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '0.6rem', zIndex: 10, background: 'rgba(255,255,255,0.4)', backdropFilter: 'blur(10px)', padding: '0.5rem 1rem', borderRadius: '20px' }}>
-                    {product.images.map((_, idx) => (
+                    {(product.images?.length > 0 ? product.images : [product.image]).map((_, idx) => (
                       <div 
                         key={idx} 
                         onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx); }}
@@ -128,7 +123,7 @@ const ProductDetailPage = () => {
                       />
                     ))}
                   </div>
-                )}
+
                 <div style={{
                   position: 'absolute',
                   top: '2rem',
@@ -185,11 +180,12 @@ const ProductDetailPage = () => {
               </div>
               {product.images?.length > 1 && (
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', marginTop: '1.2rem' }}>
-                  {product.images.map((_, idx) => (
+                  {(product.images?.length > 0 ? product.images : [product.image]).map((_, idx) => (
                     <div key={idx} style={{ width: '8px', height: '8px', borderRadius: '50%', background: currentImageIndex === idx ? 'var(--primary)' : '#ddd', transition: '0.3s' }} />
                   ))}
                 </div>
               )}
+
             </div>
           </div>
 
@@ -250,9 +246,27 @@ const ProductDetailPage = () => {
               <motion.div variants={itemVariants} style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                 <button
                   onClick={() => addToCart({ ...product, selectedSize, selectedColor })}
-                  style={{ flex: 1, minWidth: '160px', padding: 'clamp(0.9rem, 2vw, 1.2rem) clamp(1rem, 2vw, 1.5rem)', background: 'var(--primary)', color: 'white', borderRadius: '32px', border: 'none', fontWeight: 700, fontSize: 'clamp(0.8rem, 2vw, 0.92rem)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.7rem', boxShadow: '0 12px 32px rgba(233,163,163,0.4)', cursor: 'pointer', letterSpacing: '0.3px' }}
+                  disabled={product.stock === 0}
+                  style={{ 
+                    flex: 1, 
+                    minWidth: '160px', 
+                    padding: 'clamp(0.9rem, 2vw, 1.2rem) clamp(1rem, 2vw, 1.5rem)', 
+                    background: product.stock === 0 ? '#ccc' : 'var(--primary)', 
+                    color: 'white', 
+                    borderRadius: '32px', 
+                    border: 'none', 
+                    fontWeight: 700, 
+                    fontSize: 'clamp(0.8rem, 2vw, 0.92rem)', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center', 
+                    gap: '0.7rem', 
+                    boxShadow: product.stock === 0 ? 'none' : '0 12px 32px rgba(233,163,163,0.4)', 
+                    cursor: product.stock === 0 ? 'not-allowed' : 'pointer', 
+                    letterSpacing: '0.3px' 
+                  }}
                 >
-                  <ShoppingBag size={18} /> Add to Bag
+                  <ShoppingBag size={18} /> {product.stock === 0 ? 'Out of Stock' : 'Add to Bag'}
                 </button>
                 <button
                   onClick={() => toggleWishlist(product.id)}
@@ -359,77 +373,80 @@ const ProductDetailPage = () => {
               <X size={24} color="#000" />
             </motion.button>
 
-            {/* Overlay Navigation Arrows - Desktop Only */}
-            {product.images?.length > 1 && (
-              <div className="desktop-only">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(prev => (prev - 1 + product.images.length) % product.images.length); }}
-                  style={{ position: 'absolute', left: '2rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: '50%', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white', zIndex: 5010 }}
-                >
-                  <ChevronLeft size={32} />
-                </button>
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(prev => (prev + 1) % product.images.length); }}
-                  style={{ position: 'absolute', right: '2rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: '50%', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white', zIndex: 5010 }}
-                >
-                  <ChevronRight size={32} />
-                </button>
-              </div>
-            )}
+            {/* Overlay Navigation Arrows */}
+            <div className="desktop-only">
+              <button 
+                onClick={handlePrevImage}
+                style={{ position: 'absolute', left: '2rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: '50%', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white', zIndex: 5010 }}
+              >
+                <ChevronLeft size={32} />
+              </button>
+              <button 
+                onClick={handleNextImage}
+                style={{ position: 'absolute', right: '2rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)', border: 'none', borderRadius: '50%', width: '60px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white', zIndex: 5010 }}
+              >
+                <ChevronRight size={32} />
+              </button>
+            </div>
 
-            <div
-              ref={fullScreenScrollRef}
-              style={{
-                width: '100%',
-                height: '100%',
-                overflowX: 'auto',
-                overflowY: 'hidden',
-                display: 'flex',
-                scrollSnapType: 'x mandatory',
-                alignItems: 'center',
-                scrollbarWidth: 'none',
-              }}
-              className="no-scrollbar full-screen-carousel"
-              onClick={(e) => e.stopPropagation()}
-              onScroll={(e) => {
-                const index = Math.round(e.target.scrollLeft / window.innerWidth);
-                if (index !== currentImageIndex) setCurrentImageIndex(index);
-              }}
-            >
-              {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    minWidth: '100vw',
-                    height: '100vh',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    scrollSnapAlign: 'center',
-                    padding: '1rem'
-                  }}
-                >
-                  <motion.img
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    src={resolveImageUrl(img)}
+
+            <div style={{ width: '100%', height: '100%', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
+              <motion.div
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                onDragEnd={(e, { offset, velocity }) => {
+                  const swipeThreshold = 50;
+                  const images = product?.images?.length > 0 ? product.images : [product.image];
+                  if (offset.x < -swipeThreshold) handleNextImage();
+                  else if (offset.x > swipeThreshold) handlePrevImage();
+                }}
+                animate={{ x: `-${currentImageIndex * 100}%` }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                  height: '100%',
+                  cursor: 'grab'
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
+                  <div
+                    key={idx}
                     style={{
-                      maxWidth: '100%',
-                      maxHeight: '90vh',
-                      objectFit: 'contain',
-                      borderRadius: '12px',
-                      boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
+                      minWidth: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '1rem'
                     }}
-                  />
-                </div>
-              ))}
+                  >
+                    <motion.img
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      src={resolveImageUrl(img)}
+                      draggable={false}
+                      style={{
+                        maxWidth: '100%',
+                        maxHeight: '90vh',
+                        objectFit: 'contain',
+                        borderRadius: '12px',
+                        boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
+                        pointerEvents: 'none'
+                      }}
+                    />
+                  </div>
+                ))}
+              </motion.div>
             </div>
 
             <div style={{ position: 'absolute', bottom: '3rem', textAlign: 'center', color: 'white', zIndex: 5010, pointerEvents: 'none' }}>
               <p style={{ fontSize: '1.2rem', fontFamily: 'Playfair Display', letterSpacing: '1px' }}>{product.name}</p>
-              <p style={{ opacity: 0.6, fontSize: '0.8rem', marginTop: '0.5rem', letterSpacing: '4px', textTransform: 'uppercase' }}>{currentImageIndex + 1} / {product.images?.length || 1}</p>
-              <p style={{ fontSize: '0.65rem', marginTop: '1.5rem', color: 'var(--primary)', fontWeight: 800, letterSpacing: '2px' }}>DRAG TO BROWSE</p>
+              <p style={{ opacity: 0.6, fontSize: '0.8rem', marginTop: '0.5rem', letterSpacing: '4px', textTransform: 'uppercase' }}>{currentImageIndex + 1} / {(product.images?.length > 0 ? product.images : [product.image]).length}</p>
+              <p style={{ fontSize: '0.65rem', marginTop: '1.5rem', color: 'var(--primary)', fontWeight: 800, letterSpacing: '2px' }}>SWIPE OR DRAG TO BROWSE</p>
             </div>
+
           </motion.div>
         )}
       </AnimatePresence>

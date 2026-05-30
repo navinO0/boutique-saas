@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useShop } from '../context/ShopContext';
 import { Heart, ShoppingBag, Trash2, ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import PookieLoader from '../components/PookieLoader';
 
 const WishlistPage = () => {
   const { wishlist, products, toggleWishlist, addToCart, currentUser } = useShop();
@@ -13,6 +14,9 @@ const WishlistPage = () => {
   }, [currentUser, navigate]);
 
   const wishlistItems = products.filter(p => wishlist.includes(p.id));
+
+  const { isLoading } = useShop();
+  if (isLoading && products.length === 0) return <PookieLoader fullScreen={true} />;
 
   return (
     <div className="container" style={{ padding: '4rem 2rem' }}>

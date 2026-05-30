@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import API_BASE_URL from '../config/api';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -13,32 +15,51 @@ import EditProductModal from '../components/EditProductModal';
 import EditCatalogModal from '../components/EditCatalogModal';
 import { resolveImageUrl } from '../utils/imageUtils';
 import EmptyState from '../components/EmptyState';
+import PookieLoader from '../components/PookieLoader';
 
-const AttentionRequiredView = () => {
-  const { products, fetchProducts, fetchInquiries, updateInquiryStatus, allOrders } = useShop();
+const AttentionRequiredView = ({ onEditProduct }) => {
+  const { products, fetchInquiries, updateInquiryStatus, allOrders, getHeaders, fetchProducts } = useShop();
   const [inquiries, setInquiries] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [outOfStock, setOutOfStock] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [activeInquiryId, setActiveInquiryId] = useState(null);
 
   useEffect(() => {
-    const load = async () => {
-      const data = await fetchInquiries();
-      setInquiries(data);
-      setLoading(false);
-    };
-    load();
-  }, []);
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const inquiryData = await fetchInquiries();
+        setInquiries(inquiryData);
+        
+        // Fetch products to satisfy "Total Pieces" stat
+        await fetchProducts({ limit: 1000 }); // Large limit for admin stats
 
-  const outOfStock = products?.filter(p => (p.stock || 0) <= 0) || [];
-  const newInquiries = inquiries.filter(i => i.status === 'new');
-  const readInquiries = inquiries.filter(i => i.status !== 'new');
+        // Explicitly fetch only out-of-stock items for this dashboard view
+        const stockResp = await axios.get(`${API_BASE_URL}/products`, {
+          params: { stockStatus: 'outOfStock', limit: 100 },
+          headers: getHeaders ? getHeaders() : {}
+        });
+        setOutOfStock(stockResp.data.products || []);
+      } catch (error) {
+        console.error('Error loading dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, [fetchInquiries, getHeaders, fetchProducts]);
+
+  const newInquiries = (inquiries || []).filter(i => i?.status === 'new');
+  const readInquiries = (inquiries || []).filter(i => i?.status !== 'new');
+
+  if (loading) return <PookieLoader />;
 
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
       {/* Quick Stats Header */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 'clamp(0.8rem, 2vw, 1.5rem)', marginBottom: '3rem' }}>
         <StatCard title="Total Pieces" value={products?.length || '0'} icon={ShoppingBag} />
-        <StatCard title="Confirmed Revenue" value={`₹${allOrders?.filter(o => o.status === 'confirmed').reduce((s,o) => s + parseFloat(o.total), 0).toLocaleString()}`} icon={BarChart3} />
+        <StatCard title="Confirmed Revenue" value={`₹${(allOrders || []).filter(o => o?.status === 'confirmed').reduce((s,o) => s + parseFloat(o?.total || 0), 0).toLocaleString()}`} icon={BarChart3} />
         <StatCard title="Pending Inquiries" value={newInquiries.length} icon={Mail} />
         <StatCard title="Out of Stock" value={outOfStock.length} icon={AlertCircle} />
       </div>
@@ -119,13 +140,13 @@ const AttentionRequiredView = () => {
             ) : (
               outOfStock.map((item) => (
                 <div key={item.id} style={{ display: 'flex', gap: '1.2rem', alignItems: 'center', background: '#fff9f9', padding: '1rem', borderRadius: '25px', flexWrap: 'wrap' }}>
-                  <img src={resolveImageUrl(item.image)} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '15px' }} alt="" />
+                  <img src={resolveImageUrl(item.images?.[0] || item.image)} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '15px' }} alt="" />
                   <div style={{ flex: 1 }}>
                     <p style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--secondary)' }}>{item.name}</p>
                     <p style={{ fontSize: '0.75rem', color: '#ff7676', fontWeight: 800 }}>SOLD OUT</p>
                   </div>
                   <button 
-                    onClick={() => { /* Navigation to products tab with this search? */ }}
+                    onClick={() => onEditProduct(item)}
                     style={{ padding: '0.6rem 1rem', background: 'white', border: '1px solid #fff0f0', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 800, color: 'var(--primary)', cursor: 'pointer' }}
                   >
                     Edit Stock
@@ -294,11 +315,10 @@ const AdminFilterModal = ({ isOpen, onClose, filters, setFilters, siteConfig, on
   );
 };
 
-const ProductManager = () => {
-  const { adminProducts, adminPagination, addProduct, updateProduct, deleteProduct, fetchAdminProducts, siteConfig } = useShop();
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+const ProductManager = ({ onEditProduct }) => {
+  const { adminProducts, adminPagination, addProduct, updateProduct, deleteProduct, fetchAdminProducts, siteConfig, isLoading } = useShop();
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
+
   
   // Independent Filter State
   const [filters, setFilters] = useState({
@@ -352,14 +372,14 @@ const ProductManager = () => {
   };
 
   const handleEdit = (p) => {
-    setEditingProduct(p);
-    setIsEditModalOpen(true);
+    onEditProduct(p);
   };
 
   const handleAddNew = () => {
-    setEditingProduct(null);
-    setIsEditModalOpen(true);
+    onEditProduct(null);
   };
+
+  if (isLoading && adminProducts.length === 0) return <PookieLoader />;
 
   return (
     <div style={{ background: 'white', padding: 'clamp(1rem, 5vw, 2.5rem)', borderRadius: '45px', boxShadow: '0 30px 60px rgba(233,163,163,0.15)' }}>
@@ -530,33 +550,37 @@ const ProductManager = () => {
         onApply={handleApplyFilters}
         onReset={handleResetFilters}
       />
-
-      <EditProductModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        product={editingProduct}
-        onSave={(data) => editingProduct ? updateProduct(data) : addProduct(data)}
-      />
     </div>
   );
 };
 
 const OrdersManager = () => {
-  const { allOrders, fetchAllOrders, approveOrder } = useShop();
+  const { allOrders, fetchAllOrders, approveOrder, isLoading } = useShop();
   const [subTab, setSubTab] = useState('pending');
+  const [searchTerm, setSearchTerm] = useState('');
   const [processingOrderId, setProcessingOrderId] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
     fetchAllOrders();
-  }, []);
+  }, [fetchAllOrders]);
 
   const filteredOrders = allOrders.filter(order => {
-    if (subTab === 'pending') return order.status === 'pending';
-    return order.status === 'confirmed';
+    const matchesTab = subTab === 'pending' ? order.status === 'pending' : order.status === 'confirmed';
+    if (!matchesTab) return false;
+    
+    if (!searchTerm) return true;
+    
+    const searchLower = searchTerm.toLowerCase();
+    const orderId = String(order.id).toLowerCase();
+    const customerName = (order.User?.name || '').toLowerCase();
+    
+    return orderId.includes(searchLower) || customerName.includes(searchLower);
   });
 
   const pendingCount = allOrders.filter(o => o.status === 'pending').length;
+
+  if (isLoading) return <PookieLoader />;
 
   return (
     <div style={{ background: 'white', padding: 'clamp(1rem, 5vw, 2.5rem)', borderRadius: '45px', boxShadow: '0 30px 60px rgba(233,163,163,0.15)' }}>
@@ -566,45 +590,69 @@ const OrdersManager = () => {
           <p style={{ color: 'var(--text-light)', fontSize: '0.9rem', marginTop: '0.5rem' }}>Manifest verification and shipping confirmation</p>
         </div>
         
-        <div style={{ display: 'flex', background: '#fff9f9', padding: '0.5rem', borderRadius: '25px', gap: '0.5rem' }}>
-          <button 
-            onClick={() => setSubTab('pending')}
-            style={{ 
-              padding: '0.8rem 1.4rem', 
-              borderRadius: '20px', 
-              border: 'none', 
-              fontWeight: 800, 
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-              background: subTab === 'pending' ? 'var(--primary)' : 'transparent',
-              color: subTab === 'pending' ? 'white' : 'var(--primary)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.6rem',
-              transition: 'all 0.3s'
-            }}
-          >
-            <AlertCircle size={16} /> Verification Required {pendingCount > 0 && <span style={{ background: 'white', color: 'var(--primary)', padding: '2px 8px', borderRadius: '10px', fontSize: '0.7rem' }}>{pendingCount}</span>}
-          </button>
-          <button 
-            onClick={() => setSubTab('confirmed')}
-            style={{ 
-              padding: '0.8rem 1.4rem', 
-              borderRadius: '20px', 
-              border: 'none', 
-              fontWeight: 800, 
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-              background: subTab === 'confirmed' ? 'var(--secondary)' : 'transparent',
-              color: subTab === 'confirmed' ? 'white' : 'var(--secondary)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.6rem',
-              transition: 'all 0.3s'
-            }}
-          >
-            <CheckCircle size={16} /> Confirmed Orders
-          </button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', alignItems: 'flex-end', flex: 1, minWidth: '320px' }}>
+          <div style={{ display: 'flex', background: '#fff9f9', padding: '0.4rem', borderRadius: '25px', gap: '0.4rem', width: 'fit-content' }}>
+            <button 
+              onClick={() => setSubTab('pending')}
+              style={{ 
+                padding: '0.8rem 1.4rem', 
+                borderRadius: '20px', 
+                border: 'none', 
+                fontWeight: 800, 
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                background: subTab === 'pending' ? 'var(--primary)' : 'transparent',
+                color: subTab === 'pending' ? 'white' : 'var(--primary)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                transition: 'all 0.3s'
+              }}
+            >
+              <AlertCircle size={16} /> Pending {pendingCount > 0 && <span style={{ background: 'white', color: 'var(--primary)', padding: '2px 8px', borderRadius: '10px', fontSize: '0.7rem' }}>{pendingCount}</span>}
+            </button>
+            <button 
+              onClick={() => setSubTab('confirmed')}
+              style={{ 
+                padding: '0.8rem 1.4rem', 
+                borderRadius: '20px', 
+                border: 'none', 
+                fontWeight: 800, 
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                background: subTab === 'confirmed' ? 'var(--secondary)' : 'transparent',
+                color: subTab === 'confirmed' ? 'white' : 'var(--secondary)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                transition: 'all 0.3s'
+              }}
+            >
+              <CheckCircle size={16} /> Confirmed
+            </button>
+          </div>
+
+          <div style={{ position: 'relative', width: '100%', maxWidth: '350px' }}>
+            <Search size={18} style={{ position: 'absolute', left: '1.2rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--primary)', opacity: 0.6 }} />
+            <input
+              type="text"
+              placeholder="Search by ID or Customer..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.85rem 1rem 0.85rem 3.2rem',
+                border: 'none',
+                background: '#fefafa',
+                borderRadius: '30px',
+                fontWeight: 700,
+                fontSize: '0.9rem',
+                outline: 'none',
+                color: 'var(--secondary)',
+                border: '1px solid #fff0f0'
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -683,9 +731,13 @@ const OrdersManager = () => {
 };
 
 const CatalogManager = () => {
-  const { catalog, addCatalogItem, updateCatalogItem, deleteCatalogItem } = useShop();
+  const { catalog, addCatalogItem, updateCatalogItem, deleteCatalogItem, fetchCatalog, isLoading } = useShop();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
+
+  useEffect(() => {
+    fetchCatalog();
+  }, [fetchCatalog]);
 
   const handleEdit = (item) => {
     setEditingItem(item);
@@ -696,6 +748,8 @@ const CatalogManager = () => {
     setEditingItem(null);
     setIsModalOpen(true);
   };
+
+  if (isLoading) return <PookieLoader />;
 
   return (
     <div style={{ background: 'white', padding: 'clamp(1.2rem, 5vw, 2.5rem)', borderRadius: '45px', boxShadow: '0 30px 60px rgba(233,163,163,0.15)' }}>
@@ -935,12 +989,20 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const { 
     logoutUser, products, appointments, siteConfig, updateSiteConfig, 
-    isAdminLoggedIn, allOrders, fetchAllOrders 
+    isAdminLoggedIn, allOrders, fetchAllOrders, addProduct, updateProduct 
   } = useShop();
 
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+
+  const handleEditProduct = (product) => {
+    setEditingProduct(product);
+    setIsEditModalOpen(true);
+  };
+
   useEffect(() => {
-    if (isAdminLoggedIn) fetchAllOrders();
-  }, [isAdminLoggedIn]);
+    // Logic moved to sub-components
+  }, []);
 
   if (!isAdminLoggedIn) {
     return (
@@ -1006,12 +1068,12 @@ const AdminDashboard = () => {
 
       <AnimatePresence mode="wait">
         {activeTab === 'inventory' && (
-          <AttentionRequiredView />
+          <AttentionRequiredView onEditProduct={handleEditProduct} />
         )}
 
         {activeTab === 'products' && (
           <motion.div key="products" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-            <ProductManager />
+            <ProductManager onEditProduct={handleEditProduct} />
           </motion.div>
         )}
 
@@ -1045,6 +1107,13 @@ const AdminDashboard = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <EditProductModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        product={editingProduct}
+        onSave={(data) => editingProduct ? updateProduct(data) : addProduct(data)}
+      />
     </div>
   );
 };

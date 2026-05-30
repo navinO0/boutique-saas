@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Save, Trash2, Image as ImageIcon, Plus, Sparkles, Heart } from 'lucide-react';
+import axios from 'axios';
 import { useShop } from '../context/ShopContext';
+import API_BASE_URL from '../config/api';
 
 const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
   const { siteConfig } = useShop();
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     price: '',
     discount: '0',
     stock: '',
-    category: 'sarees',
+    category: '',
     image: '',
     images: [],
     colors: [],
@@ -40,7 +44,7 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
         price: '',
         discount: '0',
         stock: '10',
-        category: 'sarees',
+        category: '',
         image: '',
         images: [],
         colors: [],
@@ -49,6 +53,39 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
       });
     }
   }, [product, isOpen]);
+
+  // Fetch categories fresh from API every time modal opens — bypasses the 5-min context cache
+  useEffect(() => {
+    if (!isOpen) return;
+    const fetchCategories = async () => {
+      setCategoriesLoading(true);
+      try {
+        const resp = await axios.get(`${API_BASE_URL}/company/config`, {
+          headers: { 'X-Company-ID': siteConfig.companyId || 1 }
+        });
+        const fetched = resp.data?.categories;
+        if (fetched?.length > 0) {
+          setCategories(fetched);
+          // For new products (no product prop), default to first category
+          if (!product) {
+            setFormData(prev => ({
+              ...prev,
+              category: prev.category || fetched[0].id
+            }));
+          }
+        } else {
+          // Fallback to siteConfig from context
+          setCategories(siteConfig.categories || []);
+        }
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+        setCategories(siteConfig.categories || []);
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+    fetchCategories();
+  }, [isOpen]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -159,10 +196,34 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.68rem', fontWeight: 800, marginBottom: '0.4rem', color: 'var(--primary)', textTransform: 'uppercase' }}>Category</label>
-                  <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} style={{ width: '100%', padding: '0.85rem 1rem', border: 'none', background: '#fff9f9', borderRadius: '18px', outline: 'none', appearance: 'none', fontSize: '0.88rem' }}>
-                    {siteConfig.categories.map(cat => (
-                      <option key={cat.id} value={cat.id}>{cat.name}</option>
-                    ))}
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    disabled={categoriesLoading}
+                    style={{
+                      width: '100%',
+                      padding: '0.85rem 1rem',
+                      border: 'none',
+                      background: categoriesLoading
+                        ? 'linear-gradient(90deg,#fce8e8 25%,#fdf0f0 50%,#fce8e8 75%)'
+                        : '#fff9f9',
+                      backgroundSize: categoriesLoading ? '200% 100%' : 'auto',
+                      animation: categoriesLoading ? 'shimmer 1.5s infinite' : 'none',
+                      borderRadius: '18px',
+                      outline: 'none',
+                      appearance: 'none',
+                      fontSize: '0.88rem',
+                      opacity: categoriesLoading ? 0.7 : 1,
+                      cursor: categoriesLoading ? 'wait' : 'pointer'
+                    }}
+                  >
+                    {categoriesLoading ? (
+                      <option value="">Loading categories…</option>
+                    ) : (
+                      categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))
+                    )}
                   </select>
                 </div>
               </div>

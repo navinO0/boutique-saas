@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { resolveImageUrl } from '../utils/imageUtils';
 
 import OrderDetailModal from '../components/OrderDetailModal';
+import PookieLoader from '../components/PookieLoader';
 
 const UserOrdersPage = () => {
   const { myOrders, fetchMyOrders, currentUser, logoutUser, isLoading } = useShop();
@@ -52,11 +53,7 @@ const UserOrdersPage = () => {
         </div>
       </div>
 
-      {isLoading ? (
-        <div style={{ textAlign: 'center', padding: '5rem' }}>
-          <p style={{ fontFamily: 'Playfair Display', color: 'var(--primary)', fontStyle: 'italic', fontSize: '0.9rem' }}>Unfolding your boutique history...</p>
-        </div>
-      ) : myOrders.length === 0 ? (
+      {isLoading ? <PookieLoader /> : myOrders.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '8rem 0' }}>
           <Package size={48} style={{ color: '#f5f5f5', marginBottom: '1.5rem' }} />
           <h3 style={{ color: '#999', fontFamily: 'Playfair Display', fontSize: '1.2rem' }}>No orders yet</h3>

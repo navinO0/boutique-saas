@@ -18,15 +18,21 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
   const carouselRef = React.useRef(null);
   const fullScreenCarouselRef = React.useRef(null);
 
-  useEffect(() => {
-    if (isFullScreen && fullScreenCarouselRef.current) {
-      const carousel = fullScreenCarouselRef.current;
-      carousel.scrollTo({ left: currentImageIndex * window.innerWidth, behavior: 'instant' });
-    }
-  }, [isFullScreen]);
+  const handleNextImage = (e) => {
+    if (e) e.stopPropagation();
+    const images = product?.images?.length > 0 ? product.images : [product.image];
+    setCurrentImageIndex(prev => (prev + 1) % images.length);
+  };
+
+  const handlePrevImage = (e) => {
+    if (e) e.stopPropagation();
+    const images = product?.images?.length > 0 ? product.images : [product.image];
+    setCurrentImageIndex(prev => (prev - 1 + images.length) % images.length);
+  };
 
   useEffect(() => {
     if (isOpen && initialProduct?.id) {
+
       fetchProductDetails(initialProduct.id);
     }
   }, [isOpen, initialProduct]);
@@ -60,7 +66,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
     return () => clearInterval(interval);
   }, [product, isOpen, isFullScreen]);
 
-  if (!product) return null;
+  if (!product && !isLoading) return null;
 
   const containerVariants = {
     hidden: { opacity: 0, scale: 0.8, y: 100 },
@@ -78,7 +84,25 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
     visible: { opacity: 1, x: 0 }
   };
 
+  const SkeletonBlock = ({ w = '100%', h = '1rem', radius = '10px', style = {} }) => (
+    <div style={{
+      width: w, height: h, borderRadius: radius,
+      background: 'linear-gradient(90deg, #fce8e8 25%, #fdf0f0 50%, #fce8e8 75%)',
+      backgroundSize: '200% 100%',
+      animation: 'shimmer 1.5s infinite',
+      flexShrink: 0,
+      ...style
+    }} />
+  );
+
   return (
+    <>
+      <style>{`
+        @keyframes shimmer {
+          0%   { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `}</style>
     <AnimatePresence>
       {isOpen && (
         <motion.div 
@@ -102,7 +126,40 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
               <X size={20} />
             </button>
 
-            <div className="responsive-modal-grid">
+            {/* ── Skeleton Loader ── */}
+            {isLoading && (
+              <div className="responsive-modal-grid" style={{ padding: '1rem' }}>
+                {/* Image skeleton */}
+                <div style={{ padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <SkeletonBlock h='clamp(280px, 50vw, 460px)' radius='24px' />
+                  <div style={{ display: 'flex', gap: '0.8rem' }}>
+                    {[1,2,3,4].map(i => <SkeletonBlock key={i} w='80px' h='80px' radius='14px' />)}
+                  </div>
+                </div>
+                {/* Details skeleton */}
+                <div style={{ padding: '0.5rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <SkeletonBlock w='40%' h='0.65rem' />
+                  <SkeletonBlock w='80%' h='2rem' radius='8px' />
+                  <SkeletonBlock w='30%' h='1.8rem' radius='8px' />
+                  <SkeletonBlock h='0.85rem' />
+                  <SkeletonBlock h='0.85rem' />
+                  <SkeletonBlock w='70%' h='0.85rem' />
+                  <div style={{ display: 'flex', gap: '0.8rem', marginTop: '0.5rem' }}>
+                    {['S','M','L','XL'].map(s => <SkeletonBlock key={s} w='52px' h='42px' radius='14px' />)}
+                  </div>
+                  <div style={{ display: 'flex', gap: '1rem', marginTop: '0.4rem' }}>
+                    {[1,2,3].map(i => <SkeletonBlock key={i} w='40px' h='40px' radius='50%' />)}
+                  </div>
+                  <div style={{ display: 'flex', gap: '1rem', marginTop: '0.8rem' }}>
+                    <SkeletonBlock h='52px' radius='24px' />
+                    <SkeletonBlock w='60px' h='52px' radius='24px' />
+                  </div>
+                  <SkeletonBlock h='48px' radius='24px' />
+                </div>
+              </div>
+            )}
+
+            {!isLoading && <div className="responsive-modal-grid">
               {/* Image Section */}
               <div style={{ padding: '0.5rem' }}>
                 {/* Desktop Main Image */}
@@ -128,25 +185,20 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                     {product.images?.length > 1 && (
                       <>
                         <button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setCurrentImageIndex(prev => (prev - 1 + product.images.length) % product.images.length);
-                          }}
+                          onClick={handlePrevImage}
                           style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.7)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, backdropFilter: 'blur(5px)' }}
                         >
                           <ChevronLeft size={20} color="var(--primary)" />
                         </button>
                         <button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setCurrentImageIndex(prev => (prev + 1) % product.images.length);
-                          }}
+                          onClick={handleNextImage}
                           style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.7)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, backdropFilter: 'blur(5px)' }}
                         >
                           <ChevronRight size={20} color="var(--primary)" />
                         </button>
                       </>
                     )}
+
 
                     <div style={{ 
                       position: 'absolute', 
@@ -266,12 +318,28 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
 
                 <motion.div variants={itemVariants} className="modal-action-row">
                   <motion.button 
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    whileHover={product.stock === 0 ? {} : { scale: 1.02 }}
+                    whileTap={product.stock === 0 ? {} : { scale: 0.98 }}
+                    disabled={product.stock === 0}
                     onClick={() => onAddToCart({ ...product, selectedSize, selectedColor })} 
-                    style={{ flex: 1, padding: 'clamp(0.85rem, 2vw, 1.1rem)', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '24px', fontWeight: 700, fontSize: 'clamp(0.78rem, 2vw, 0.92rem)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', letterSpacing: '0.3px' }}
+                    style={{ 
+                      flex: 1, 
+                      padding: 'clamp(0.85rem, 2vw, 1.1rem)', 
+                      background: product.stock === 0 ? '#ccc' : 'var(--primary)', 
+                      color: 'white', 
+                      border: 'none', 
+                      borderRadius: '24px', 
+                      fontWeight: 700, 
+                      fontSize: 'clamp(0.78rem, 2vw, 0.92rem)', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      gap: '0.6rem', 
+                      letterSpacing: '0.3px',
+                      cursor: product.stock === 0 ? 'not-allowed' : 'pointer'
+                    }}
                   >
-                    <ShoppingBag size={17} /> Add to Magic Bag
+                    <ShoppingBag size={17} /> {product.stock === 0 ? 'Sold Out' : 'Add to Magic Bag'}
                   </motion.button>
                   <motion.button 
                     whileHover={{ scale: 1.05 }}
@@ -315,7 +383,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                   <MessageSquare size={17} /> Chat with Designer
                 </motion.button>
               </div>
-            </div>
+            </div>}
 
             {/* Similar Products */}
             {similarProducts.length > 0 && (
@@ -350,6 +418,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
           </motion.div>
         </motion.div>
       )}
+    </AnimatePresence>
 
       {/* Full Screen Image Overlay */}
       <AnimatePresence>
@@ -380,98 +449,81 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                <X size={24} color="#000" />
             </motion.button>
 
-            <div 
-              ref={fullScreenCarouselRef}
-              style={{ 
-                width: '100%', 
-                height: '100%', 
-                overflowX: 'auto', 
-                overflowY: 'hidden', 
-                display: 'flex', 
-                scrollSnapType: 'x mandatory',
-                alignItems: 'center',
-                scrollbarWidth: 'none',
-              }}
-              className="no-scrollbar full-screen-carousel"
-              onClick={(e) => e.stopPropagation()}
-              onScroll={(e) => {
-                const index = Math.round(e.target.scrollLeft / window.innerWidth);
-                if (index !== currentImageIndex) setCurrentImageIndex(index);
-              }}
-            >
-              {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
-                <div 
-                  key={idx} 
-                  style={{ 
-                    minWidth: '100vw', 
-                    height: '100vh', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    scrollSnapAlign: 'center',
-                    padding: '1rem'
-                  }}
-                >
-                  <motion.img 
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    src={resolveImageUrl(img)} 
-                    style={{ 
-                      maxWidth: '100%', 
-                      maxHeight: '90vh', 
-                      objectFit: 'contain', 
-                      borderRadius: '12px',
-                      boxShadow: '0 20px 50px rgba(0,0,0,0.3)'
-                    }} 
-                  />
-                </div>
-              ))}
+            <div style={{ width: '100%', height: '100%', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
+              <motion.div
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                onDragEnd={(e, { offset }) => {
+                  const swipeThreshold = 50;
+                  if (offset.x < -swipeThreshold) handleNextImage();
+                  else if (offset.x > swipeThreshold) handlePrevImage();
+                }}
+                animate={{ x: `-${currentImageIndex * 100}%` }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                  height: '100%',
+                  cursor: 'grab'
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      minWidth: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '1rem'
+                    }}
+                  >
+                    <motion.img
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      src={resolveImageUrl(img)}
+                      draggable={false}
+                      style={{
+                        maxWidth: '100%',
+                        maxHeight: '90vh',
+                        objectFit: 'contain',
+                        borderRadius: '12px',
+                        boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
+                        pointerEvents: 'none'
+                      }}
+                    />
+                  </div>
+                ))}
+              </motion.div>
             </div>
 
-            {product.images?.length > 1 && (
-              <>
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (fullScreenCarouselRef.current) {
-                      const newIndex = (currentImageIndex - 1 + (product.images?.length || 1)) % (product.images?.length || 1);
-                      fullScreenCarouselRef.current.scrollTo({ 
-                        left: newIndex * window.innerWidth, 
-                        behavior: 'smooth' 
-                      });
-                    }
-                  }}
-                  style={{ position: 'absolute', left: '2rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '50%', width: '55px', height: '55px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 6010, backdropFilter: 'blur(10px)' }}
-                >
-                  <ChevronLeft size={30} color="white" />
-                </button>
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (fullScreenCarouselRef.current) {
-                      const newIndex = (currentImageIndex + 1) % (product.images?.length || 1);
-                      fullScreenCarouselRef.current.scrollTo({ 
-                        left: newIndex * window.innerWidth, 
-                        behavior: 'smooth' 
-                      });
-                    }
-                  }}
-                  style={{ position: 'absolute', right: '2rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '50%', width: '55px', height: '55px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 6010, backdropFilter: 'blur(10px)' }}
-                >
-                  <ChevronRight size={30} color="white" />
-                </button>
-              </>
-            )}
+            <div className="desktop-only">
+              <button 
+                onClick={handlePrevImage}
+                style={{ position: 'absolute', left: '2rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '50%', width: '55px', height: '55px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 6010, backdropFilter: 'blur(10px)' }}
+              >
+                <ChevronLeft size={30} color="white" />
+              </button>
+              <button 
+                onClick={handleNextImage}
+                style={{ position: 'absolute', right: '2rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '50%', width: '55px', height: '55px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 6010, backdropFilter: 'blur(10px)' }}
+              >
+                <ChevronRight size={30} color="white" />
+              </button>
+            </div>
 
             <div style={{ position: 'absolute', bottom: '3rem', textAlign: 'center', color: 'white', zIndex: 6010, pointerEvents: 'none' }}>
                <p style={{ fontSize: '1.2rem', fontFamily: 'Playfair Display', letterSpacing: '1px' }}>{product.name}</p>
-               <p style={{ opacity: 0.6, fontSize: '0.8rem', marginTop: '0.5rem', letterSpacing: '4px', textTransform: 'uppercase' }}>{currentImageIndex + 1} / {product.images?.length || 1}</p>
-               <p style={{ fontSize: '0.65rem', marginTop: '1.5rem', color: 'var(--primary)', fontWeight: 800, letterSpacing: '2px' }}>DRAG TO BROWSE</p>
+               <p style={{ opacity: 0.6, fontSize: '0.8rem', marginTop: '0.5rem', letterSpacing: '4px', textTransform: 'uppercase' }}>{currentImageIndex + 1} / {(product.images?.length > 0 ? product.images : [product.image]).length}</p>
+               <p style={{ fontSize: '0.65rem', marginTop: '1.5rem', color: 'var(--primary)', fontWeight: 800, letterSpacing: '2px' }}>SWIPE OR DRAG TO BROWSE</p>
             </div>
+
           </motion.div>
         )}
       </AnimatePresence>
-    </AnimatePresence>
+    </>
   );
 };
 
