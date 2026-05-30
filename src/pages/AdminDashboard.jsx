@@ -335,7 +335,7 @@ const ProductManager = ({ onEditProduct }) => {
     fetchAdminProducts({
       search: f.search,
       category: f.category !== 'all' ? f.category : undefined,
-      isActive: f.isActive !== 'all' ? f.isActive : undefined,
+      isActive: f.isActive,
       sortBy: f.sortBy,
       maxPrice: f.maxPrice !== '100000' ? f.maxPrice : undefined,
       page: f.page
@@ -640,7 +640,6 @@ const OrdersManager = () => {
               style={{
                 width: '100%',
                 padding: '0.85rem 1rem 0.85rem 3.2rem',
-                border: 'none',
                 background: '#fefafa',
                 borderRadius: '30px',
                 fontWeight: 700,

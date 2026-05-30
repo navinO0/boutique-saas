@@ -69,6 +69,7 @@ const ProductDetailPage = () => {
     return () => clearInterval(interval);
   }, [product, isFullScreen]);
 
+
   if (isLoading || !product) return <PookieLoader />;
 
 
@@ -106,7 +107,7 @@ const ProductDetailPage = () => {
                     exit={{ opacity: 0, x: -20 }}
                     src={resolveImageUrl(product.images?.[currentImageIndex] || product.image)}
                     onClick={() => setIsFullScreen(true)}
-                    style={{ width: '100%', height: '500px', objectFit: 'contain', borderRadius: '24px', cursor: 'zoom-in' }}
+                    style={{ width: '100%', height: '600px', objectFit: 'contain', borderRadius: '24px', cursor: 'zoom-in', background: '#fefafa' }}
                   />
                 </AnimatePresence>
 
@@ -158,33 +159,52 @@ const ProductDetailPage = () => {
 
             {/* Mobile/Tablet View */}
             <div className="mobile-only" style={{ flexDirection: 'column' }}>
-              <div 
-                ref={scrollRef}
-                className="mobile-image-carousel no-scrollbar" 
-                style={{ borderRadius: '40px', background: '#fef5f5', overflowX: 'auto', display: 'flex', scrollSnapType: 'x mandatory' }}
-                onScroll={(e) => {
-                  const index = Math.round(e.target.scrollLeft / e.target.clientWidth);
-                  if (index !== currentImageIndex) setCurrentImageIndex(index);
-                }}
-              >
-                {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
-                  <div key={idx} className="carousel-item" style={{ minWidth: '100%', height: '400px', display: 'flex', alignItems: 'center', justifyContent: 'center', scrollSnapAlign: 'center' }}>
-                    <img
-                      src={resolveImageUrl(img)}
-                      alt=""
-                      style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                      onClick={() => { setCurrentImageIndex(idx); setIsFullScreen(true); }}
-                    />
-                  </div>
-                ))}
-              </div>
-              {product.images?.length > 1 && (
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', marginTop: '1.2rem' }}>
-                  {(product.images?.length > 0 ? product.images : [product.image]).map((_, idx) => (
-                    <div key={idx} style={{ width: '8px', height: '8px', borderRadius: '50%', background: currentImageIndex === idx ? 'var(--primary)' : '#ddd', transition: '0.3s' }} />
+              <div style={{ position: 'relative' }}>
+                <div 
+                  ref={scrollRef}
+                  className="mobile-image-carousel no-scrollbar" 
+                  style={{ borderRadius: '40px', background: '#fef5f5', overflowX: 'auto', display: 'flex', scrollSnapType: 'x mandatory' }}
+                  onScroll={(e) => {
+                    const container = e.target;
+                    const scrollWidth = container.clientWidth;
+                    if (scrollWidth > 0) {
+                      const index = Math.round(container.scrollLeft / scrollWidth);
+                      if (index !== currentImageIndex) setCurrentImageIndex(index);
+                    }
+                  }}
+                >
+                  {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
+                    <div key={idx} className="carousel-item" style={{ minWidth: '100%', height: '450px', display: 'flex', alignItems: 'center', justifyContent: 'center', scrollSnapAlign: 'center', background: '#fefafa' }}>
+                      <img
+                        src={resolveImageUrl(img)}
+                        alt=""
+                        style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                        onClick={() => { setCurrentImageIndex(idx); setIsFullScreen(true); }}
+                      />
+                    </div>
                   ))}
                 </div>
-              )}
+                
+                {product.images?.length > 1 && (
+                  <div style={{ 
+                    position: 'absolute', 
+                    bottom: '1.5rem', 
+                    left: '50%', 
+                    transform: 'translateX(-50%)', 
+                    display: 'flex', 
+                    gap: '0.6rem',
+                    background: 'rgba(255,255,255,0.4)',
+                    backdropFilter: 'blur(10px)',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '20px',
+                    zIndex: 10
+                  }}>
+                    {(product.images?.length > 0 ? product.images : [product.image]).map((_, idx) => (
+                      <div key={idx} style={{ width: currentImageIndex === idx ? '15px' : '6px', height: '6px', borderRadius: '4px', background: currentImageIndex === idx ? 'var(--primary)' : 'rgba(0,0,0,0.2)', transition: '0.3s' }} />
+                    ))}
+                  </div>
+                )}
+              </div>
 
             </div>
           </div>
