@@ -58,16 +58,29 @@ const ProductDetailPage = () => {
     setCurrentImageIndex(prev => (prev - 1 + images.length) % images.length);
   };
 
-  // Auto-scroll images
+  const autoScrollRef = useRef(null);
+
+  const [autoScrollPaused, setAutoScrollPaused] = useState(false);
+
+  // Auto-scroll images logic with intelligent pausing
   useEffect(() => {
-    if (!product?.images?.length || product.images.length <= 1 || isFullScreen) return;
+    if (autoScrollRef.current) {
+      clearInterval(autoScrollRef.current);
+      autoScrollRef.current = null;
+    }
 
-    const interval = setInterval(() => {
-      setCurrentImageIndex(prev => (prev + 1) % product.images.length);
-    }, 4000);
+    if (!product?.images?.length || product.images.length <= 1 || isFullScreen || autoScrollPaused) return;
 
-    return () => clearInterval(interval);
-  }, [product, isFullScreen]);
+    autoScrollRef.current = setInterval(() => {
+      setCurrentImageIndex(prev => (prev + 1) % (product.images?.length || 1));
+    }, 5000);
+
+    return () => {
+      if (autoScrollRef.current) {
+        clearInterval(autoScrollRef.current);
+      }
+    };
+  }, [product?.id, isFullScreen, product?.images?.length, autoScrollPaused]);
 
 
   if (isLoading || !product) return <PookieLoader />;
@@ -97,50 +110,57 @@ const ProductDetailPage = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="product-main-image-container"
-                style={{ borderRadius: '50px', overflow: 'hidden', position: 'relative', boxShadow: '0 40px 100px rgba(233,163,163,0.2)', width: '100%' }}
+                onMouseEnter={() => setAutoScrollPaused(true)}
+                onMouseLeave={() => setAutoScrollPaused(false)}
+                style={{ boxShadow: '0 40px 100px rgba(233,163,163,0.15)' }}
               >
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={currentImageIndex}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, scale: 1.1 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.6, ease: "circOut" }}
                     src={resolveImageUrl(product.images?.[currentImageIndex] || product.image)}
                     onClick={() => setIsFullScreen(true)}
-                    style={{ width: '100%', height: '600px', objectFit: 'contain', borderRadius: '24px', cursor: 'zoom-in', background: '#fefafa' }}
+                    className="premium-full-box-image"
+                    style={{ cursor: 'zoom-in' }}
                   />
                 </AnimatePresence>
 
-                {/* Desktop Navigation Arrows moved to overlay as per user request */}
-                
+                {/* Desktop Tap Navigation Regions */}
+                <div className="carousel-tap-area carousel-tap-left" onClick={handlePrevImage} />
+                <div className="carousel-tap-area carousel-tap-right" onClick={handleNextImage} />
 
-                {/* Desktop Dots Overlay */}
-                  <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '0.6rem', zIndex: 10, background: 'rgba(255,255,255,0.4)', backdropFilter: 'blur(10px)', padding: '0.5rem 1rem', borderRadius: '20px' }}>
-                    {(product.images?.length > 0 ? product.images : [product.image]).map((_, idx) => (
-                      <div 
-                        key={idx} 
-                        onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx); }}
-                        style={{ width: currentImageIndex === idx ? '20px' : '8px', height: '8px', borderRadius: '4px', background: currentImageIndex === idx ? 'var(--primary)' : 'rgba(0,0,0,0.2)', transition: '0.3s', cursor: 'pointer' }} 
-                      />
-                    ))}
-                  </div>
+                {/* Desktop Micro-indicators */}
+                <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '0.6rem', zIndex: 30, background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)', padding: '0.6rem 1.2rem', borderRadius: '30px' }}>
+                  {(product.images?.length > 0 ? product.images : [product.image]).map((_, idx) => (
+                    <div 
+                      key={idx} 
+                      onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx); }}
+                      style={{ width: currentImageIndex === idx ? '24px' : '8px', height: '8px', borderRadius: '4px', background: currentImageIndex === idx ? 'var(--primary)' : 'rgba(0,0,0,0.1)', transition: '0.4s cubic-bezier(0.19, 1, 0.22, 1)', cursor: 'pointer' }} 
+                    />
+                  ))}
+                </div>
 
                 <div style={{
                   position: 'absolute',
                   top: '2rem',
                   left: '2rem',
                   background: 'white',
-                  padding: '0.6rem 1.2rem',
-                  borderRadius: '25px',
+                  padding: '0.7rem 1.4rem',
+                  borderRadius: '30px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.6rem',
+                  gap: '0.7rem',
                   fontWeight: 900,
                   color: 'var(--primary)',
                   boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-                  fontSize: '0.8rem'
+                  fontSize: '0.75rem',
+                  letterSpacing: '1px',
+                  zIndex: 30
                 }}>
-                  <Sparkles size={15} /> Exclusive Masterpiece
+                  <Sparkles size={15} /> EXCLUSIVE PIECE
                 </div>
               </motion.div>
 
@@ -159,11 +179,13 @@ const ProductDetailPage = () => {
 
             {/* Mobile/Tablet View */}
             <div className="mobile-only" style={{ flexDirection: 'column' }}>
-              <div style={{ position: 'relative' }}>
+              <div style={{ position: 'relative', borderRadius: '40px', overflow: 'hidden' }}>
                 <div 
                   ref={scrollRef}
                   className="mobile-image-carousel no-scrollbar" 
-                  style={{ borderRadius: '40px', background: '#fef5f5', overflowX: 'auto', display: 'flex', scrollSnapType: 'x mandatory' }}
+                  onTouchStart={() => setAutoScrollPaused(true)}
+                  onTouchEnd={() => setTimeout(() => setAutoScrollPaused(false), 2000)}
+                  style={{ background: '#fef5f5', overflowX: 'auto', display: 'flex', scrollSnapType: 'x mandatory' }}
                   onScroll={(e) => {
                     const container = e.target;
                     const scrollWidth = container.clientWidth;
@@ -174,7 +196,7 @@ const ProductDetailPage = () => {
                   }}
                 >
                   {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
-                    <div key={idx} className="carousel-item" style={{ minWidth: '100%', height: '450px', display: 'flex', alignItems: 'center', justifyContent: 'center', scrollSnapAlign: 'center', background: '#fefafa' }}>
+                    <div key={idx} className="carousel-item" style={{ minWidth: '100%', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center', scrollSnapAlign: 'center', background: '#fefafa' }}>
                       <img
                         src={resolveImageUrl(img)}
                         alt=""
@@ -193,17 +215,22 @@ const ProductDetailPage = () => {
                     transform: 'translateX(-50%)', 
                     display: 'flex', 
                     gap: '0.6rem',
-                    background: 'rgba(255,255,255,0.4)',
-                    backdropFilter: 'blur(10px)',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '20px',
-                    zIndex: 10
+                    background: 'rgba(255,255,255,0.7)',
+                    backdropFilter: 'blur(15px)',
+                    padding: '0.6rem 1.2rem',
+                    borderRadius: '30px',
+                    zIndex: 10,
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
                   }}>
                     {(product.images?.length > 0 ? product.images : [product.image]).map((_, idx) => (
-                      <div key={idx} style={{ width: currentImageIndex === idx ? '15px' : '6px', height: '6px', borderRadius: '4px', background: currentImageIndex === idx ? 'var(--primary)' : 'rgba(0,0,0,0.2)', transition: '0.3s' }} />
+                      <div key={idx} style={{ width: currentImageIndex === idx ? '20px' : '6px', height: '6px', borderRadius: '4px', background: currentImageIndex === idx ? 'var(--primary)' : 'rgba(0,0,0,0.1)', transition: '0.4s' }} />
                     ))}
                   </div>
                 )}
+
+                <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(10px)', padding: '0.5rem 1rem', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 900, color: 'var(--primary)', zIndex: 10 }}>
+                  {currentImageIndex + 1} / {(product.images?.length > 0 ? product.images : [product.image]).length}
+                </div>
               </div>
 
             </div>

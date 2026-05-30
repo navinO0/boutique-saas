@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Heart, ShoppingBag, Share2, Check, MessageSquare, Sparkles, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from 'axios';
@@ -55,16 +55,27 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
     }
   };
 
-  // Auto-scroll images
+  const [autoScrollPaused, setAutoScrollPaused] = useState(false);
+
+  // Auto-scroll images with intelligent pausing
   useEffect(() => {
-    if (!product?.images?.length || product.images.length <= 1 || !isOpen || isFullScreen) return;
+    if (autoScrollRef.current) {
+      clearInterval(autoScrollRef.current);
+      autoScrollRef.current = null;
+    }
+
+    if (!product?.images?.length || product.images.length <= 1 || !isOpen || isFullScreen || autoScrollPaused) return;
     
-    const interval = setInterval(() => {
-      setCurrentImageIndex(prev => (prev + 1) % product.images.length);
-    }, 4000);
+    autoScrollRef.current = setInterval(() => {
+      setCurrentImageIndex(prev => (prev + 1) % (product.images?.length || 1));
+    }, 5000);
     
-    return () => clearInterval(interval);
-  }, [product, isOpen, isFullScreen]);
+    return () => {
+      if (autoScrollRef.current) {
+        clearInterval(autoScrollRef.current);
+      }
+    };
+  }, [product?.id, isOpen, isFullScreen, product?.images?.length, autoScrollPaused]);
 
   if (!product && !isLoading) return null;
 
@@ -166,38 +177,39 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                 <div className="desktop-only">
                   <motion.div 
                     layoutId={`product-image-${product.id}`}
-                    className="modal-main-image"
-                    style={{ width: '100%', position: 'relative', aspectRatio: '3/4', overflow: 'hidden', borderRadius: '24px' }}
+                    onMouseEnter={() => setAutoScrollPaused(true)}
+                    onMouseLeave={() => setAutoScrollPaused(false)}
+                    className="modal-main-image product-main-image-container"
+                    style={{ width: '100%', position: 'relative', aspectRatio: '3/4', overflow: 'hidden', borderRadius: '32px', boxShadow: '0 20px 50px rgba(233,163,163,0.1)' }}
                   >
                     <AnimatePresence mode="wait">
                       <motion.img 
                         key={currentImageIndex}
                         initial={{ opacity: 0, scale: 1.1 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.5 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.6, ease: "circOut" }}
                         src={resolveImageUrl(product.images?.[currentImageIndex] || product.image)} 
                         onClick={(e) => { e.stopPropagation(); setIsFullScreen(true); }} 
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', background: '#fef5f5', cursor: 'zoom-in' }} 
+                        className="premium-full-box-image"
+                        style={{ cursor: 'zoom-in' }} 
                       />
                     </AnimatePresence>
 
-                    {product.images?.length > 1 && (
-                      <>
-                        <button 
-                          onClick={handlePrevImage}
-                          style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.7)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, backdropFilter: 'blur(5px)' }}
-                        >
-                          <ChevronLeft size={20} color="var(--primary)" />
-                        </button>
-                        <button 
-                          onClick={handleNextImage}
-                          style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.7)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, backdropFilter: 'blur(5px)' }}
-                        >
-                          <ChevronRight size={20} color="var(--primary)" />
-                        </button>
-                      </>
-                    )}
+                    {/* Desktop Tap Navigation Regions */}
+                    <div className="carousel-tap-area carousel-tap-left" onClick={handlePrevImage} />
+                    <div className="carousel-tap-area carousel-tap-right" onClick={handleNextImage} />
+
+                    {/* Modal Micro-indicators */}
+                    <div style={{ position: 'absolute', bottom: '1.2rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '0.6rem', zIndex: 30, background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(10px)', padding: '0.6rem 1.2rem', borderRadius: '30px', boxShadow: '0 8px 32px rgba(0,0,0,0.05)' }}>
+                      {(product.images?.length > 0 ? product.images : [product.image]).map((_, idx) => (
+                        <div 
+                          key={idx} 
+                          onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx); }}
+                          style={{ width: currentImageIndex === idx ? '24px' : '8px', height: '8px', borderRadius: '4px', background: currentImageIndex === idx ? 'var(--primary)' : 'rgba(0,0,0,0.1)', transition: '0.4s cubic-bezier(0.19, 1, 0.22, 1)', cursor: 'pointer' }} 
+                        />
+                      ))}
+                    </div>
 
 
                     <div style={{ 
@@ -236,25 +248,43 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
 
                 {/* Mobile/Tablet Scrollable Gallery */}
                 <div className="mobile-only" style={{ flexDirection: 'column' }}>
-                  <div className="mobile-image-carousel" style={{ borderRadius: '24px', background: '#fef5f5' }}>
-                    {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
-                      <div key={idx} className="carousel-item" style={{ height: '350px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <img 
-                          src={resolveImageUrl(img)} 
-                          alt="" 
-                          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                          onClick={() => { setCurrentImageIndex(idx); setIsFullScreen(true); }}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  {product.images?.length > 1 && (
-                    <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '1rem' }}>
-                      {product.images.map((_, idx) => (
-                        <div key={idx} style={{ width: '6px', height: '6px', borderRadius: '50%', background: currentImageIndex === idx ? 'var(--primary)' : '#eee' }} />
+                  <div style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden' }}>
+                    <div 
+                      className="mobile-image-carousel no-scrollbar" 
+                      onTouchStart={() => setAutoScrollPaused(true)}
+                      onTouchEnd={() => setTimeout(() => setAutoScrollPaused(false), 2000)}
+                      style={{ background: '#fef5f5', overflowX: 'auto', display: 'flex', scrollSnapType: 'x mandatory' }}
+                      onScroll={(e) => {
+                        const container = e.target;
+                        const scrollWidth = container.clientWidth;
+                        if (scrollWidth > 0) {
+                          const index = Math.round(container.scrollLeft / scrollWidth);
+                          if (index !== currentImageIndex) setCurrentImageIndex(index);
+                        }
+                      }}
+                    >
+                      {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
+                        <div key={idx} className="carousel-item" style={{ minWidth: '100%', height: '350px', display: 'flex', alignItems: 'center', justifyContent: 'center', scrollSnapAlign: 'center', background: '#fefafa' }}>
+                          <img 
+                            src={resolveImageUrl(img)} 
+                            alt="" 
+                            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                            onClick={() => { setCurrentImageIndex(idx); setIsFullScreen(true); }}
+                          />
+                        </div>
                       ))}
                     </div>
-                  )}
+                    {product.images?.length > 1 && (
+                      <div style={{ position: 'absolute', bottom: '0.8rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '0.4rem', zIndex: 10, background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(10px)', padding: '0.5rem 0.8rem', borderRadius: '20px' }}>
+                        {product.images.map((_, idx) => (
+                          <div key={idx} style={{ width: currentImageIndex === idx ? '15px' : '5px', height: '5px', borderRadius: '3px', background: currentImageIndex === idx ? 'var(--primary)' : 'rgba(0,0,0,0.1)', transition: '0.4s' }} />
+                        ))}
+                      </div>
+                    )}
+                    <div style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(10px)', padding: '0.4rem 0.8rem', borderRadius: '15px', fontSize: '0.65rem', fontWeight: 900, color: 'var(--primary)', zIndex: 10 }}>
+                      {currentImageIndex + 1} / {(product.images?.length > 0 ? product.images : [product.image]).length}
+                    </div>
+                  </div>
                 </div>
               </div>
 
