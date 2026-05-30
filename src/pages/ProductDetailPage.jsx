@@ -50,12 +50,18 @@ const ProductDetailPage = () => {
     if (e) e.stopPropagation();
     const images = product?.images?.length > 0 ? product.images : [product.image];
     setCurrentImageIndex(prev => (prev + 1) % images.length);
+    // Reset timer on manual nav
+    setAutoScrollPaused(true);
+    setTimeout(() => setAutoScrollPaused(false), 8000); 
   };
 
   const handlePrevImage = (e) => {
     if (e) e.stopPropagation();
     const images = product?.images?.length > 0 ? product.images : [product.image];
     setCurrentImageIndex(prev => (prev - 1 + images.length) % images.length);
+    // Reset timer on manual nav
+    setAutoScrollPaused(true);
+    setTimeout(() => setAutoScrollPaused(false), 8000);
   };
 
   const autoScrollRef = useRef(null);

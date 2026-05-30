@@ -47,7 +47,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, isAdmin, onApprove, isProces
             <div>
               <h2 style={{ fontSize: '1.25rem', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>#{order.id.toString().padStart(6, '0')}</h2>
               <p style={{ fontSize: '0.7rem', color: '#aaa', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginTop: '0.2rem' }}>
-                Manifest Created {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                Manifest Created {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} at {new Date(order.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
               </p>
             </div>
             <button onClick={onClose} style={{ background: '#f5f5f5', border: 'none', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888', cursor: 'pointer' }}><X size={18} /></button>

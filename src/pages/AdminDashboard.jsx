@@ -686,6 +686,12 @@ const OrdersManager = () => {
                     <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px' }}>Items</span>
                     <p style={{ fontWeight: 800, color: '#666', fontSize: '0.85rem' }}>{order.OrderItems?.length} Pieces</p>
                   </div>
+                  <div>
+                    <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px' }}>Manifested At</span>
+                    <p style={{ fontWeight: 800, color: '#666', fontSize: '0.8rem' }}>
+                      {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}, {new Date(order.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
                 </div>
                 <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
                   <span style={{ 
