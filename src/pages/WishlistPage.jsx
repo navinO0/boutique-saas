@@ -47,7 +47,7 @@ const WishlistPage = () => {
                 <Trash2 size={16} color="#dc2626" />
               </button>
               
-              <div style={{ height: '350px' }}>
+              <div style={{ height: '450px' }}>
                 <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
               

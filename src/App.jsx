@@ -19,6 +19,8 @@ const UserOrdersPage = lazy(() => import('./pages/UserOrdersPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
+const AccountPage = lazy(() => import('./pages/AccountPage'));
+const OrderDetailPage = lazy(() => import('./pages/OrderDetailPage'));
 
 const Navbar = ({ onOpenCart }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -77,7 +79,7 @@ const Navbar = ({ onOpenCart }) => {
             <Link to="/about">About Us</Link>
             <Link to="/contact">Contact</Link>
             {currentUser && (
-              isAdminUser ? <Link to="/admin">Admin</Link> : <Link to="/orders">Orders</Link>
+              isAdminUser ? <Link to="/admin">Admin</Link> : <Link to="/account">Account</Link>
             )}
           </div>
 
@@ -134,7 +136,7 @@ const Navbar = ({ onOpenCart }) => {
             <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Bag</span>
           </div>
           {currentUser ? (
-            <Link to={isAdminUser ? "/admin" : "/orders"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
+            <Link to={isAdminUser ? "/admin" : "/account"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
               <motion.div whileTap={{ scale: 0.8 }}><User size={18} /></motion.div>
               <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Account</span>
             </Link>
@@ -163,7 +165,7 @@ const Navbar = ({ onOpenCart }) => {
               <Link to="/about" onClick={() => setIsOpen(false)}>About</Link>
               <Link to="/contact" onClick={() => setIsOpen(false)}>Contact</Link>
               {currentUser && (
-                isAdminUser ? <Link to="/admin" onClick={() => setIsOpen(false)}>Admin</Link> : <Link to="/orders" onClick={() => setIsOpen(false)}>Orders</Link>
+                isAdminUser ? <Link to="/admin" onClick={() => setIsOpen(false)}>Admin</Link> : <Link to="/account" onClick={() => setIsOpen(false)}>Account</Link>
               )}
               {!currentUser && <Link to="/auth" onClick={() => setIsOpen(false)}>Login</Link>}
               {currentUser && <button onClick={handleLogout} style={{ color: 'var(--primary)', background: 'none', border: 'none', fontWeight: 700, textTransform: 'uppercase' }}>Logout</button>}
@@ -274,6 +276,8 @@ function App() {
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/orders" element={<UserOrdersPage />} />
+            <Route path="/account" element={<AccountPage />} />
+            <Route path="/account/order/:orderId" element={<OrderDetailPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/product/:id" element={<ProductDetailPage />} />

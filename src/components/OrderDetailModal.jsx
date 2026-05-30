@@ -53,14 +53,14 @@ const OrderDetailModal = ({ isOpen, onClose, order, isAdmin, onApprove, isProces
             <button onClick={onClose} style={{ background: '#f5f5f5', border: 'none', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#888', cursor: 'pointer' }}><X size={18} /></button>
           </div>
 
-          <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+          <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             {/* 1. Status Section */}
-            <div style={{ textAlign: 'center', background: '#fefafa', padding: '1.5rem', borderRadius: '25px', border: '1px solid #fff0f0' }}>
+            <div style={{ textAlign: 'center', background: '#fefafa', padding: '1.2rem', borderRadius: '25px', border: '1px solid #fff0f0' }}>
               <span style={{ 
-                padding: '0.5rem 1.2rem', borderRadius: '30px', fontSize: '0.7rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1px',
-                background: order.status === 'confirmed' ? '#f0fdf4' : '#fff7ed',
-                color: order.status === 'confirmed' ? '#10b981' : '#f97316',
-                display: 'inline-block', marginBottom: '1.2rem'
+                padding: '0.5rem 1.2rem', borderRadius: '30px', fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1px',
+                background: order.status === 'delivered' ? '#f0fdf4' : order.status === 'confirmed' ? '#f0fdf4' : '#fff7ed',
+                color: order.status === 'delivered' ? '#10b981' : order.status === 'confirmed' ? '#10b981' : '#f97316',
+                display: 'inline-block', marginBottom: isAdmin && order.status === 'pending' ? '1.2rem' : '0'
               }}>
                 {order.status}
               </span>
@@ -79,54 +79,54 @@ const OrderDetailModal = ({ isOpen, onClose, order, isAdmin, onApprove, isProces
               )}
             </div>
 
-            {/* 2. Customer & shipping */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--primary)' }}>
-                <MapPin size={16} />
-                <h4 style={{ fontSize: '0.7rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1.5px' }}>Shipping Details</h4>
-              </div>
-              <div style={{ paddingLeft: '1.3rem', borderLeft: '2px solid #fff0f0' }}>
-                <p style={{ fontWeight: 800, fontSize: '0.95rem', color: 'var(--secondary)' }}>{order.address?.name}</p>
-                <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '0.5rem', lineHeight: 1.6 }}>{order.address?.addressText}, {order.address?.city} - {order.address?.pincode}</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.8rem', color: 'var(--primary)' }}>
-                  <Phone size={12} />
-                  <span style={{ fontSize: '0.85rem', fontWeight: 800 }}>+91 {order.address?.phone}</span>
+            {/* Grid for Shipping & Payment - Stacks on mobile */}
+            <div className="order-details-meta-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
+              {/* 2. Customer & shipping */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--primary)' }}>
+                  <MapPin size={14} />
+                  <h4 style={{ fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1.5px' }}>Shipping Details</h4>
+                </div>
+                <div style={{ paddingLeft: '1rem', borderLeft: '2px solid #fff0f0' }}>
+                  <p style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--secondary)' }}>{order.address?.name}</p>
+                  <p style={{ fontSize: '0.8rem', color: '#666', marginTop: '0.4rem', lineHeight: 1.5 }}>{order.address?.addressText}, {order.address?.city} - {order.address?.pincode}</p>
+                  <p style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--secondary)', marginTop: '0.6rem' }}>+91 {order.address?.phone}</p>
                 </div>
               </div>
-            </div>
 
-            {/* 3. Payment */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--primary)' }}>
-                <CreditCard size={16} />
-                <h4 style={{ fontSize: '0.7rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1.5px' }}>Payment Context</h4>
-              </div>
-              <div style={{ paddingLeft: '1.3rem', borderLeft: '2px solid #fff0f0' }}>
-                <p style={{ fontSize: '0.6rem', fontWeight: 800, color: '#aaa', textTransform: 'uppercase', marginBottom: '0.3rem' }}>UTR / Transaction ID</p>
-                <p style={{ fontWeight: 900, fontSize: '1.1rem', color: 'var(--secondary)', letterSpacing: '0.5px' }}>{order.transactionId || 'NOT_PROVIDED'}</p>
-                <p style={{ fontSize: '0.7rem', color: '#888', marginTop: '0.5rem', fontStyle: 'italic' }}>Submitted via {order.paymentMethod}</p>
+              {/* 3. Payment */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--primary)' }}>
+                  <CreditCard size={14} />
+                  <h4 style={{ fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1.5px' }}>Payment Context</h4>
+                </div>
+                <div style={{ paddingLeft: '1rem', borderLeft: '2px solid #fff0f0' }}>
+                  <p style={{ fontSize: '0.6rem', fontWeight: 800, color: '#aaa', textTransform: 'uppercase', marginBottom: '0.2rem' }}>UTR / ID</p>
+                  <p style={{ fontWeight: 900, fontSize: '1rem', color: 'var(--secondary)', wordBreak: 'break-all' }}>{order.transactionId || 'NOT_PROVIDED'}</p>
+                  <p style={{ fontSize: '0.65rem', color: '#888', marginTop: '0.4rem', fontStyle: 'italic' }}>Submitted via {order.paymentMethod}</p>
+                </div>
               </div>
             </div>
 
             {/* 4. Ordered Pieces */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--primary)' }}>
-                <ShoppingBag size={16} />
-                <h4 style={{ fontSize: '0.7rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1.5px' }}>Ordered Pieces</h4>
+                <ShoppingBag size={14} />
+                <h4 style={{ fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1.5px' }}>Ordered Pieces</h4>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                 {order.OrderItems?.map((item, idx) => (
-                  <div key={idx} style={{ display: 'grid', gridTemplateColumns: '70px 1fr auto', gap: '1.2rem', alignItems: 'center' }}>
-                    <div style={{ width: '70px', height: '95px', borderRadius: '15px', overflow: 'hidden', background: '#f9f9f9', border: '1px solid #eee' }}>
+                  <div key={idx} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', background: '#fafafa', padding: '1rem', borderRadius: '20px', border: '1px solid #f0f0f0' }}>
+                    <div style={{ width: '60px', height: '80px', borderRadius: '12px', overflow: 'hidden', flexShrink: 0, border: '1px solid #eee' }}>
                       <img src={resolveImageUrl(item.Product?.images?.[0])} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
-                    <div style={{ minWidth: 0 }}>
-                      <h5 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.Product?.name}</h5>
-                      <p style={{ fontSize: '0.75rem', color: '#aaa', marginTop: '0.2rem' }}>{item.size || 'Free Size'} • {item.color || 'Default'}</p>
-                      <p style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--primary)', marginTop: '0.5rem' }}>₹{parseFloat(item.price).toLocaleString()} x {item.quantity}</p>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <p style={{ fontWeight: 900, fontSize: '1rem', color: 'var(--secondary)' }}>₹{(parseFloat(item.price) * item.quantity).toLocaleString()}</p>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <h5 style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--secondary)', marginBottom: '0.2rem' }}>{item.Product?.name}</h5>
+                      <p style={{ fontSize: '0.7rem', color: '#888' }}>{item.size || 'Free Size'} • {item.color || 'Default'}</p>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '0.6rem' }}>
+                        <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#666' }}>₹{parseFloat(item.price).toLocaleString()} x {item.quantity}</p>
+                        <p style={{ fontWeight: 900, fontSize: '0.9rem', color: 'var(--primary)' }}>₹{(parseFloat(item.price) * item.quantity).toLocaleString()}</p>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -134,11 +134,12 @@ const OrderDetailModal = ({ isOpen, onClose, order, isAdmin, onApprove, isProces
             </div>
 
             {/* 5. Manifest Total */}
-            <div style={{ marginTop: '1rem', padding: '2.5rem 0', borderTop: '2px dashed #f5f5f5', textAlign: 'center' }}>
-              <p style={{ fontSize: '0.65rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.5rem' }}>Manifest Total Value</p>
-              <p style={{ fontSize: '2.5rem', fontWeight: 950, color: 'var(--primary)', letterSpacing: '-2px' }}>₹{parseFloat(order.total).toLocaleString()}</p>
-              <p style={{ fontSize: '0.75rem', color: '#aaa', marginTop: '0.5rem', fontFamily: 'Playfair Display' }}>Including all atelier charges</p>
+            <div style={{ marginTop: '0.5rem', padding: '2rem 0', borderTop: '2px dashed #f5f5f5', textAlign: 'center' }}>
+              <p style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.4rem' }}>Manifest Total Value</p>
+              <p style={{ fontSize: 'clamp(2rem, 8vw, 2.5rem)', fontWeight: 950, color: 'var(--primary)', letterSpacing: '-1.5px' }}>₹{parseFloat(order.total).toLocaleString()}</p>
+              <p style={{ fontSize: '0.7rem', color: '#aaa', marginTop: '0.4rem', fontFamily: 'Playfair Display' }}>Including all atelier charges</p>
             </div>
+
             
             <div style={{ height: '3rem', flexShrink: 0 }} />
           </div>

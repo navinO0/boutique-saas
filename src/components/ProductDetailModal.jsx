@@ -148,7 +148,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
               <div className="responsive-modal-grid" style={{ padding: '1rem' }}>
                 {/* Image skeleton */}
                 <div style={{ padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <SkeletonBlock h='clamp(280px, 50vw, 460px)' radius='24px' />
+                  <SkeletonBlock h='clamp(350px, 60vw, 550px)' radius='24px' />
                   <div style={{ display: 'flex', gap: '0.8rem' }}>
                     {[1,2,3,4].map(i => <SkeletonBlock key={i} w='80px' h='80px' radius='14px' />)}
                   </div>
@@ -297,14 +297,14 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
               {/* Details Section */}
               <div style={{ padding: '0.5rem clamp(0.8rem, 3vw, 2rem)' }}>
                 <motion.span variants={itemVariants} style={{ color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', fontSize: '0.65rem', letterSpacing: '4px', display: 'block' }}>{product.category}</motion.span>
-                <motion.h2 variants={itemVariants} style={{ fontSize: 'clamp(1.4rem, 3.5vw, 2.4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', margin: '0.4rem 0', lineHeight: 1.1 }}>{product.name}</motion.h2>
+                <motion.h2 variants={itemVariants} style={{ fontSize: 'clamp(1.2rem, 3.5vw, 2.2rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', margin: '0.4rem 0', lineHeight: 1.1 }}>{product.name}</motion.h2>
                 
                 <motion.div variants={itemVariants} style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '0.8rem 0', flexWrap: 'wrap' }}>
-                  <p style={{ fontSize: 'clamp(1.3rem, 3vw, 2rem)', fontWeight: 900, color: 'var(--primary)' }}>₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
+                  <p style={{ fontSize: 'clamp(1.1rem, 3vw, 1.8rem)', fontWeight: 900, color: 'var(--primary)' }}>₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
                   {product.discount > 0 && <span style={{ padding: '0.3rem 0.8rem', background: '#fff0f0', color: 'var(--primary)', borderRadius: '10px', fontWeight: 800, fontSize: '0.75rem' }}>{product.discount}% OFF</span>}
                 </motion.div>
 
-                <motion.p variants={itemVariants} style={{ color: '#777', lineHeight: 1.6, fontSize: 'clamp(0.78rem, 1.8vw, 0.92rem)', marginBottom: '1.2rem', letterSpacing: '0.01em' }}>{product.description}</motion.p>
+                <motion.p variants={itemVariants} style={{ color: '#777', lineHeight: 1.6, fontSize: 'clamp(0.72rem, 1.8vw, 0.9rem)', marginBottom: '1.2rem', letterSpacing: '0.01em' }}>{product.description}</motion.p>
 
                 {/* Selections */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', marginBottom: '2rem' }}>
@@ -441,7 +441,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                       onClick={() => fetchProductDetails(p.id)}
                       style={{ cursor: 'pointer', background: 'white', padding: '0.8rem', borderRadius: '24px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}
                     >
-                      <img src={resolveImageUrl(p.images?.[0] || p.image)} style={{ width: '100%', height: 'clamp(140px, 25vw, 240px)', objectFit: 'contain', borderRadius: '18px', background: '#fef5f5' }} alt={p.name} />
+                      <img src={resolveImageUrl(p.images?.[0] || p.image)} style={{ width: '100%', height: 'clamp(200px, 35vw, 350px)', objectFit: 'contain', borderRadius: '18px', background: '#fef5f5' }} alt={p.name} />
                       <div style={{ padding: '0.8rem 0.3rem' }}>
                         <p style={{ fontWeight: 800, color: 'var(--secondary)', fontSize: 'clamp(0.8rem, 2vw, 1rem)' }}>{p.name}</p>
                         <p style={{ color: 'var(--primary)', fontWeight: 900, marginTop: '0.4rem', fontSize: 'clamp(0.85rem, 2vw, 1rem)' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>

@@ -16,7 +16,7 @@ export const ShopProvider = ({ children }) => {
   const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1 });
   const [adminPagination, setAdminPagination] = useState({ currentPage: 1, totalPages: 1 });
   const [cart, setCart] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
+  const [wishlist, setWishlist] = useState(JSON.parse(localStorage.getItem('wishlist')) || []);
   const [siteConfig, setSiteConfig] = useState(BOUTIQUE_CONFIG);
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
   const [token, setToken] = useState(localStorage.getItem('token') || '');
@@ -274,6 +274,23 @@ export const ShopProvider = ({ children }) => {
     }
   };
 
+  const updateUserProfile = async (profileData) => {
+    setIsLoading(true);
+    try {
+      const resp = await axios.patch(`${API_BASE_URL}/auth/profile`, profileData, { headers: getHeaders() });
+      const updatedUser = resp.data.user;
+      setCurrentUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      showToast('Profile updated successfully! ');
+      return { success: true };
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Update failed ');
+      return { success: false };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const fetchCart = useCallback(async () => {
     try {
       const resp = await axios.get(`${API_BASE_URL}/cart`, { headers: getHeaders() });
@@ -412,11 +429,48 @@ export const ShopProvider = ({ children }) => {
     }
   };
 
-  const toggleWishlist = useCallback((id) => {
+  const fetchWishlist = useCallback(async () => {
+    if (!currentUser) return;
+    try {
+      const resp = await axios.get(`${API_BASE_URL}/wishlist`, { headers: getHeaders() });
+      setWishlist(resp.data);
+    } catch (err) {
+      console.error('Error fetching wishlist');
+    }
+  }, [getHeaders, currentUser]);
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchWishlist();
+    }
+  }, [currentUser, fetchWishlist]);
+
+  // Persist to localStorage for guests and backup for users
+  useEffect(() => {
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+  }, [wishlist]);
+
+  const toggleWishlist = useCallback(async (id) => {
+    // Optimistic UI update
     setWishlist(prev =>
       prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
     );
-  }, []);
+
+    if (!currentUser) {
+      showToast('Login to save your dreams forever ✨');
+      return;
+    }
+
+    try {
+      await axios.post(`${API_BASE_URL}/wishlist/toggle`, { productId: id }, { headers: getHeaders() });
+    } catch (err) {
+      console.error('Error toggling wishlist:', err);
+      // Revert on failure
+      setWishlist(prev =>
+        prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+      );
+    }
+  }, [getHeaders, currentUser, showToast]);
 
   const addAddress = useCallback((address) => {
     const newAddresses = [...userAddresses, { ...address, id: Date.now() }];
@@ -462,7 +516,7 @@ export const ShopProvider = ({ children }) => {
     pagination, adminPagination, fetchProducts, fetchAdminProducts, fetchIconProducts, fetchCatalog,
     addProduct, updateProduct, deleteProduct,
     addCatalogItem, updateCatalogItem, deleteCatalogItem,
-    cart, wishlist, toggleWishlist, addToCart, removeFromCart, updateQuantity, loginUser, logoutUser, registerUser, currentUser,
+    cart, wishlist, toggleWishlist, addToCart, removeFromCart, updateQuantity, loginUser, logoutUser, registerUser, updateUserProfile, currentUser,
     placeOrder, siteConfig, updateSiteConfig, toast, showToast,
     allOrders, myOrders, appointments, fetchAllOrders, fetchMyOrders, approveOrder,
     userAddresses, addAddress,
@@ -473,7 +527,7 @@ export const ShopProvider = ({ children }) => {
     products, adminProducts, iconProducts, catalog, isLoading, error, clearError, pagination, adminPagination,
     fetchProducts, fetchAdminProducts, fetchIconProducts, fetchCatalog, addProduct, updateProduct, deleteProduct,
     addCatalogItem, updateCatalogItem, deleteCatalogItem, cart, wishlist, toggleWishlist, addToCart, 
-    removeFromCart, updateQuantity, loginUser, logoutUser, registerUser, currentUser, placeOrder, 
+    removeFromCart, updateQuantity, loginUser, logoutUser, registerUser, updateUserProfile, currentUser, placeOrder, 
     siteConfig, updateSiteConfig, toast, showToast, allOrders, myOrders, appointments, fetchAllOrders, 
     fetchMyOrders, approveOrder, userAddresses, addAddress, submitInquiry, fetchInquiries, updateInquiryStatus,
     getHeaders

@@ -67,7 +67,7 @@ const UserOrdersPage = () => {
               initial={{ opacity: 0, y: 10 }} 
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              onClick={() => setSelectedOrder(order)}
+              onClick={() => navigate(`/account/order/${order.id}`)}
               style={{ 
                 background: 'white', borderRadius: '25px', border: '1px solid #fff3f3', padding: '1.2rem 1.5rem',
                 display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer',
@@ -107,13 +107,6 @@ const UserOrdersPage = () => {
           ))}
         </div>
       )}
-
-      <OrderDetailModal 
-        isOpen={!!selectedOrder} 
-        onClose={() => setSelectedOrder(null)} 
-        order={selectedOrder} 
-        isAdmin={false}
-      />
     </div>
   );
 };

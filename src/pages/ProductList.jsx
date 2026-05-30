@@ -32,7 +32,7 @@ const ProductCard = React.memo(({ product, wishlist, toggleWishlist, addToCart, 
         transition: 'all 0.4s'
       }}
     >
-      <div style={{ position: 'relative', height: 'clamp(140px, 32vw, 300px)', overflow: 'hidden', borderRadius: '16px', background: '#fefafa' }}>
+      <div style={{ position: 'relative', height: 'clamp(220px, 45vw, 420px)', overflow: 'hidden', borderRadius: '16px', background: '#fefafa' }}>
         <img
           src={resolveImageUrl(product.images?.[0] || product.image)}
           alt={product.name}
@@ -63,10 +63,10 @@ const ProductCard = React.memo(({ product, wishlist, toggleWishlist, addToCart, 
       </div>
 
       <div style={{ padding: '0.8rem 0.4rem', textAlign: 'left' }}>
-        <p style={{ color: 'var(--primary)', fontSize: '0.5rem', fontWeight: 950, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.2rem' }}>{product.category}</p>
-        <h3 style={{ fontSize: '0.85rem', color: 'var(--secondary)', fontFamily: 'Playfair Display', fontWeight: 700, minHeight: '2.2rem' }}>{product.name}</h3>
+        <p style={{ color: 'var(--primary)', fontSize: 'clamp(0.45rem, 2vw, 0.55rem)', fontWeight: 950, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.2rem' }}>{product.category}</p>
+        <h3 style={{ fontSize: 'clamp(0.72rem, 2.5vw, 0.95rem)', color: 'var(--secondary)', fontFamily: 'Playfair Display', fontWeight: 700, minHeight: '2.2rem' }}>{product.name}</h3>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.8rem', paddingTop: '0.8rem', borderTop: '1px solid #f9f0f0' }}>
-          <p style={{ fontWeight: 950, color: 'var(--primary)', fontSize: '0.95rem' }}>₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
+          <p style={{ fontWeight: 950, color: 'var(--primary)', fontSize: 'clamp(0.82rem, 2.5vw, 1.1rem)' }}>₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
           <div style={{ display: 'flex', gap: '2px' }}>
             {[...Array(5)].map((_, i) => <Star key={i} size={8} fill={i < 4 ? "var(--primary)" : "none"} color={i < 4 ? "var(--primary)" : "#eee"} />)}
           </div>
@@ -175,7 +175,7 @@ const ProductList = () => {
         <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary)', marginBottom: '1.2rem', fontWeight: 700, fontSize: '0.85rem' }}>
           <ArrowLeft size={14} /> Back to Home
         </Link>
-        <h2 style={{ fontSize: 'clamp(1.8rem, 5vw, 3rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+        <h2 style={{ fontSize: 'clamp(1.4rem, 5vw, 3rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
           {filter === 'all' ? 'Signature Designs' : siteConfig.categories.find(c => c.id === filter)?.name} <Sparkles size={24} color="var(--primary)" />
         </h2>
         

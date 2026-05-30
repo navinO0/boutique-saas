@@ -114,14 +114,14 @@ const Hero = ({ onBook }) => {
           transition={{ duration: 1.2, ease: "easeOut" }}
           style={glassStyle}
         >
-          <div style={{ padding: '0.4rem 1rem', background: 'var(--primary)', borderRadius: '10px', color: 'white', width: 'fit-content', fontWeight: 800, letterSpacing: '3px', fontSize: 'clamp(0.55rem, 1.5vw, 0.65rem)', textTransform: 'uppercase', marginBottom: 'clamp(1rem, 3vw, 2rem)', boxShadow: '0 10px 20px rgba(233,163,163,0.3)' }}>
+          <div style={{ padding: '0.4rem 1rem', background: 'var(--primary)', borderRadius: '10px', color: 'white', width: 'fit-content', fontWeight: 800, letterSpacing: '3px', fontSize: 'clamp(0.5rem, 1.5vw, 0.65rem)', textTransform: 'uppercase', marginBottom: 'clamp(1rem, 3vw, 2rem)', boxShadow: '0 10px 20px rgba(233,163,163,0.3)' }}>
             Couture House • Est 2026
           </div>
-          <h1 style={{ fontSize: 'clamp(2.4rem, 8vw, 6.5rem)', color: 'white', lineHeight: '0.9', marginBottom: 'clamp(1.2rem, 3vw, 2.5rem)', fontFamily: 'Playfair Display', letterSpacing: 'clamp(-1px, -0.4vw, -3px)', textShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
+          <h1 style={{ fontSize: 'clamp(2rem, 8vw, 6.5rem)', color: 'white', lineHeight: '0.9', marginBottom: 'clamp(1.2rem, 3vw, 2.5rem)', fontFamily: 'Playfair Display', letterSpacing: 'clamp(-1px, -0.4vw, -3px)', textShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
             Unfold Your <br />
             <motion.span initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} style={{ color: 'var(--primary)', paddingLeft: 'clamp(0.8rem, 2.5vw, 2.5rem)', display: 'inline-block' }}>Aura.</motion.span>
           </h1>
-          <p style={{ fontSize: 'clamp(0.82rem, 2vw, 1.1rem)', color: 'rgba(255,255,255,0.95)', maxWidth: '560px', marginBottom: 'clamp(1.8rem, 5vw, 3.5rem)', lineHeight: '1.9', letterSpacing: '0.01em', fontWeight: 500 }}>
+          <p style={{ fontSize: 'clamp(0.78rem, 2vw, 1.1rem)', color: 'rgba(255,255,255,0.95)', maxWidth: '560px', marginBottom: 'clamp(1.8rem, 5vw, 3.5rem)', lineHeight: '1.9', letterSpacing: '0.01em', fontWeight: 500 }}>
             Bridging timeless heritage with futuristic silhouettes. We don't just stitch; we sculpt your dreams into wearable reality.
           </p>
           <div className="hero-cta-group">
@@ -157,8 +157,8 @@ const Services = ({ services }) => (
     <div className="container">
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'clamp(2.5rem, 6vw, 6rem)', gap: '1.5rem' }}>
         <div>
-          <span style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '5px', textTransform: 'uppercase', fontSize: 'clamp(0.6rem, 1.5vw, 0.72rem)' }}>Craftsmanship</span>
-          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.05, marginTop: '0.6rem' }}>Pure <br /> Artistry</h2>
+          <span style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '5px', textTransform: 'uppercase', fontSize: 'clamp(0.55rem, 1.5vw, 0.72rem)' }}>Craftsmanship</span>
+          <h2 style={{ fontSize: 'clamp(1.7rem, 5vw, 4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.05, marginTop: '0.6rem' }}>Pure <br /> Artistry</h2>
         </div>
         <p style={{ maxWidth: '380px', color: '#777', fontSize: 'clamp(0.8rem, 1.8vw, 0.95rem)', lineHeight: 1.9 }}>Every thread tells a story. From hand-woven silks to intricate embroidery, we bring heritage to the modern world.</p>
       </div>
@@ -418,8 +418,8 @@ const LandingPage = () => {
       <section style={{ background: 'var(--accent)' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 6vw, 5rem)' }}>
-            <span style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '6px', textTransform: 'uppercase', fontSize: 'clamp(0.6rem, 1.5vw, 0.7rem)' }}>Curation</span>
-            <h2 style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3.5rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginTop: '0.8rem' }}>Icons Only</h2>
+            <span style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '6px', textTransform: 'uppercase', fontSize: 'clamp(0.55rem, 1.5vw, 0.7rem)' }}>Curation</span>
+            <h2 style={{ fontSize: 'clamp(1.6rem, 4.5vw, 3.5rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginTop: '0.8rem' }}>Icons Only</h2>
           </div>
 
           <div className="featured-grid">
@@ -441,7 +441,7 @@ const LandingPage = () => {
                   border: '1px solid #fff5f5'
                 }}
               >
-                <div style={{ height: 'clamp(180px, 35vw, 380px)', borderRadius: 'clamp(15px, 2vw, 32px)', overflow: 'hidden', position: 'relative', background: '#fefafa' }}>
+                <div style={{ height: 'clamp(250px, 45vw, 450px)', borderRadius: 'clamp(15px, 2vw, 32px)', overflow: 'hidden', position: 'relative', background: '#fefafa' }}>
                   <img
                     src={resolveImageUrl(p.images?.[0] || p.image)}
                     style={{ width: '100%', height: '100%', objectFit: 'contain', transition: '0.6s' }}
@@ -459,7 +459,7 @@ const LandingPage = () => {
                 </div>
                 <div style={{ padding: 'clamp(1rem, 2.5vw, 1.8rem) 0.6rem 0.5rem', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
                   <p style={{ color: 'var(--primary)', fontSize: '0.55rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '2.5px', marginBottom: '0.4rem', borderLeft: '2px solid var(--primary)', paddingLeft: '8px' }}>{p.category}</p>
-                  <h3 style={{ fontSize: 'clamp(0.95rem, 2.5vw, 1.4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.3, minHeight: '3.2rem', display: 'flex', alignItems: 'center' }}>{p.name}</h3>
+                  <h3 style={{ fontSize: 'clamp(0.85rem, 2.5vw, 1.4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.3, minHeight: '3.2rem', display: 'flex', alignItems: 'center' }}>{p.name}</h3>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid #f9f0f0' }}>
                     <p style={{ color: 'var(--primary)', fontWeight: 900, fontSize: 'clamp(0.95rem, 2.2vw, 1.25rem)' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
                     <div style={{ display: 'flex', gap: '3px' }}>
