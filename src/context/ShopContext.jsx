@@ -15,7 +15,7 @@ export const ShopProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1 });
   const [adminPagination, setAdminPagination] = useState({ currentPage: 1, totalPages: 1 });
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(JSON.parse(localStorage.getItem('guestCart')) || []);
   const [wishlist, setWishlist] = useState(JSON.parse(localStorage.getItem('wishlist')) || []);
   const [siteConfig, setSiteConfig] = useState(BOUTIQUE_CONFIG);
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
@@ -235,6 +235,7 @@ export const ShopProvider = ({ children }) => {
 
   const registerUser = async (userData) => {
     setIsLoading(true);
+    const guestCartSnapshot = [...cart];
     try {
       const resp = await axios.post(`${API_BASE_URL}/auth/register`, { 
         ...userData, 
@@ -245,11 +246,28 @@ export const ShopProvider = ({ children }) => {
       setToken(newToken);
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('token', newToken);
+
+      // Persist guest cart for new users
+      if (guestCartSnapshot.length > 0) {
+        const authHeaders = {
+          'X-Company-ID': siteConfig.companyId || 1,
+          Authorization: `Bearer ${newToken}`,
+        };
+        try {
+          await axios.post(
+            `${API_BASE_URL}/cart/sync`,
+            { items: guestCartSnapshot },
+            { headers: authHeaders }
+          );
+        } catch (_) {}
+        localStorage.removeItem('guestCart');
+      }
+
       showToast(`Welcome to the atelier, ${user.name}! `);
       return { success: true };
     } catch (err) {
       showToast(err.response?.data?.message || 'Registration failed ');
-      return { success: false, message: error.response?.data?.message || 'Registration failed' };
+      return { success: false, message: err.response?.data?.message || 'Registration failed' };
     } finally {
       setIsLoading(false);
     }
@@ -257,6 +275,8 @@ export const ShopProvider = ({ children }) => {
 
   const loginUser = async (email, password) => {
     setIsLoading(true);
+    // Snapshot the guest cart BEFORE we touch anything
+    const guestCartSnapshot = [...cart];
     try {
       const resp = await axios.post(`${API_BASE_URL}/auth/login`, { email, password });
       const { user, token: newToken } = resp.data;
@@ -264,6 +284,55 @@ export const ShopProvider = ({ children }) => {
       setToken(newToken);
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('token', newToken);
+
+      // Merge guest cart with DB cart
+      const authHeaders = {
+        'X-Company-ID': siteConfig.companyId || 1,
+        Authorization: `Bearer ${newToken}`,
+      };
+
+      let dbCart = [];
+      try {
+        const cartResp = await axios.get(`${API_BASE_URL}/cart`, { headers: authHeaders });
+        dbCart = cartResp.data || [];
+      } catch (_) {
+        // If fetch fails, start from DB-empty state
+      }
+
+      if (guestCartSnapshot.length > 0) {
+        // Merge: DB items take priority; guest-only items are appended
+        const mergedMap = new Map();
+        dbCart.forEach(item => {
+          const key = `${item.id}_${item.selectedSize}_${item.selectedColor}`;
+          mergedMap.set(key, item);
+        });
+        guestCartSnapshot.forEach(item => {
+          const key = `${item.id}_${item.selectedSize}_${item.selectedColor}`;
+          if (!mergedMap.has(key)) {
+            mergedMap.set(key, item);
+          } else {
+            // Combine quantities if item exists in both
+            const existing = mergedMap.get(key);
+            mergedMap.set(key, { ...existing, quantity: existing.quantity + item.quantity });
+          }
+        });
+        const mergedCart = Array.from(mergedMap.values());
+        setCart(mergedCart);
+
+        // Persist the merged cart to the server
+        try {
+          await axios.post(
+            `${API_BASE_URL}/cart/sync`,
+            { items: mergedCart },
+            { headers: authHeaders }
+          );
+        } catch (_) {}
+      } else {
+        setCart(dbCart);
+      }
+
+      // Clear guest cart from localStorage after merge
+      localStorage.removeItem('guestCart');
       showToast(`Welcome back, ${user.name}! `);
       return { success: true };
     } catch (err) {
@@ -309,20 +378,33 @@ export const ShopProvider = ({ children }) => {
     }
   }, [currentUser, getHeaders]);
 
+  // Persist guest cart to localStorage so it survives page reloads
   useEffect(() => {
-    if (currentUser) {
-      const timer = setTimeout(() => {
-        syncCart(cart);
-      }, 1000);
-      return () => clearTimeout(timer);
+    if (!currentUser) {
+      localStorage.setItem('guestCart', JSON.stringify(cart));
     }
+  }, [cart, currentUser]);
+
+  // Debounced server sync — only for logged-in users, skip on first mount
+  const isMounted = useRef(false);
+  useEffect(() => {
+    if (!currentUser) return;
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return; // skip the initial fire (login handler already synced)
+    }
+    const timer = setTimeout(() => {
+      syncCart(cart);
+    }, 1000);
+    return () => clearTimeout(timer);
   }, [cart, currentUser, syncCart]);
 
+  // Reset mount flag when user logs out
   useEffect(() => {
-    if (currentUser) {
-      fetchCart();
+    if (!currentUser) {
+      isMounted.current = false;
     }
-  }, [currentUser, fetchCart]);
+  }, [currentUser]);
 
   const logoutUser = useCallback(() => {
     setCurrentUser(null);
@@ -330,6 +412,7 @@ export const ShopProvider = ({ children }) => {
     setCart([]);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    localStorage.removeItem('guestCart');
     showToast('Magical exit... see you soon! ');
   }, [showToast]);
 
