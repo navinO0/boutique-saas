@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, ShoppingBag, User, Instagram, Facebook, Phone, ShoppingCart, Heart, LogOut, ArrowRight, Sparkles, Cloud, Heart as HeartIcon, Info, MessageCircle, Search } from 'lucide-react';
 import { useShop } from './context/ShopContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -442,11 +442,21 @@ function App() {
 
   return (
     <Router>
+      <AppContent isCartOpen={isCartOpen} setIsCartOpen={setIsCartOpen} />
+    </Router>
+  );
+}
+
+function AppContent({ isCartOpen, setIsCartOpen }) {
+  const location = useLocation();
+
+  return (
+    <>
       <ScrollToTop />
       <Navbar onOpenCart={() => setIsCartOpen(true)} />
       <Toast />
       <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-      <main style={{ minHeight: '80vh', paddingTop: '80px' }}>
+      <main style={{ minHeight: '80vh', paddingTop: location.pathname === '/' ? '0px' : '80px' }}>
         <Suspense fallback={<PookieLoader />}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -467,7 +477,7 @@ function App() {
         </Suspense>
       </main>
       <Footer />
-    </Router>
+    </>
   );
 }
 

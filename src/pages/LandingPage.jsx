@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
-import { ShoppingBag, Star, Heart, ArrowRight, Scissors, Sparkles, Briefcase, Phone, Mail, MapPin, Quote, Sparkle, X, Calendar } from 'lucide-react';
+import { ShoppingBag, Star, Heart, ArrowRight, Scissors, Sparkles, Briefcase, Phone, Mail, MapPin, Quote, Sparkle, X, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useShop } from '../context/ShopContext';
 import { useSmoothScroll } from '../hooks/useSmoothScroll';
@@ -415,65 +415,91 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
         </motion.h2>
       </div>
 
-      <div
-        ref={containerRef}
-        onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeave}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
+      <div 
+        style={{ position: 'relative' }}
         onMouseEnter={() => setIsPaused(true)}
-        className="no-scrollbar"
-        style={{
-          display: 'flex',
-          overflowX: 'auto',
-          cursor: isDown ? 'grabbing' : 'grab',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          paddingLeft: '5vw',
-          paddingBottom: 'clamp(2rem, 4vw, 4rem)',
-          userSelect: isDown ? 'none' : 'auto',
-          scrollBehavior: 'auto'
-        }}
+        onMouseLeave={() => { setIsPaused(false); setIsDown(false); }}
       >
-        <div className="luxury-gallery-track">
-          {displayItems.map((p, idx) => (
-            <div
-              key={`${p.id}-${idx}`}
-              className="premium-gallery-card"
-              onClick={() => {
-                if (!hasDragged && onProductClick) onProductClick(p.id);
-              }}
-              style={{
-                userSelect: 'none',
-                flexShrink: 0,
-                cursor: 'pointer'
-              }}
-            >
-              <img
-                src={resolveImageUrl(p.images?.[0] || p.image)}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'contain', borderRadius: '8px', background: '#fef5f5',
-                  pointerEvents: 'none',
-                  userSelect: 'none'
+        <div
+          ref={containerRef}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          className="no-scrollbar"
+          style={{
+            display: 'flex',
+            overflowX: 'auto',
+            cursor: isDown ? 'grabbing' : 'grab',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            paddingLeft: '5vw',
+            paddingBottom: 'clamp(2rem, 4vw, 4rem)',
+            userSelect: isDown ? 'none' : 'auto',
+            scrollBehavior: 'smooth'
+          }}
+        >
+          <div className="luxury-gallery-track">
+            {displayItems.map((p, idx) => (
+              <div
+                key={`${p.id}-${idx}`}
+                className="premium-gallery-card"
+                onClick={() => {
+                  if (!hasDragged && onProductClick) onProductClick(p.id);
                 }}
-                alt={p.name}
-                loading="lazy"
-                draggable="false"
-              />
-              <div className="card-glass-overlay" style={{ pointerEvents: 'none' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                  <div>
-                    <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '4px', marginBottom: '0.5rem' }}>{p.category}</p>
-                    <h3 style={{ color: 'white', fontSize: '2.2rem', fontFamily: 'Roboto', lineHeight: 1.1 }}>{p.name}</h3>
+                style={{
+                  userSelect: 'none',
+                  flexShrink: 0,
+                  cursor: 'pointer'
+                }}
+              >
+                <img
+                  src={resolveImageUrl(p.images?.[0] || p.image)}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain', borderRadius: '8px', background: '#fef5f5',
+                    pointerEvents: 'none',
+                    userSelect: 'none'
+                  }}
+                  alt={p.name}
+                  loading="lazy"
+                  draggable="false"
+                />
+                <div className="card-glass-overlay" style={{ pointerEvents: 'none' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                    <div>
+                      <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '4px', marginBottom: '0.5rem' }}>{p.category}</p>
+                      <h3 style={{ color: 'white', fontSize: '2.2rem', fontFamily: 'Playfair Display', lineHeight: 1.1 }}>{p.name}</h3>
+                    </div>
+                    <div style={{ background: 'var(--primary)', padding: '0.8rem', borderRadius: '8px', color: 'white', display: 'flex' }}><ArrowRight size={20} /></div>
                   </div>
-                  <div style={{ background: 'var(--primary)', padding: '0.8rem', borderRadius: '8px', color: 'white', display: 'flex' }}><ArrowRight size={20} /></div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+
+        {/* Desktop Navigation Arrows */}
+        <button
+          className="desktop-only"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (containerRef.current) containerRef.current.scrollBy({ left: -450 });
+          }}
+          style={{ position: 'absolute', left: '2rem', top: '40%', background: 'rgba(255, 255, 255, 0.6)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '60px', height: '60px', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 12px 35px rgba(0,0,0,0.15)', pointerEvents: 'auto' }}
+        >
+          <ChevronLeft size={30} />
+        </button>
+        <button
+          className="desktop-only"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (containerRef.current) containerRef.current.scrollBy({ left: 450 });
+          }}
+          style={{ position: 'absolute', right: '2rem', top: '40%', background: 'rgba(255, 255, 255, 0.6)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '60px', height: '60px', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 12px 35px rgba(0,0,0,0.15)', pointerEvents: 'auto' }}
+        >
+          <ChevronRight size={30} />
+        </button>
       </div>
     </section>
   );
@@ -551,9 +577,8 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
       onMouseUp={() => setIsDown(false)}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsPaused(true)}
-      className="no-scrollbar"
-      style={{
-        display: 'flex',
+          style={{
+            display: 'flex',
         overflowX: 'auto',
         cursor: isDown ? 'grabbing' : 'grab',
         scrollbarWidth: 'none',
@@ -637,63 +662,95 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
 
   return (
     <div 
-      ref={scrollRef}
-      className="no-scrollbar"
+      style={{ position: 'relative' }}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => { setIsPaused(false); setIsDragging(false); }}
-      onTouchStart={() => setIsPaused(true)}
-      onMouseDown={handleMouseDown}
-      onMouseUp={() => setIsDragging(false)}
-      onMouseMove={(e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        const x = e.pageX - scrollRef.current.offsetLeft;
-        const walk = (x - startX) * 2.2;
-        scrollRef.current.scrollLeft = scrollLeft - walk;
-      }}
-      style={{
-        display: 'flex',
-        overflowX: 'auto',
-        padding: isMobile ? '10px 10px 15px' : '15px 5vw 30px',
-        gap: isMobile ? '12px' : '25px',
-        cursor: 'grab',
-        scrollSnapType: (isDragging || isPaused) ? 'none' : 'none' // Disable snap during auto-scroll
-      }}
     >
-      {displayItems.map((p, pIdx) => (
-        <motion.div
-          key={`${p.id}-${pIdx}`}
-          whileHover={{ y: -12 }}
-          onClick={() => !isDragging && onProductClick(p.id)}
-          style={{
-            flexShrink: 0,
-            width: isMobile ? '240px' : 'clamp(280px, 25vw, 360px)',
-            background: 'white',
-            borderRadius: '12px',
-            padding: '0.8rem',
-            boxShadow: '0 20px 40px rgba(233,163,163,0.08)',
-            border: '1px solid #fff5f5',
-            cursor: 'pointer'
-          }}
-        >
-          <div style={{ height: isMobile ? '280px' : 'clamp(320px, 45vh, 420px)', borderRadius: '8px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
-            <img src={p.images?.[0] || p.image} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt={p.name} />
-            <div style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'var(--primary)', color: 'white', padding: '0.4rem 1rem', borderRadius: '6px', fontWeight: 800, fontSize: '0.7rem', boxShadow: '0 5px 15px rgba(233,163,163,0.3)' }}>
-              LATEST
-            </div>
-          </div>
-          <div style={{ padding: '1.2rem 0.6rem 0.5rem' }}>
-            <p style={{ color: 'var(--primary)', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.4rem' }}>{p.category}</p>
-            <h3 style={{ fontSize: isMobile ? '1.1rem' : '1.3rem', fontFamily: 'Roboto', color: 'var(--secondary)', marginBottom: '0.6rem', fontWeight: 700 }}>{p.name}</h3>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #fef0f0', paddingTop: '0.8rem' }}>
-              <p style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.2rem' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
-              <div style={{ background: 'var(--primary)', padding: '0.6rem', borderRadius: '50%', display: 'flex', color: 'white' }}>
-                <ArrowRight size={16} />
+      <div 
+        ref={scrollRef}
+        className="no-scrollbar"
+        onTouchStart={() => setIsPaused(true)}
+        onMouseDown={handleMouseDown}
+        onMouseUp={() => setIsDragging(false)}
+        onMouseMove={(e) => {
+          if (!isDragging) return;
+          e.preventDefault();
+          const x = e.pageX - scrollRef.current.offsetLeft;
+          const walk = (x - startX) * 2.2;
+          scrollRef.current.scrollLeft = scrollLeft - walk;
+        }}
+        style={{
+          display: 'flex',
+          overflowX: 'auto',
+          padding: isMobile ? '10px 10px 15px' : '15px 5vw 30px',
+          gap: isMobile ? '12px' : '25px',
+          cursor: 'grab',
+          scrollSnapType: (isDragging || isPaused) ? 'none' : 'none', // Disable snap during auto-scroll
+          scrollBehavior: 'smooth'
+        }}
+      >
+        {displayItems.map((p, pIdx) => (
+          <motion.div
+            key={`${p.id}-${pIdx}`}
+            whileHover={{ y: -12 }}
+            onClick={() => !isDragging && onProductClick(p.id)}
+            style={{
+              flexShrink: 0,
+              width: isMobile ? '240px' : 'clamp(280px, 25vw, 360px)',
+              background: 'white',
+              borderRadius: '12px',
+              padding: '0.8rem',
+              boxShadow: '0 20px 40px rgba(233,163,163,0.08)',
+              border: '1px solid #fff5f5',
+              cursor: 'pointer'
+            }}
+          >
+            <div style={{ height: isMobile ? '280px' : 'clamp(320px, 45vh, 420px)', borderRadius: '8px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
+              <img src={p.images?.[0] || p.image} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt={p.name} />
+              <div style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'var(--primary)', color: 'white', padding: '0.4rem 1rem', borderRadius: '6px', fontWeight: 800, fontSize: '0.7rem', boxShadow: '0 5px 15px rgba(233,163,163,0.3)' }}>
+                LATEST
               </div>
             </div>
-          </div>
-        </motion.div>
-      ))}
+            <div style={{ padding: '1.2rem 0.6rem 0.5rem' }}>
+              <p style={{ color: 'var(--primary)', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.4rem' }}>{p.category}</p>
+              <h3 style={{ fontSize: isMobile ? '1.1rem' : '1.3rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '0.6rem', fontWeight: 700 }}>{p.name}</h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #fef0f0', paddingTop: '0.8rem' }}>
+                <p style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.2rem' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
+                <div style={{ background: 'var(--primary)', padding: '0.6rem', borderRadius: '50%', display: 'flex', color: 'white' }}>
+                  <ArrowRight size={16} />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {!isMobile && (
+        <>
+      {!isMobile && (
+        <>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (scrollRef.current) scrollRef.current.scrollBy({ left: -450 });
+            }}
+            style={{ position: 'absolute', left: '1rem', top: '45%', transform: 'translateY(-50%)', background: 'rgba(255, 255, 255, 0.6)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '50px', height: '50px', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 8px 25px rgba(0,0,0,0.15)', pointerEvents: 'auto' }}
+          >
+            <ChevronLeft size={28} />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (scrollRef.current) scrollRef.current.scrollBy({ left: 450 });
+            }}
+            style={{ position: 'absolute', right: '1rem', top: '45%', transform: 'translateY(-50%)', background: 'rgba(255, 255, 255, 0.6)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '50px', height: '50px', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 8px 25px rgba(0,0,0,0.15)', pointerEvents: 'auto' }}
+          >
+            <ChevronRight size={28} />
+          </button>
+        </>
+      )}
+        </>
+      )}
     </div>
   );
 };
