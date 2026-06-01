@@ -86,7 +86,7 @@ const EditCatalogModal = ({ isOpen, onClose, item, onSave }) => {
 
             <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
               <Sparkles size={32} color="var(--primary)" style={{ marginBottom: '1rem' }} />
-              <h2 style={{ fontSize: '2rem', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>{item ? 'Update Catalog Work' : 'Add New Portfolio Piece'}</h2>
+              <h2 style={{ fontSize: '2rem', fontFamily: 'Roboto', color: 'var(--secondary)' }}>{item ? 'Update Catalog Work' : 'Add New Portfolio Piece'}</h2>
               <p style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>Showcase your latest artisanal creations</p>
             </div>
 

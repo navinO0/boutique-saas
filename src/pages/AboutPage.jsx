@@ -39,7 +39,7 @@ const AboutPage = () => {
 
       {/* Hero */}
       <section style={{ background: 'var(--secondary)', minHeight: '80vh', display: 'flex', alignItems: 'center', position: 'relative', overflow: 'hidden', padding: 'clamp(6rem, 12vw, 10rem) 0 clamp(4rem, 8vw, 7rem)' }}>
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.04, fontSize: '22vw', fontWeight: 900, color: 'white', fontFamily: 'Playfair Display', display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', userSelect: 'none', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.04, fontSize: '22vw', fontWeight: 700, color: 'white', fontFamily: 'Roboto', display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', userSelect: 'none', overflow: 'hidden', whiteSpace: 'nowrap' }}>
           STORY
         </div>
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
@@ -47,7 +47,7 @@ const AboutPage = () => {
             <span style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '6px', textTransform: 'uppercase', fontSize: '0.7rem', display: 'block', marginBottom: '1.5rem' }}>
               Our Story
             </span>
-            <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 7rem)', fontFamily: 'Playfair Display', color: 'white', lineHeight: 0.92, marginBottom: 'clamp(1.5rem, 4vw, 3rem)', letterSpacing: '-2px' }}>
+            <h1 style={{ fontSize: 'clamp(2.5rem, 8vw, 7rem)', fontFamily: 'Roboto', color: 'white', lineHeight: 0.92, marginBottom: 'clamp(1.5rem, 4vw, 3rem)', letterSpacing: '-2px' }}>
               Dressed in <br />
               <span style={{ color: 'var(--primary)' }}>Heritage.</span>
             </h1>
@@ -67,7 +67,7 @@ const AboutPage = () => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '2rem', textAlign: 'center' }}>
             {stats.map((s, i) => (
               <motion.div key={i} custom={i} initial="hidden" whileInView="visible" variants={fadeUp} viewport={{ once: true }}>
-                <p style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, color: 'var(--primary)', fontFamily: 'Playfair Display', lineHeight: 1 }}>{s.number}</p>
+                <p style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 700, color: 'var(--primary)', fontFamily: 'Roboto', lineHeight: 1 }}>{s.number}</p>
                 <p style={{ fontSize: 'clamp(0.68rem, 1.5vw, 0.8rem)', fontWeight: 800, color: 'var(--secondary)', textTransform: 'uppercase', letterSpacing: '3px', marginTop: '0.5rem', opacity: 0.7 }}>{s.label}</p>
               </motion.div>
             ))}
@@ -89,7 +89,7 @@ const AboutPage = () => {
                 />
               </div>
               <div style={{ position: 'absolute', bottom: '-1.5rem', right: '-1.5rem', background: 'var(--primary)', color: 'white', padding: '1.2rem 1.8rem', borderRadius: '20px', boxShadow: '0 20px 40px rgba(233,163,163,0.4)', backdropFilter: 'blur(10px)' }}>
-                <p style={{ fontFamily: 'Playfair Display', fontSize: 'clamp(1rem, 2.5vw, 1.4rem)', fontWeight: 900, lineHeight: 1.2 }}>Est. 2018</p>
+                <p style={{ fontFamily: 'Roboto', fontSize: 'clamp(1rem, 2.5vw, 1.4rem)', fontWeight: 700, lineHeight: 1.2 }}>Est. 2018</p>
                 <p style={{ fontSize: '0.68rem', opacity: 0.85, fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase', marginTop: '0.3rem' }}>Chennai, India</p>
               </div>
             </motion.div>
@@ -97,7 +97,7 @@ const AboutPage = () => {
             {/* Text */}
             <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
               <span style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '5px', textTransform: 'uppercase', fontSize: '0.68rem', display: 'block', marginBottom: '1.2rem' }}>The Founder</span>
-              <h2 style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3.8rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.1, marginBottom: '1.5rem' }}>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 4.5vw, 3.8rem)', fontFamily: 'Roboto', color: 'var(--secondary)', lineHeight: 1.1, marginBottom: '1.5rem' }}>
                 A Passion Stitched <br /> into Every Thread
               </h2>
               <p style={{ color: '#777', lineHeight: 1.95, fontSize: 'clamp(0.82rem, 1.8vw, 0.98rem)', marginBottom: '1.2rem' }}>
@@ -111,7 +111,7 @@ const AboutPage = () => {
                   <Sparkles size={20} color="var(--primary)" />
                 </div>
                 <div>
-                  <p style={{ fontFamily: 'Playfair Display', fontWeight: 900, color: 'var(--secondary)', fontSize: 'clamp(1rem, 2vw, 1.2rem)' }}>Priya {siteConfig.name.split(' ')[0]}</p>
+                  <p style={{ fontFamily: 'Roboto', fontWeight: 700, color: 'var(--secondary)', fontSize: 'clamp(1rem, 2vw, 1.2rem)' }}>Priya {siteConfig.name.split(' ')[0]}</p>
                   <p style={{ fontSize: '0.72rem', color: '#aaa', fontWeight: 700, letterSpacing: '2px', textTransform: 'uppercase' }}>Founder & Creative Director</p>
                 </div>
               </div>
@@ -125,7 +125,7 @@ const AboutPage = () => {
         <div className="container">
           <motion.div initial="hidden" whileInView="visible" variants={fadeUp} viewport={{ once: true }} style={{ textAlign: 'center', marginBottom: 'clamp(2.5rem, 6vw, 6rem)' }}>
             <span style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '6px', textTransform: 'uppercase', fontSize: '0.68rem', display: 'block', marginBottom: '1rem' }}>What We Stand For</span>
-            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', fontFamily: 'Playfair Display', color: 'white', lineHeight: 1.05 }}>Our Core Values</h2>
+            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', fontFamily: 'Roboto', color: 'white', lineHeight: 1.05 }}>Our Core Values</h2>
           </motion.div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: 'clamp(1rem, 2.5vw, 2rem)' }}>
             {values.map((v, i) => (
@@ -142,7 +142,7 @@ const AboutPage = () => {
                 <div style={{ width: '48px', height: '48px', background: 'var(--primary)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
                   <v.icon size={22} color="white" />
                 </div>
-                <h3 style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)', fontFamily: 'Playfair Display', color: 'white', marginBottom: '0.8rem' }}>{v.title}</h3>
+                <h3 style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)', fontFamily: 'Roboto', color: 'white', marginBottom: '0.8rem' }}>{v.title}</h3>
                 <p style={{ color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, fontSize: 'clamp(0.78rem, 1.6vw, 0.88rem)' }}>{v.desc}</p>
               </motion.div>
             ))}
@@ -155,7 +155,7 @@ const AboutPage = () => {
         <div className="container">
           <motion.div initial="hidden" whileInView="visible" variants={fadeUp} viewport={{ once: true }} style={{ textAlign: 'center', marginBottom: 'clamp(2.5rem, 6vw, 6rem)' }}>
             <span style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '6px', textTransform: 'uppercase', fontSize: '0.68rem', display: 'block', marginBottom: '1rem' }}>Our Journey</span>
-            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.05 }}>Chapter by Chapter</h2>
+            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', fontFamily: 'Roboto', color: 'var(--secondary)', lineHeight: 1.05 }}>Chapter by Chapter</h2>
           </motion.div>
           <div style={{ maxWidth: '680px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'clamp(1.5rem, 4vw, 3rem)', position: 'relative' }}>
             <div style={{ position: 'absolute', left: 'clamp(32px, 5vw, 44px)', top: 0, bottom: 0, width: '2px', background: 'linear-gradient(to bottom, var(--primary), transparent)', opacity: 0.2 }} />
@@ -170,7 +170,7 @@ const AboutPage = () => {
                 style={{ display: 'flex', gap: 'clamp(1rem, 3vw, 2.5rem)', alignItems: 'flex-start', position: 'relative' }}
               >
                 <div style={{ flexShrink: 0, width: 'clamp(64px, 10vw, 88px)', height: 'clamp(64px, 10vw, 88px)', background: i === milestones.length - 1 ? 'var(--primary)' : 'var(--accent)', borderRadius: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: `2px solid ${i === milestones.length - 1 ? 'var(--primary)' : '#ffe4e1'}` }}>
-                  <span style={{ fontSize: 'clamp(0.68rem, 1.5vw, 0.8rem)', fontWeight: 900, color: i === milestones.length - 1 ? 'white' : 'var(--primary)', lineHeight: 1 }}>{m.year}</span>
+                  <span style={{ fontSize: 'clamp(0.68rem, 1.5vw, 0.8rem)', fontWeight: 700, color: i === milestones.length - 1 ? 'white' : 'var(--primary)', lineHeight: 1 }}>{m.year}</span>
                 </div>
                 <div style={{ paddingTop: 'clamp(0.8rem, 2vw, 1.4rem)', flex: 1 }}>
                   <p style={{ color: '#555', lineHeight: 1.8, fontSize: 'clamp(0.82rem, 1.8vw, 0.98rem)' }}>{m.event}</p>
@@ -186,7 +186,7 @@ const AboutPage = () => {
         <div className="container" style={{ textAlign: 'center' }}>
           <motion.div initial="hidden" whileInView="visible" variants={fadeUp} viewport={{ once: true }}>
             <Sparkles size={32} color="var(--primary)" style={{ marginBottom: '1.5rem' }} />
-            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '1rem', lineHeight: 1.1 }}>
+            <h2 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', fontFamily: 'Roboto', color: 'var(--secondary)', marginBottom: '1rem', lineHeight: 1.1 }}>
               Begin Your Story
             </h2>
             <p style={{ color: '#888', maxWidth: '480px', margin: '0 auto 2.5rem', lineHeight: 1.9, fontSize: 'clamp(0.82rem, 1.8vw, 0.98rem)' }}>

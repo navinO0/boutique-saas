@@ -39,7 +39,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'clamp(1.5rem, 5vw, 2.5rem)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                 <ShoppingBag size={20} color="var(--primary)" />
-                <h2 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>Your Dream Bag ({cart.length})</h2>
+                <h2 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.4rem)', fontFamily: 'Roboto', color: 'var(--secondary)' }}>Your Dream Bag ({cart.length})</h2>
               </div>
               <button onClick={onClose} style={{ color: 'var(--primary)', background: '#fff0f0', border: 'none', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><X size={18} /></button>
             </div>
@@ -91,7 +91,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
               <div style={{ borderTop: '2px dashed #fff0f0', paddingTop: '1.5rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.8rem' }}>
                   <span style={{ fontSize: '1rem', fontWeight: 700, color: '#666' }}>Grand Total</span>
-                  <span style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--primary)' }}>₹{total.toLocaleString()}</span>
+                  <span style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--primary)' }}>₹{total.toLocaleString()}</span>
                 </div>
                 <button
                   onClick={handleCheckout}

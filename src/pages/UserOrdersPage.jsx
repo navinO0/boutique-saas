@@ -33,7 +33,7 @@ const UserOrdersPage = () => {
           <Link to="/products" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#888', marginBottom: '0.8rem', textDecoration: 'none', fontWeight: 700, fontSize: '0.8rem' }}>
             <ArrowLeft size={14} /> Continue Shopping
           </Link>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 6vw, 3rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>Order History</h2>
+          <h2 style={{ fontSize: 'clamp(1.8rem, 6vw, 3rem)', fontFamily: 'Roboto', color: 'var(--secondary)' }}>Order History</h2>
         </div>
         <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.4rem' }}>
           <div>
@@ -56,7 +56,7 @@ const UserOrdersPage = () => {
       {isLoading ? <PookieLoader /> : myOrders.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '8rem 0' }}>
           <Package size={48} style={{ color: '#f5f5f5', marginBottom: '1.5rem' }} />
-          <h3 style={{ color: '#999', fontFamily: 'Playfair Display', fontSize: '1.2rem' }}>No orders yet</h3>
+          <h3 style={{ color: '#999', fontFamily: 'Roboto', fontSize: '1.2rem' }}>No orders yet</h3>
           <Link to="/products" style={{ color: 'var(--primary)', fontWeight: 800, marginTop: '1rem', display: 'inline-block', textDecoration: 'none', fontSize: '0.9rem' }}>Explore active collections</Link>
         </div>
       ) : (
@@ -77,25 +77,25 @@ const UserOrdersPage = () => {
             >
               <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', alignItems: 'center' }}>
                 <div>
-                  <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '0.2rem' }}>Order</span>
+                  <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '0.2rem' }}>Order</span>
                   <p style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--secondary)' }}>#{order.id.toString().padStart(5, '0')}</p>
                 </div>
                 <div>
-                  <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '0.2rem' }}>Date</span>
+                  <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '0.2rem' }}>Date</span>
                   <p style={{ fontWeight: 800, fontSize: '0.8rem', color: '#666' }}>{new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</p>
                 </div>
                 <div>
-                  <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '0.2rem' }}>Amount</span>
-                  <p style={{ fontWeight: 900, color: 'var(--primary)', fontSize: '0.85rem' }}>₹{parseFloat(order.total).toLocaleString()}</p>
+                  <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '0.2rem' }}>Amount</span>
+                  <p style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '0.85rem' }}>₹{parseFloat(order.total).toLocaleString()}</p>
                 </div>
                 <div>
-                  <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '0.2rem' }}>Items</span>
+                  <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '0.2rem' }}>Items</span>
                   <p style={{ fontWeight: 800, color: '#666', fontSize: '0.8rem' }}>{order.OrderItems?.reduce((acc, item) => acc + item.quantity, 0)} Pcs</p>
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <span style={{ 
-                  padding: '0.3rem 0.8rem', borderRadius: '12px', fontSize: '0.6rem', fontWeight: 900, textTransform: 'uppercase',
+                  padding: '0.3rem 0.8rem', borderRadius: '12px', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase',
                   background: order.status === 'delivered' ? '#f0fdf4' : order.status === 'pending' ? '#fff7ed' : '#f0f9ff',
                   color: order.status === 'delivered' ? '#10b981' : order.status === 'pending' ? '#f97316' : '#0369a1'
                 }}>

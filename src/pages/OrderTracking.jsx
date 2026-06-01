@@ -43,7 +43,7 @@ const OrderTracking = () => {
           <div style={{ display: 'inline-flex', padding: '0.6rem 1.2rem', background: '#fff0f0', borderRadius: '20px', color: 'var(--primary)', fontWeight: 800, fontSize: '0.65rem', letterSpacing: '3px', textTransform: 'uppercase', marginBottom: '1.2rem', boxShadow: '0 5px 15px rgba(233,163,163,0.1)' }}>
             Live Atelier Status
           </div>
-          <h2 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.1 }}>Track Your <span style={{ color: 'var(--primary)', fontStyle: 'italic' }}>Magic</span></h2>
+          <h2 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontFamily: 'Roboto', color: 'var(--secondary)', lineHeight: 1.1 }}>Track Your <span style={{ color: 'var(--primary)', fontStyle: 'italic' }}>Magic</span></h2>
           <p style={{ color: '#777', marginTop: '1.2rem', maxWidth: '520px', margin: '1.2rem auto', fontSize: '0.92rem', lineHeight: 1.9 }}>
             Enter your unique Order Reference to peek into our atelier and see the progress of your handcrafted masterpiece.
           </p>
@@ -98,7 +98,7 @@ const OrderTracking = () => {
               style={{ padding: '4rem 0' }}
             >
               <PookieLoader />
-              <p style={{ textAlign: 'center', marginTop: '2rem', color: '#888', fontStyle: 'italic', fontFamily: 'Playfair Display' }}>Consulting with our master tailors...</p>
+              <p style={{ textAlign: 'center', marginTop: '2rem', color: '#888', fontStyle: 'italic', fontFamily: 'Roboto' }}>Consulting with our master tailors...</p>
             </motion.div>
           ) : order === "not-found" ? (
             <motion.div 
@@ -107,7 +107,7 @@ const OrderTracking = () => {
               style={{ padding: '4rem 2rem', background: '#fff9f9', color: 'var(--primary)', borderRadius: '45px', textAlign: 'center', border: '1.5px solid #fff0f0' }}
             >
               <Package size={40} style={{ marginBottom: '1.2rem', opacity: 0.5 }} />
-              <h3 style={{ fontFamily: 'Playfair Display', fontSize: '1.6rem', color: 'var(--secondary)' }}>Order Not Found</h3>
+              <h3 style={{ fontFamily: 'Roboto', fontSize: '1.6rem', color: 'var(--secondary)' }}>Order Not Found</h3>
               <p style={{ marginTop: '0.5rem', opacity: 0.7, maxWidth: '400px', margin: '0.5rem auto' }}>The wings of our messenger haven't found this ID yet. Please double check your confirmation email or contact support.</p>
             </motion.div>
           ) : order ? (
@@ -119,11 +119,11 @@ const OrderTracking = () => {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3rem', borderBottom: '1px solid #fef0f0', paddingBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' }}>
                 <div>
-                  <span style={{ fontSize: '0.65rem', color: 'var(--primary)', textTransform: 'uppercase', fontWeight: 900, letterSpacing: '2px' }}>Reference</span>
-                  <h3 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.8rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1 }}>{order.id}</h3>
+                  <span style={{ fontSize: '0.65rem', color: 'var(--primary)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '2px' }}>Reference</span>
+                  <h3 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.8rem)', fontFamily: 'Roboto', color: 'var(--secondary)', lineHeight: 1 }}>{order.id}</h3>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontSize: '0.65rem', color: 'var(--primary)', textTransform: 'uppercase', fontWeight: 900, letterSpacing: '2px' }}>Est. Completion</span>
+                  <span style={{ fontSize: '0.65rem', color: 'var(--primary)', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '2px' }}>Est. Completion</span>
                   <h3 style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)', color: 'var(--secondary)', fontWeight: 800 }}>{order.date}</h3>
                 </div>
               </div>
@@ -134,7 +134,7 @@ const OrderTracking = () => {
                 </div>
                 <div>
                   <p style={{ fontSize: '0.7rem', color: '#999', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>Current Masterpiece</p>
-                  <h4 style={{ fontSize: '1.25rem', color: 'var(--secondary)', fontFamily: 'Playfair Display', marginTop: '0.2rem' }}>{order.item}</h4>
+                  <h4 style={{ fontSize: '1.25rem', color: 'var(--secondary)', fontFamily: 'Roboto', marginTop: '0.2rem' }}>{order.item}</h4>
                 </div>
               </div>
 
@@ -178,7 +178,7 @@ const OrderTracking = () => {
                           />
                         )}
                       </motion.div>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 900, color: isActive ? 'var(--secondary)' : '#ccc', textTransform: 'uppercase', letterSpacing: '1.5px', textAlign: 'center' }}>{step}</span>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: isActive ? 'var(--secondary)' : '#ccc', textTransform: 'uppercase', letterSpacing: '1.5px', textAlign: 'center' }}>{step}</span>
                       {isCurrent && <motion.div layoutId="sparkle-track" style={{ position: 'absolute', top: '-1.8rem' }}><Sparkles size={18} color="var(--primary)" /></motion.div>}
                     </div>
                   );

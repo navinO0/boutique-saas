@@ -85,21 +85,21 @@ const AccountPage = () => {
           >
             <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
               <div>
-                <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>Order ID</span>
+                <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>Order ID</span>
                 <p style={{ fontWeight: 800, fontSize: '0.9rem' }}>#{order.id.toString().padStart(5, '0')}</p>
               </div>
               <div>
-                <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>Date</span>
+                <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>Date</span>
                 <p style={{ fontWeight: 700, fontSize: '0.85rem', color: '#666' }}>{new Date(order.createdAt).toLocaleDateString()}</p>
               </div>
               <div>
-                <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>Total</span>
-                <p style={{ fontWeight: 900, fontSize: '0.9rem', color: 'var(--primary)' }}>₹{parseFloat(order.total).toLocaleString()}</p>
+                <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', display: 'block' }}>Total</span>
+                <p style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--primary)' }}>₹{parseFloat(order.total).toLocaleString()}</p>
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                <span style={{ 
-                padding: '0.4rem 0.8rem', borderRadius: '12px', fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase',
+                padding: '0.4rem 0.8rem', borderRadius: '12px', fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase',
                 background: order.status === 'delivered' ? '#f0fdf4' : order.status === 'pending' ? '#fff7ed' : '#f0f9ff',
                 color: order.status === 'delivered' ? '#10b981' : order.status === 'pending' ? '#f97316' : '#0369a1'
                }}>
@@ -122,7 +122,7 @@ const AccountPage = () => {
             onSubmit={handleSaveAddress}
             style={{ background: 'white', padding: 'clamp(1rem, 5vw, 2rem)', borderRadius: '30px', border: '1.5px solid var(--primary)', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}
           >
-            <h4 style={{ fontFamily: 'Playfair Display', fontSize: '1.2rem', color: 'var(--secondary)' }}>{editingAddressId ? 'Edit Address' : 'Add New Address'}</h4>
+            <h4 style={{ fontFamily: 'Roboto', fontSize: '1.2rem', color: 'var(--secondary)' }}>{editingAddressId ? 'Edit Address' : 'Add New Address'}</h4>
             <div className="address-form-grid">
               <input type="text" placeholder="Full Name" value={addressForm.name} required style={{ width: '100%', padding: '0.8rem 1.2rem', borderRadius: '15px', border: '1px solid #eee' }} onChange={e => setAddressForm({...addressForm, name: e.target.value})} />
               <input type="tel" placeholder="Phone Number" value={addressForm.phone} required style={{ width: '100%', padding: '0.8rem 1.2rem', borderRadius: '15px', border: '1px solid #eee' }} onChange={e => setAddressForm({...addressForm, phone: e.target.value})} />
@@ -177,7 +177,7 @@ const AccountPage = () => {
         <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: 'var(--primary)' }}>
           <User size={40} />
         </div>
-        <h3 style={{ fontFamily: 'Playfair Display', fontSize: '1.8rem', color: 'var(--secondary)' }}>Personal Details</h3>
+        <h3 style={{ fontFamily: 'Roboto', fontSize: '1.8rem', color: 'var(--secondary)' }}>Personal Details</h3>
         <p style={{ color: '#888', fontSize: '0.85rem', marginTop: '0.5rem' }}>Manage your account identity and contact information</p>
       </div>
 
@@ -189,7 +189,7 @@ const AccountPage = () => {
         style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-          <label style={{ fontSize: '0.65rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', paddingLeft: '0.5rem' }}>Full Identity</label>
+          <label style={{ fontSize: '0.65rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', paddingLeft: '0.5rem' }}>Full Identity</label>
           <input 
             type="text" value={profileForm.name} 
             onChange={e => setProfileForm({...profileForm, name: e.target.value})}
@@ -199,7 +199,7 @@ const AccountPage = () => {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-          <label style={{ fontSize: '0.65rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', paddingLeft: '0.5rem' }}>Email Address</label>
+          <label style={{ fontSize: '0.65rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', paddingLeft: '0.5rem' }}>Email Address</label>
           <input 
             type="email" value={profileForm.email} 
             onChange={e => setProfileForm({...profileForm, email: e.target.value})}
@@ -209,7 +209,7 @@ const AccountPage = () => {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-          <label style={{ fontSize: '0.65rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', paddingLeft: '0.5rem' }}>Contact Number</label>
+          <label style={{ fontSize: '0.65rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px', paddingLeft: '0.5rem' }}>Contact Number</label>
           <input 
             type="tel" value={profileForm.phone} 
             onChange={e => setProfileForm({...profileForm, phone: e.target.value})}
@@ -256,7 +256,7 @@ const AccountPage = () => {
               </div>
               <div style={{ padding: '1.2rem' }}>
                 <p style={{ fontWeight: 800, fontSize: '0.85rem', color: 'var(--secondary)', marginBottom: '0.4rem' }}>{item.name}</p>
-                <p style={{ fontWeight: 900, color: 'var(--primary)', fontSize: '0.95rem', marginBottom: '1rem' }}>₹{parseFloat(item.discountedPrice).toLocaleString()}</p>
+                <p style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '0.95rem', marginBottom: '1rem' }}>₹{parseFloat(item.discountedPrice).toLocaleString()}</p>
                 <button 
                   onClick={() => addToCart(item)}
                   style={{ width: '100%', padding: '0.7rem', background: 'var(--secondary)', color: 'white', borderRadius: '12px', fontWeight: 700, fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
@@ -279,7 +279,7 @@ const AccountPage = () => {
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#aaa', fontWeight: 800, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.8rem' }}>
             <ArrowLeft size={12} /> Boutique
           </Link>
-          <h2 style={{ fontSize: 'clamp(1.8rem, 6vw, 3rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.1 }}>User Sanctuary</h2>
+          <h2 style={{ fontSize: 'clamp(1.8rem, 6vw, 3rem)', fontFamily: 'Roboto', color: 'var(--secondary)', lineHeight: 1.1 }}>User Sanctuary</h2>
           <p style={{ color: '#888', marginTop: '0.5rem', fontSize: 'clamp(0.8rem, 2vw, 0.95rem)' }}>Welcome, <span style={{ color: 'var(--primary)', fontWeight: 800 }}>{currentUser.name}</span></p>
         </div>
         <div>

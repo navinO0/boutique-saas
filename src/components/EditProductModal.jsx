@@ -15,6 +15,7 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
     discount: '0',
     stock: '',
     category: '',
+    collections: [],
     image: '',
     images: [],
     colors: [],
@@ -34,6 +35,7 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
       setFormData({
         ...product,
         images: product.images || [product.image],
+        collections: product.collections || (product.category ? [product.category] : []),
         colors: product.colors || [],
         sizes: product.sizes || [],
         isIcon: product.isIcon || false
@@ -45,6 +47,7 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
         discount: '0',
         stock: '10',
         category: '',
+        collections: [],
         image: '',
         images: [],
         colors: [],
@@ -162,6 +165,25 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
     });
   };
 
+  const toggleCollection = (catId) => {
+    const isSelected = formData.collections.includes(catId);
+    if (isSelected) {
+      setFormData({
+        ...formData,
+        collections: formData.collections.filter(id => id !== catId),
+        // If we remove the primary category, update it to the first remaining collection if any
+        category: formData.category === catId ? (formData.collections.filter(id => id !== catId)[0] || '') : formData.category
+      });
+    } else {
+      setFormData({
+        ...formData,
+        collections: [...formData.collections, catId],
+        // If no category is selected yet, make this the primary
+        category: formData.category ? formData.category : catId
+      });
+    }
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -184,7 +206,7 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
 
             <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
               <Sparkles size={24} color="var(--primary)" style={{ marginBottom: '0.6rem' }} />
-              <h2 style={{ fontSize: '1.5rem', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>{product ? 'Edit Your Masterpiece' : 'Upload New Work'}</h2>
+              <h2 style={{ fontSize: '1.5rem', fontFamily: 'Roboto', color: 'var(--secondary)' }}>{product ? 'Edit Your Masterpiece' : 'Upload New Work'}</h2>
               <p style={{ color: '#999', fontSize: '0.78rem', marginTop: '0.3rem' }}>Fill in the details of your beautiful design</p>
             </div>
 
@@ -195,36 +217,46 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
                   <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} style={{ width: '100%', padding: '0.85rem 1rem', border: 'none', background: '#fff9f9', borderRadius: '18px', outline: 'none', fontSize: '0.88rem' }} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.68rem', fontWeight: 800, marginBottom: '0.4rem', color: 'var(--primary)', textTransform: 'uppercase' }}>Category</label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    disabled={categoriesLoading}
-                    style={{
-                      width: '100%',
-                      padding: '0.85rem 1rem',
-                      border: 'none',
-                      background: categoriesLoading
-                        ? 'linear-gradient(90deg,#fce8e8 25%,#fdf0f0 50%,#fce8e8 75%)'
-                        : '#fff9f9',
-                      backgroundSize: categoriesLoading ? '200% 100%' : 'auto',
-                      animation: categoriesLoading ? 'shimmer 1.5s infinite' : 'none',
-                      borderRadius: '18px',
-                      outline: 'none',
-                      appearance: 'none',
-                      fontSize: '0.88rem',
-                      opacity: categoriesLoading ? 0.7 : 1,
-                      cursor: categoriesLoading ? 'wait' : 'pointer'
-                    }}
-                  >
-                    {categoriesLoading ? (
-                      <option value="">Loading categories…</option>
-                    ) : (
-                      categories.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.name}</option>
-                      ))
-                    )}
-                  </select>
+                  <label style={{ display: 'block', fontSize: '0.68rem', fontWeight: 800, marginBottom: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase' }}>Collections</label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    {categories.map(cat => {
+                      const isSelected = formData.collections?.includes(cat.id);
+                      return (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() => toggleCollection(cat.id)}
+                          style={{
+                            padding: '0.5rem 1rem',
+                            borderRadius: '12px',
+                            border: isSelected ? '1px solid var(--primary)' : '1px solid #eee',
+                            background: isSelected ? 'var(--primary)' : 'white',
+                            color: isSelected ? 'white' : 'var(--secondary)',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            transition: '0.2s'
+                          }}
+                        >
+                          {cat.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {formData.collections?.length > 1 && (
+                    <div style={{ marginTop: '0.8rem' }}>
+                      <label style={{ display: 'block', fontSize: '0.6rem', fontWeight: 800, color: '#999', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Primary Display Category</label>
+                      <select 
+                        value={formData.category}
+                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        style={{ padding: '0.4rem', borderRadius: '10px', border: '1px solid #eee', fontSize: '0.7rem', outline: 'none' }}
+                      >
+                        {formData.collections.map(id => (
+                          <option key={id} value={id}>{categories.find(c => c.id === id)?.name || id}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </div>
               </div>
 

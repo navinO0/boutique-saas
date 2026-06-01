@@ -287,7 +287,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                         ))}
                       </div>
                     )}
-                    <div style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(10px)', padding: '0.4rem 0.8rem', borderRadius: '15px', fontSize: '0.65rem', fontWeight: 900, color: 'var(--primary)', zIndex: 10 }}>
+                    <div style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(10px)', padding: '0.4rem 0.8rem', borderRadius: '15px', fontSize: '0.65rem', fontWeight: 700, color: 'var(--primary)', zIndex: 10 }}>
                       {currentImageIndex + 1} / {(product.images?.length > 0 ? product.images : [product.image]).length}
                     </div>
                   </div>
@@ -297,10 +297,10 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
               {/* Details Section */}
               <div style={{ padding: '0.5rem clamp(0.8rem, 3vw, 2rem)' }}>
                 <motion.span variants={itemVariants} style={{ color: 'var(--primary)', fontWeight: 800, textTransform: 'uppercase', fontSize: '0.65rem', letterSpacing: '4px', display: 'block' }}>{product.category}</motion.span>
-                <motion.h2 variants={itemVariants} style={{ fontSize: 'clamp(1.2rem, 3.5vw, 2.2rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', margin: '0.4rem 0', lineHeight: 1.1 }}>{product.name}</motion.h2>
+                <motion.h2 variants={itemVariants} style={{ fontSize: 'clamp(1.2rem, 3.5vw, 2.2rem)', fontFamily: 'Roboto', color: 'var(--secondary)', margin: '0.4rem 0', lineHeight: 1.1 }}>{product.name}</motion.h2>
                 
                 <motion.div variants={itemVariants} style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '0.8rem 0', flexWrap: 'wrap' }}>
-                  <p style={{ fontSize: 'clamp(1.1rem, 3vw, 1.8rem)', fontWeight: 900, color: 'var(--primary)' }}>₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
+                  <p style={{ fontSize: 'clamp(1.1rem, 3vw, 1.8rem)', fontWeight: 700, color: 'var(--primary)' }}>₹{parseFloat(product.discountedPrice).toLocaleString()}</p>
                   {product.discount > 0 && <span style={{ padding: '0.3rem 0.8rem', background: '#fff0f0', color: 'var(--primary)', borderRadius: '10px', fontWeight: 800, fontSize: '0.75rem' }}>{product.discount}% OFF</span>}
                 </motion.div>
 
@@ -427,27 +427,50 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
                 style={{ padding: 'clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 3rem)', background: '#fff9f9', borderRadius: '40px 40px 0 0' }}
               >
-                <h3 style={{ fontSize: 'clamp(1.4rem, 4vw, 2.2rem)', fontFamily: 'Playfair Display', marginBottom: 'clamp(1.5rem, 4vw, 3rem)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                <h3 style={{ fontSize: 'clamp(1.4rem, 4vw, 2.2rem)', fontFamily: 'Roboto', marginBottom: 'clamp(1.5rem, 4vw, 3rem)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                   More Magic <Sparkles size={24} color="var(--primary)" />
                 </h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(180px, 100%), 1fr))', gap: 'clamp(1rem, 3vw, 2.5rem)' }}>
-                  {similarProducts.map((p, i) => (
-                    <motion.div 
-                      key={p.id} 
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.1 }}
-                      whileHover={{ y: -10 }}
-                      onClick={() => fetchProductDetails(p.id)}
-                      style={{ cursor: 'pointer', background: 'white', padding: '0.8rem', borderRadius: '24px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}
-                    >
-                      <img src={resolveImageUrl(p.images?.[0] || p.image)} style={{ width: '100%', height: 'clamp(200px, 35vw, 350px)', objectFit: 'contain', borderRadius: '18px', background: '#fef5f5' }} alt={p.name} />
-                      <div style={{ padding: '0.8rem 0.3rem' }}>
-                        <p style={{ fontWeight: 800, color: 'var(--secondary)', fontSize: 'clamp(0.8rem, 2vw, 1rem)' }}>{p.name}</p>
-                        <p style={{ color: 'var(--primary)', fontWeight: 900, marginTop: '0.4rem', fontSize: 'clamp(0.85rem, 2vw, 1rem)' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
-                      </div>
-                    </motion.div>
-                  ))}
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: window.innerWidth < 768 ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', 
+                  gap: '10px' 
+                }}>
+                  {similarProducts.slice(0, 4).map((p, i) => {
+                    const isSimilarMobile = window.innerWidth < 768;
+                    return (
+                      <motion.div 
+                        key={p.id} 
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        whileHover={{ y: -10 }}
+                        onClick={() => fetchProductDetails(p.id)}
+                        style={{ 
+                          cursor: 'pointer', 
+                          background: 'white', 
+                          padding: '0.4rem', 
+                          borderRadius: '8px', 
+                          boxShadow: '0 10px 25px rgba(0,0,0,0.05)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          height: 'auto',
+                          border: '1px solid #fff0f0'
+                        }}
+                      >
+                        <div style={{ height: isSimilarMobile ? 'clamp(180px, 45vw, 250px)' : '200px', flexShrink: 0, overflow: 'hidden', borderRadius: '6px', background: '#fef5f5' }}>
+                          <img 
+                            src={resolveImageUrl(p.images?.[0] || p.image)} 
+                            style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+                            alt={p.name} 
+                          />
+                        </div>
+                        <div style={{ padding: '0.6rem 0.3rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                          <p style={{ fontWeight: 700, color: 'var(--secondary)', fontSize: 'clamp(0.7rem, 2vw, 0.9rem)', marginBottom: '0.2rem' }}>{p.name}</p>
+                          <p style={{ color: 'var(--primary)', fontWeight: 700, marginTop: 'auto', fontSize: 'clamp(0.75rem, 2vw, 1rem)' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </motion.div>
             )}
@@ -551,7 +574,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
             </div>
 
             <div style={{ position: 'absolute', bottom: '3rem', textAlign: 'center', color: 'white', zIndex: 6010, pointerEvents: 'none' }}>
-               <p style={{ fontSize: '1.2rem', fontFamily: 'Playfair Display', letterSpacing: '1px' }}>{product.name}</p>
+               <p style={{ fontSize: '1.2rem', fontFamily: 'Roboto', letterSpacing: '1px' }}>{product.name}</p>
                <p style={{ opacity: 0.6, fontSize: '0.8rem', marginTop: '0.5rem', letterSpacing: '4px', textTransform: 'uppercase' }}>{currentImageIndex + 1} / {(product.images?.length > 0 ? product.images : [product.image]).length}</p>
                <p style={{ fontSize: '0.65rem', marginTop: '1.5rem', color: 'var(--primary)', fontWeight: 800, letterSpacing: '2px' }}>SWIPE OR DRAG TO BROWSE</p>
             </div>

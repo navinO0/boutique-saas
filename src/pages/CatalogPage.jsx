@@ -130,12 +130,12 @@ const CatalogItemModal = ({ isOpen, onClose, item }) => {
               <div className="container" style={{ padding: 0, maxWidth: '800px' }}>
                 <motion.span
                   initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
-                  style={{ color: 'var(--primary)', fontWeight: 900, textTransform: 'uppercase', fontSize: '0.7rem', letterSpacing: '4px', display: 'block', marginBottom: '1rem' }}
+                  style={{ color: 'var(--primary)', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.7rem', letterSpacing: '4px', display: 'block', marginBottom: '1rem' }}
                 >
                   {item.category}
                 </motion.span>
 
-                <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '1.5rem', lineHeight: 1.15 }}>{item.name}</h2>
+                <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontFamily: 'Roboto', color: 'var(--secondary)', marginBottom: '1.5rem', lineHeight: 1.15 }}>{item.name}</h2>
 
                 <div style={{ width: '40px', height: '3px', background: 'var(--primary)', marginBottom: '2rem', borderRadius: '2px' }} />
 
@@ -341,7 +341,7 @@ const CatalogPage = () => {
 
       <div style={{ textAlign: 'center', marginBottom: 'clamp(3rem, 7vw, 5rem)' }}>
         <Sparkles size={28} color="var(--primary)" style={{ marginBottom: '1.2rem' }} />
-        <h1 style={{ fontSize: 'clamp(2.2rem, 6vw, 4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', lineHeight: 1.1 }}>The Atelier <span style={{ color: 'var(--primary)', fontStyle: 'italic' }}>Catalog</span></h1>
+        <h1 style={{ fontSize: 'clamp(2.2rem, 6vw, 4rem)', fontFamily: 'Roboto', color: 'var(--secondary)', lineHeight: 1.1 }}>The Atelier <span style={{ color: 'var(--primary)', fontStyle: 'italic' }}>Catalog</span></h1>
         <p style={{ color: '#777', marginTop: '0.8rem', maxWidth: '520px', margin: '0.8rem auto', fontSize: '0.92rem', lineHeight: 1.8 }}>A curated showcase of our finest handcrafted legacy. From heritage bridal to modern evening wear, explored and redesigned just for you.</p>
       </div>
 
@@ -377,7 +377,7 @@ const CatalogPage = () => {
             </div>
             <div style={{ padding: '1.5rem 1rem', textAlign: 'center' }}>
               <p style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '3px', marginBottom: '0.4rem' }}>{item.category}</p>
-              <h3 style={{ fontSize: '1.3rem', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>{item.name}</h3>
+              <h3 style={{ fontSize: '1.3rem', fontFamily: 'Roboto', color: 'var(--secondary)' }}>{item.name}</h3>
               <div style={{ width: '30px', height: '1.5px', background: '#ffe4e1', margin: '1rem auto' }}></div>
               <p style={{ fontSize: '0.78rem', color: '#aaa', fontStyle: 'italic', letterSpacing: '0.5px' }}>Artisan Details</p>
             </div>
@@ -397,7 +397,7 @@ const CatalogPage = () => {
       {/* Portfolio Story Section */}
       <section style={{ marginTop: '7rem', background: 'var(--accent)', padding: 'clamp(3rem, 8vw, 5rem) 2rem', borderRadius: '48px', textAlign: 'center' }}>
         <Quote size={30} color="var(--primary)" style={{ opacity: 0.15, marginBottom: '1.5rem' }} />
-        <h2 style={{ fontSize: 'clamp(1.7rem, 4vw, 2.5rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '1.5rem', lineHeight: 1.1 }}>Every design is a conversation, <br /> every stitch is a promise.</h2>
+        <h2 style={{ fontSize: 'clamp(1.7rem, 4vw, 2.5rem)', fontFamily: 'Roboto', color: 'var(--secondary)', marginBottom: '1.5rem', lineHeight: 1.1 }}>Every design is a conversation, <br /> every stitch is a promise.</h2>
         <p style={{ maxWidth: '520px', margin: '0 auto', color: '#777', lineHeight: 1.8, fontSize: '0.92rem' }}>Our catalog represents years of artisanal excellence. Whether you want a recreation of a past masterpiece or a completely new vision, our atelier is ready to bring your dream to life.</p>
         <button style={{ marginTop: '2.5rem', padding: '1rem 2.5rem', background: 'var(--secondary)', color: 'white', borderRadius: '28px', border: 'none', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', boxShadow: '0 12px 24px rgba(74,55,55,0.15)' }}>Explore Customizations</button>
       </section>

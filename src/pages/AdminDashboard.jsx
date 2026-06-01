@@ -65,7 +65,7 @@ const AttentionRequiredView = ({ onEditProduct }) => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '2rem' }}>
         {/* Contact Form Submissions */}
         <div style={{ background: 'white', padding: 'clamp(1.2rem, 4vw, 2rem)', borderRadius: '35px', boxShadow: '0 20px 40px rgba(233,163,163,0.08)', border: '1px solid #fff0f0' }}>
-          <h3 style={{ marginBottom: '2rem', fontFamily: 'Playfair Display', fontSize: '1.5rem', color: 'var(--secondary)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+          <h3 style={{ marginBottom: '2rem', fontFamily: 'Roboto', fontSize: '1.5rem', color: 'var(--secondary)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
             <Mail size={22} color="var(--primary)" /> Customer Inquiries
           </h3>
           
@@ -83,7 +83,7 @@ const AttentionRequiredView = ({ onEditProduct }) => {
                         <p style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}><Phone size={12} /> {inv.phone}</p>
                       </div>
                     </div>
-                    {inv.status === 'new' && <span style={{ background: 'var(--primary)', color: 'white', fontSize: '0.6rem', padding: '0.2rem 0.6rem', borderRadius: '10px', fontWeight: 900 }}>NEW</span>}
+                    {inv.status === 'new' && <span style={{ background: 'var(--primary)', color: 'white', fontSize: '0.6rem', padding: '0.2rem 0.6rem', borderRadius: '10px', fontWeight: 700 }}>NEW</span>}
                   </div>
                   <p style={{ fontSize: '0.8rem', fontWeight: 700, color: '#555', marginBottom: '0.4rem' }}>{inv.subject}</p>
                   <p style={{ fontSize: '0.85rem', color: '#777', lineHeight: 1.5, marginBottom: '1rem' }}>{inv.message}</p>
@@ -124,7 +124,7 @@ const AttentionRequiredView = ({ onEditProduct }) => {
 
         {/* Out of Stock Items */}
         <div style={{ background: 'white', padding: 'clamp(1.2rem, 4vw, 2rem)', borderRadius: '35px', boxShadow: '0 20px 40px rgba(233,163,163,0.08)', border: '1px solid #fff0f0' }}>
-          <h3 style={{ marginBottom: '2rem', fontFamily: 'Playfair Display', fontSize: '1.5rem', color: 'var(--secondary)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+          <h3 style={{ marginBottom: '2rem', fontFamily: 'Roboto', fontSize: '1.5rem', color: 'var(--secondary)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
             <AlertCircle size={22} color="var(--primary)" /> Restock Required
           </h3>
 
@@ -172,7 +172,7 @@ const StatCard = ({ title, value, icon: Icon, trend }) => (
       )}
     </div>
     <p style={{ color: 'var(--text-light)', fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>{title}</p>
-    <h3 style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--secondary)', marginTop: '0.3rem' }}>{value}</h3>
+    <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--secondary)', marginTop: '0.3rem' }}>{value}</h3>
   </div>
 );
 
@@ -203,7 +203,7 @@ const AdminFilterModal = ({ isOpen, onClose, filters, setFilters, siteConfig, on
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
-              <h3 style={{ fontSize: '1.8rem', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>Refine Magic</h3>
+              <h3 style={{ fontSize: '1.8rem', fontFamily: 'Roboto', color: 'var(--secondary)' }}>Refine Magic</h3>
               <button onClick={onClose} style={{ background: '#fff9f9', color: 'var(--primary)', padding: '0.8rem', borderRadius: '50%', border: 'none', cursor: 'pointer' }}>
                 <X size={20} />
               </button>
@@ -212,7 +212,7 @@ const AdminFilterModal = ({ isOpen, onClose, filters, setFilters, siteConfig, on
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
               {/* Category */}
               <div>
-                <label style={{ fontSize: '0.7rem', fontWeight: 950, textTransform: 'uppercase', letterSpacing: '2px', color: 'var(--primary)', display: 'block', marginBottom: '1.2rem' }}>Collections</label>
+                <label style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', color: 'var(--primary)', display: 'block', marginBottom: '1.2rem' }}>Collections</label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.8rem' }}>
                   <button 
                     onClick={() => setFilters({ ...filters, category: 'all' })}
@@ -230,7 +230,7 @@ const AdminFilterModal = ({ isOpen, onClose, filters, setFilters, siteConfig, on
 
               {/* Visibility Status */}
               <div>
-                <label style={{ fontSize: '0.7rem', fontWeight: 950, textTransform: 'uppercase', letterSpacing: '2px', color: 'var(--primary)', display: 'block', marginBottom: '1.2rem' }}>Visibility State</label>
+                <label style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', color: 'var(--primary)', display: 'block', marginBottom: '1.2rem' }}>Visibility State</label>
                 <div style={{ display: 'flex', gap: '0.8rem' }}>
                   {[
                     { id: 'all', label: 'Everything' },
@@ -248,7 +248,7 @@ const AdminFilterModal = ({ isOpen, onClose, filters, setFilters, siteConfig, on
 
               {/* Sorting */}
               <div>
-                <label style={{ fontSize: '0.7rem', fontWeight: 950, textTransform: 'uppercase', letterSpacing: '2px', color: 'var(--primary)', display: 'block', marginBottom: '1.2rem' }}>Sort Manifest</label>
+                <label style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', color: 'var(--primary)', display: 'block', marginBottom: '1.2rem' }}>Sort Manifest</label>
                 <div style={{ position: 'relative' }}>
                   <select
                     value={filters.sortBy}
@@ -267,9 +267,9 @@ const AdminFilterModal = ({ isOpen, onClose, filters, setFilters, siteConfig, on
               {/* Price Cap */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                  <label style={{ fontSize: '0.7rem', fontWeight: 950, textTransform: 'uppercase', letterSpacing: '2px', color: 'var(--primary)' }}>Price Limit</label>
+                  <label style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', color: 'var(--primary)' }}>Price Limit</label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontWeight: 950, color: 'var(--secondary)', fontSize: '1rem' }}>₹</span>
+                    <span style={{ fontWeight: 700, color: 'var(--secondary)', fontSize: '1rem' }}>₹</span>
                     <input 
                       type="number"
                       value={filters.maxPrice}
@@ -293,7 +293,7 @@ const AdminFilterModal = ({ isOpen, onClose, filters, setFilters, siteConfig, on
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={onApply}
-                  style={{ flex: 2, padding: '1.4rem', background: 'var(--primary)', color: 'white', borderRadius: '25px', fontWeight: 900, border: 'none', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '2px', cursor: 'pointer', boxShadow: '0 15px 35px rgba(233,163,163,0.3)' }}
+                  style={{ flex: 2, padding: '1.4rem', background: 'var(--primary)', color: 'white', borderRadius: '25px', fontWeight: 700, border: 'none', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '2px', cursor: 'pointer', boxShadow: '0 15px 35px rgba(233,163,163,0.3)' }}
                 >
                   Apply Magic
                 </motion.button>
@@ -383,7 +383,7 @@ const ProductManager = ({ onEditProduct }) => {
     <div style={{ background: 'white', padding: 'clamp(1rem, 5vw, 2.5rem)', borderRadius: '45px', boxShadow: '0 30px 60px rgba(233,163,163,0.15)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', flexWrap: 'wrap', gap: '1.2rem' }}>
         <div>
-          <h3 style={{ fontSize: '1.8rem', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>Inventory Master  </h3>
+          <h3 style={{ fontSize: '1.8rem', fontFamily: 'Roboto', color: 'var(--secondary)' }}>Inventory Master  </h3>
           <p style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>Manage your beautiful designs and stock levels</p>
         </div>
         <button onClick={handleAddNew} style={{ padding: '1rem 2rem', background: 'var(--primary)', color: 'white', borderRadius: '30px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.8rem', border: 'none', cursor: 'pointer' }}>
@@ -467,7 +467,7 @@ const ProductManager = ({ onEditProduct }) => {
               }}
             >
               {!p.isActive && (
-                <div style={{ position: 'absolute', top: '1rem', left: '1rem', background: '#444', color: 'white', padding: '0.3rem 0.8rem', borderRadius: '15px', fontSize: '0.65rem', fontWeight: 900, zIndex: 10, letterSpacing: '1px' }}>
+                <div style={{ position: 'absolute', top: '1rem', left: '1rem', background: '#444', color: 'white', padding: '0.3rem 0.8rem', borderRadius: '15px', fontSize: '0.65rem', fontWeight: 700, zIndex: 10, letterSpacing: '1px' }}>
                   HIDDEN
                 </div>
               )}
@@ -487,7 +487,7 @@ const ProductManager = ({ onEditProduct }) => {
                   </div>
                 </div>
                 <h4 style={{ fontWeight: 800, margin: '0.5rem 0', fontSize: '1rem', color: 'var(--secondary)', minHeight: '2.5rem' }}>{p.name}</h4>
-                <p style={{ fontWeight: 900, color: 'var(--primary)', fontSize: '1.1rem' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
+                <p style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '1.1rem' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
                 
                 <div style={{ display: 'flex', gap: '0.6rem', marginTop: '1.5rem' }}>
                   <button onClick={() => handleToggleActive(p)} style={{ padding: '0.8rem', background: 'white', border: '1px solid #fff0f0', borderRadius: '15px', color: p.isActive ? 'var(--primary)' : '#999', cursor: 'pointer' }}>
@@ -584,7 +584,7 @@ const OrdersManager = () => {
     <div style={{ background: 'white', padding: 'clamp(1rem, 5vw, 2.5rem)', borderRadius: '45px', boxShadow: '0 30px 60px rgba(233,163,163,0.15)' }}>
       <div style={{ marginBottom: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1.2rem' }}>
         <div>
-          <h3 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.8rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>Order Master <CreditCard size={22} color="var(--primary)" /></h3>
+          <h3 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.8rem)', fontFamily: 'Roboto', color: 'var(--secondary)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>Order Master <CreditCard size={22} color="var(--primary)" /></h3>
           <p style={{ color: 'var(--text-light)', fontSize: '0.9rem', marginTop: '0.5rem' }}>Manifest verification and shipping confirmation</p>
         </div>
         
@@ -675,19 +675,19 @@ const OrdersManager = () => {
               >
                 <div style={{ display: 'flex', gap: '2.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
                   <div>
-                    <span style={{ fontSize: '0.6rem', fontWeight: 900, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Order #{String(order.id).padStart(5, '0')}</span>
+                    <span style={{ fontSize: '0.6rem', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Order #{String(order.id).padStart(5, '0')}</span>
                     <h4 style={{ fontWeight: 800, color: 'var(--secondary)', marginTop: '0.2rem', fontSize: '0.95rem' }}>{order.User?.name}</h4>
                   </div>
                   <div>
-                    <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px' }}>Value</span>
+                    <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px' }}>Value</span>
                     <p style={{ fontWeight: 800, color: 'var(--secondary)', fontSize: '0.9rem' }}>₹{parseFloat(order.total).toLocaleString()}</p>
                   </div>
                   <div>
-                    <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px' }}>Items</span>
+                    <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px' }}>Items</span>
                     <p style={{ fontWeight: 800, color: '#666', fontSize: '0.85rem' }}>{order.OrderItems?.length} Pieces</p>
                   </div>
                   <div>
-                    <span style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px' }}>Manifested At</span>
+                    <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '1px' }}>Manifested At</span>
                     <p style={{ fontWeight: 800, color: '#666', fontSize: '0.8rem' }}>
                       {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}, {new Date(order.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
                     </p>
@@ -708,7 +708,7 @@ const OrdersManager = () => {
             {filteredOrders.length === 0 && (
               <div style={{ textAlign: 'center', padding: '6rem 2rem', color: '#ccc' }}>
                 <CheckCircle size={60} style={{ opacity: 0.2, marginBottom: '1.5rem' }} />
-                <h3 style={{ fontFamily: 'Playfair Display', fontSize: '1.5rem', color: '#ddd' }}>Quiet in the Atelier</h3>
+                <h3 style={{ fontFamily: 'Roboto', fontSize: '1.5rem', color: '#ddd' }}>Quiet in the Atelier</h3>
                 <p style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>All manifests in this section have been addressed.</p>
               </div>
             )}
@@ -758,7 +758,7 @@ const CatalogManager = () => {
     <div style={{ background: 'white', padding: 'clamp(1.2rem, 5vw, 2.5rem)', borderRadius: '45px', boxShadow: '0 30px 60px rgba(233,163,163,0.15)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', flexWrap: 'wrap', gap: '1.2rem' }}>
         <div>
-          <h3 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.8rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>Atelier Portfolio <Package size={22} color="var(--primary)" /></h3>
+          <h3 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.8rem)', fontFamily: 'Roboto', color: 'var(--secondary)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>Atelier Portfolio <Package size={22} color="var(--primary)" /></h3>
           <p style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>Showcase your masterpieces in the gallery</p>
         </div>
         <button onClick={handleAddNew} style={{ padding: '1rem 2rem', background: 'var(--primary)', color: 'white', borderRadius: '30px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.8rem', border: 'none', cursor: 'pointer' }}>
@@ -824,7 +824,7 @@ const CollectionsManager = () => {
     <div style={{ background: 'white', padding: 'clamp(1.2rem, 5vw, 2.5rem)', borderRadius: '45px', boxShadow: '0 30px 60px rgba(233,163,163,0.15)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', flexWrap: 'wrap', gap: '1.5rem' }}>
         <div>
-          <h3 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.8rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>Global Collections <Globe size={22} color="var(--primary)" /></h3>
+          <h3 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.8rem)', fontFamily: 'Roboto', color: 'var(--secondary)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>Global Collections <Globe size={22} color="var(--primary)" /></h3>
           <p style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>Categorize your magic (Clothing, Beauty, Essentials...)</p>
         </div>
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
@@ -879,6 +879,117 @@ const CollectionsManager = () => {
   );
 };
 
+const BannerManager = () => {
+  const { siteConfig, updateSiteConfig } = useShop();
+  const [isSaving, setIsSaving] = useState(false);
+  const [banners, setBanners] = useState(siteConfig.banners || []);
+
+  const handleUpdate = (idx, field, value) => {
+    const updated = [...banners];
+    updated[idx] = { ...updated[idx], [field]: value };
+    setBanners(updated);
+  };
+
+  const handleAdd = () => {
+    const newBanner = { 
+      desktopImage: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600', 
+      tabletImage: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1000',
+      mobileImage: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=600',
+      title: 'New Season Bloom', 
+      subtitle: 'Limited Edition', 
+      buttonText: 'Shop Now', 
+      link: '/products' 
+    };
+    setBanners([...banners, newBanner]);
+  };
+
+  const handleDelete = (idx) => {
+    if (window.confirm("Remove this magical banner? 🪄")) {
+      setBanners(banners.filter((_, i) => i !== idx));
+    }
+  };
+
+  const handleSaveAll = async () => {
+    setIsSaving(true);
+    await updateSiteConfig({ banners });
+    setIsSaving(false);
+  };
+
+  return (
+    <div style={{ background: 'white', padding: 'clamp(1.2rem, 5vw, 2.5rem)', borderRadius: '45px', boxShadow: '0 30px 60px rgba(233,163,163,0.15)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', flexWrap: 'wrap', gap: '1.5rem' }}>
+        <div>
+          <h3 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.8rem)', fontFamily: 'Roboto', color: 'var(--secondary)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>Storytelling Banners <ImageIcon size={22} color="var(--primary)" /></h3>
+          <p style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>High-impact responsive promotions for your landing page</p>
+        </div>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <button onClick={handleAdd} style={{ padding: '1rem 2rem', background: '#fff0f0', color: 'var(--primary)', borderRadius: '30px', fontWeight: 800, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+            <Plus size={20} /> New Slide
+          </button>
+          <button 
+            disabled={isSaving}
+            onClick={handleSaveAll} 
+            style={{ padding: '1rem 2rem', background: 'var(--primary)', color: 'white', borderRadius: '30px', fontWeight: 800, border: 'none', cursor: isSaving ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem', opacity: isSaving ? 0.7 : 1 }}
+          >
+            <Save size={20} /> {isSaving ? 'Syncing...' : 'Save Banners'}
+          </button>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        {banners.map((banner, idx) => (
+          <div key={idx} style={{ background: '#fefafa', padding: '2rem', borderRadius: '35px', border: '1px solid #fff0f0', position: 'relative' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                <div style={{ position: 'relative', height: '240px', borderRadius: '25px', overflow: 'hidden', border: '1px solid #fff0f0' }}>
+                  <img src={banner.desktopImage || banner.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+                  <div style={{ position: 'absolute', bottom: '10px', right: '10px', background: 'white', padding: '0.5rem', borderRadius: '12px', color: 'var(--primary)', fontSize: '0.6rem', fontWeight: 800 }}>DESKTOP PREVIEW</div>
+                </div>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Headline</label>
+                    <input type="text" value={banner.title} onChange={(e) => handleUpdate(idx, 'title', e.target.value)} style={{ width: '100%', padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontWeight: 800, color: 'var(--secondary)' }} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Sub-headline</label>
+                    <input type="text" value={banner.subtitle} onChange={(e) => handleUpdate(idx, 'subtitle', e.target.value)} style={{ width: '100%', padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.85rem' }} />
+                  </div>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Redirect Link (URL or /path)</label>
+                  <input type="text" value={banner.link} onChange={(e) => handleUpdate(idx, 'link', e.target.value)} style={{ width: '100%', padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.85rem', color: '#666' }} />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Desktop Image URL (Large Screens)</label>
+                  <input type="text" value={banner.desktopImage || banner.image} onChange={(e) => handleUpdate(idx, 'desktopImage', e.target.value)} style={{ width: '100%', padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.75rem', color: '#666' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Tablet Image URL (Medium Screens)</label>
+                  <input type="text" value={banner.tabletImage || banner.image} onChange={(e) => handleUpdate(idx, 'tabletImage', e.target.value)} style={{ width: '100%', padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.75rem', color: '#666' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Mobile Image URL (Small Screens)</label>
+                  <input type="text" value={banner.mobileImage || banner.image} onChange={(e) => handleUpdate(idx, 'mobileImage', e.target.value)} style={{ width: '100%', padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.75rem', color: '#666' }} />
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => handleDelete(idx)}
+              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'white', border: 'none', borderRadius: '50%', width: '35px', height: '35px', color: '#e9a3a3', cursor: 'pointer', boxShadow: '0 5px 15px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              <Trash2 size={18} />
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const ConfigForm = ({ siteConfig, onUpdate }) => {
   const [formData, setFormData] = useState(siteConfig);
   const [isSaving, setIsSaving] = useState(false);
@@ -899,7 +1010,7 @@ const ConfigForm = ({ siteConfig, onUpdate }) => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '2rem' }}>
         {/* Contact Details Section */}
         <div style={{ background: '#fff9f9', padding: '2.5rem', borderRadius: '35px' }}>
-          <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.8rem', color: 'var(--secondary)', fontFamily: 'Playfair Display', fontSize: '1.4rem' }}>
+          <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.8rem', color: 'var(--secondary)', fontFamily: 'Roboto', fontSize: '1.4rem' }}>
             <Phone size={18} color="var(--primary)" /> Contact Details
           </h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -923,7 +1034,7 @@ const ConfigForm = ({ siteConfig, onUpdate }) => {
         </div>
 
         <div style={{ background: '#fefafa', padding: '2.5rem', borderRadius: '35px' }}>
-          <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.8rem', color: 'var(--secondary)', fontFamily: 'Playfair Display', fontSize: '1.4rem' }}><CreditCard size={18} color="var(--primary)" /> Payments (UPI)</h4>
+          <h4 style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.8rem', color: 'var(--secondary)', fontFamily: 'Roboto', fontSize: '1.4rem' }}><CreditCard size={18} color="var(--primary)" /> Payments (UPI)</h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div>
               <label style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', display: 'block', marginBottom: '0.6rem' }}>UPI ID</label>
@@ -1011,7 +1122,7 @@ const AdminDashboard = () => {
     return (
       <div style={{ height: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
         <div>
-          <h2 style={{ fontFamily: 'Playfair Display', fontSize: '2.5rem', marginBottom: '1.5rem' }}>Access Restricted</h2>
+          <h2 style={{ fontFamily: 'Roboto', fontSize: '2.5rem', marginBottom: '1.5rem' }}>Access Restricted</h2>
           <p style={{ color: '#666', marginBottom: '2rem' }}>Only the head of the atelier can view this magical space.</p>
           <button onClick={() => navigate('/')} style={{ padding: '1rem 2rem', background: 'var(--primary)', color: 'white', borderRadius: '30px', border: 'none', fontWeight: 700 }}>Back to Storefront</button>
         </div>
@@ -1028,7 +1139,7 @@ const AdminDashboard = () => {
     <div className="container" style={{ padding: '6rem 1rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4rem', flexWrap: 'wrap', gap: '2rem' }}>
         <div>
-          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>Atelier Control Center</h2>
+          <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontFamily: 'Roboto', color: 'var(--secondary)' }}>Atelier Control Center</h2>
           <p style={{ color: 'var(--text-light)', marginTop: '0.5rem', fontWeight: 600 }}>Manifest your boutique's vision and manage every thread.</p>
         </div>
         <button onClick={handleLogout} style={{ padding: '1rem 2rem', background: 'white', border: '1px solid #fff0f0', color: 'var(--primary)', borderRadius: '30px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
@@ -1042,6 +1153,7 @@ const AdminDashboard = () => {
           { id: 'products', label: 'Products', icon: ShoppingBag },
           { id: 'orders', label: 'Orders', icon: CreditCard },
           { id: 'catalog', label: 'Catalog', icon: Package },
+          { id: 'banners', label: 'Banners', icon: ImageIcon },
           { id: 'collections', label: 'Collections', icon: Globe },
           { id: 'settings', label: 'Customize', icon: Settings }
         ].map(tab => (
@@ -1092,6 +1204,12 @@ const AdminDashboard = () => {
           </motion.div>
         )}
 
+        {activeTab === 'banners' && (
+          <motion.div key="banners" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+            <BannerManager />
+          </motion.div>
+        )}
+
         {activeTab === 'collections' && (
           <motion.div key="collections" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
             <CollectionsManager />
@@ -1102,7 +1220,7 @@ const AdminDashboard = () => {
           <motion.div key="settings" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
             <div style={{ background: 'white', padding: 'clamp(1rem, 5vw, 4rem)', borderRadius: '45px', boxShadow: '0 30px 60px rgba(233,163,163,0.15)' }}>
               <div style={{ marginBottom: '4rem', textAlign: 'center' }}>
-                <h3 style={{ fontSize: '2.2rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '0.8rem' }}>Manifest Your Boutique</h3>
+                <h3 style={{ fontSize: '2.2rem', fontFamily: 'Roboto', color: 'var(--secondary)', marginBottom: '0.8rem' }}>Manifest Your Boutique</h3>
                 <p style={{ color: 'var(--text-light)', maxWidth: '600px', margin: '0 auto', lineHeight: 1.8 }}>Update your dreamy branding and contact details in real-time. Changes will be reflected across your magical storefront.</p>
               </div>
               <ConfigForm siteConfig={siteConfig} onUpdate={updateSiteConfig} />

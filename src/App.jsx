@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { Menu, X, ShoppingBag, User, Instagram, Facebook, Phone, ShoppingCart, Heart, LogOut, ArrowRight, Sparkles, Cloud, Heart as HeartIcon, Info, MessageCircle } from 'lucide-react';
+import { Menu, X, ShoppingBag, User, Instagram, Facebook, Phone, ShoppingCart, Heart, LogOut, ArrowRight, Sparkles, Cloud, Heart as HeartIcon, Info, MessageCircle, Search } from 'lucide-react';
 import { useShop } from './context/ShopContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import CartSidebar from './components/CartSidebar';
@@ -25,8 +25,10 @@ const OrderDetailPage = lazy(() => import('./pages/OrderDetailPage'));
 const Navbar = ({ onOpenCart }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
-  const { cart, currentUser, logoutUser, siteConfig, isAdminLoggedIn } = useShop();
+  const { cart, currentUser, logoutUser, siteConfig, isAdminLoggedIn, products } = useShop();
 
   const handleLogout = () => {
     logoutUser();
@@ -38,6 +40,14 @@ const Navbar = ({ onOpenCart }) => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') setIsSearchOpen(false);
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
   const isAdminUser = isAdminLoggedIn;
@@ -71,12 +81,31 @@ const Navbar = ({ onOpenCart }) => {
         </Link>
 
         {/* Desktop Menu */}
-        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }} className="desktop-only">
+        <div className="desktop-only" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flex: 1, justifyContent: 'flex-end' }}>
+          {/* Global Search Trigger */}
+          <motion.div 
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setIsSearchOpen(true)}
+            style={{ 
+              cursor: 'pointer', 
+              background: '#fff0f0', 
+              padding: '0.65rem', 
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--primary)',
+              transition: '0.3s'
+            }}
+          >
+            <Search size={18} />
+          </motion.div>
+
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', fontSize: '0.78rem', fontWeight: 700, color: 'var(--secondary)', textTransform: 'uppercase', letterSpacing: '1.2px' }}>
             <Link to="/">Home</Link>
+            <Link to="/about">About</Link>
             <Link to="/products">Collections</Link>
             <Link to="/catalog">Catalog</Link>
-            <Link to="/about">About Us</Link>
             <Link to="/contact">Contact</Link>
             {currentUser && (
               isAdminUser ? <Link to="/admin">Admin</Link> : <Link to="/account">Account</Link>
@@ -87,7 +116,7 @@ const Navbar = ({ onOpenCart }) => {
             <div style={{ position: 'relative', cursor: 'pointer', background: '#fff0f0', padding: '0.6rem', borderRadius: '50%' }} onClick={onOpenCart}>
               <ShoppingCart size={18} color="var(--primary)" />
               {cart.length > 0 && (
-                <span style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'var(--primary)', color: 'white', fontSize: '0.6rem', width: '15px', height: '15px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>
+                <span style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'var(--primary)', color: 'white', fontSize: '0.6rem', width: '15px', height: '15px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>
                   {cart.length}
                 </span>
               )}
@@ -103,49 +132,47 @@ const Navbar = ({ onOpenCart }) => {
         </div>
 
         {/* Mobile Navbar Items */}
-        <div style={{ display: 'none', width: '100%', justifyContent: 'space-around', alignItems: 'center', padding: '0.3rem 0.1rem calc(0.6rem + env(safe-area-inset-bottom))', overflow: 'hidden' }} className="mobile-only">
-          <Link to="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'none', width: '100%', justifyContent: 'space-between', alignItems: 'center', padding: '0.3rem 0.6rem calc(0.6rem + env(safe-area-inset-bottom))', gap: '0.4rem' }} className="mobile-only">
+          <Link to="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0 0.2rem' }}>
             <motion.div whileTap={{ scale: 0.8 }}><ShoppingBag size={18} color="var(--primary)" /></motion.div>
-            <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Home</span>
+            <span style={{ fontSize: '0.45rem', fontWeight: 800, textTransform: 'uppercase' }}>Home</span>
           </Link>
-          <Link to="/products" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
-            <motion.div whileTap={{ scale: 0.8 }}><Sparkles size={18} /></motion.div>
-            <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Shop</span>
-          </Link>
-          <Link to="/catalog" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
-            <motion.div whileTap={{ scale: 0.8 }}><Instagram size={18} /></motion.div>
-            <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Gallery</span>
-          </Link>
-          <Link to="/about" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
+
+          <Link to="/about" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0 0.2rem' }}>
             <motion.div whileTap={{ scale: 0.8 }}><Info size={18} /></motion.div>
-            <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>About</span>
+            <span style={{ fontSize: '0.45rem', fontWeight: 800, textTransform: 'uppercase' }}>About</span>
           </Link>
-          <Link to="/contact" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
-            <motion.div whileTap={{ scale: 0.8 }}><MessageCircle size={18} /></motion.div>
-            <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Contact</span>
+
+          {/* Search Trigger */}
+          <div 
+            onClick={() => setIsSearchOpen(true)}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0 0.2rem', cursor: 'pointer' }}
+          >
+            <motion.div whileTap={{ scale: 0.8 }}><Search size={18} /></motion.div>
+            <span style={{ fontSize: '0.45rem', fontWeight: 800, textTransform: 'uppercase' }}>Search</span>
+          </div>
+
+          <Link to="/products" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0 0.2rem' }}>
+            <motion.div whileTap={{ scale: 0.8 }}><Sparkles size={18} /></motion.div>
+            <span style={{ fontSize: '0.45rem', fontWeight: 800, textTransform: 'uppercase' }}>Shop</span>
           </Link>
-          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0, cursor: 'pointer' }} onClick={onOpenCart}>
+          
+          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0 0.2rem', cursor: 'pointer' }} onClick={onOpenCart}>
             <motion.div whileTap={{ scale: 0.8 }}>
               <ShoppingCart size={18} color="var(--primary)" />
               {cart.length > 0 && (
-                <span style={{ position: 'absolute', top: '-5px', right: '2%', background: 'var(--primary)', color: 'white', fontSize: '0.45rem', width: '12px', height: '12px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, boxShadow: '0 2px 5px rgba(0,0,0,0.1)' }}>
+                <span style={{ position: 'absolute', top: '-5px', right: '0', background: 'var(--primary)', color: 'white', fontSize: '0.4rem', width: '12px', height: '12px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>
                   {cart.length}
                 </span>
               )}
             </motion.div>
-            <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Bag</span>
+            <span style={{ fontSize: '0.45rem', fontWeight: 800, textTransform: 'uppercase' }}>Bag</span>
           </div>
-          {currentUser ? (
-            <Link to={isAdminUser ? "/admin" : "/account"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
-              <motion.div whileTap={{ scale: 0.8 }}><User size={18} /></motion.div>
-              <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Account</span>
-            </Link>
-          ) : (
-            <Link to="/auth" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.2rem', color: 'var(--secondary)', flex: 1, minWidth: 0 }}>
-              <motion.div whileTap={{ scale: 0.8 }}><User size={18} /></motion.div>
-              <span style={{ fontSize: '0.48rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%', textAlign: 'center' }}>Login</span>
-            </Link>
-          )}
+
+          <Link to={currentUser ? (isAdminUser ? "/admin" : "/account") : "/auth"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0 0.2rem' }}>
+            <motion.div whileTap={{ scale: 0.8 }}><User size={18} /></motion.div>
+            <span style={{ fontSize: '0.45rem', fontWeight: 800, textTransform: 'uppercase' }}>Me</span>
+          </Link>
         </div>
       </div>
 
@@ -171,6 +198,83 @@ const Navbar = ({ onOpenCart }) => {
               {currentUser && <button onClick={handleLogout} style={{ color: 'var(--primary)', background: 'none', border: 'none', fontWeight: 700, textTransform: 'uppercase' }}>Logout</button>}
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+      {/* Minimalistic Floating Search Bar */}
+      <AnimatePresence>
+        {isSearchOpen && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 3500, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', paddingTop: 'clamp(0.5rem, 5vw, 8vh)' }}>
+            {/* Soft backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSearchOpen(false)}
+              style={{ position: 'absolute', inset: 0, background: 'rgba(255, 255, 255, 0.75)', backdropFilter: 'blur(10px)' }}
+            />
+            
+            <motion.div
+              initial={{ y: -30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -30, opacity: 0 }}
+              style={{ 
+                position: 'relative', 
+                width: '94%', 
+                maxWidth: '650px',
+                zIndex: 1
+              }}
+            >
+              <div style={{ 
+                background: 'white', 
+                padding: '0.8rem 1.5rem', 
+                borderRadius: '40px', 
+                boxShadow: '0 20px 50px rgba(233,163,163,0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                border: '1px solid #fff0f0'
+              }}>
+                <Search size={22} color="var(--primary)" />
+                <input
+                  autoFocus
+                  placeholder="What are you looking for?"
+                  style={{ 
+                    flex: 1,
+                    border: 'none',
+                    outline: 'none',
+                    fontSize: '1.1rem',
+                    fontFamily: 'Playfair Display',
+                    fontWeight: 700,
+                    color: 'var(--secondary)',
+                    padding: '0.8rem 0'
+                  }}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && searchQuery.trim()) {
+                      navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
+                      setIsSearchOpen(false);
+                      setSearchQuery('');
+                    }
+                  }}
+                />
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setIsSearchOpen(false)}
+                  style={{ background: '#fff0f0', border: 'none', borderRadius: '50%', width: '35px', height: '35px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', cursor: 'pointer' }}
+                >
+                  <X size={18} />
+                </motion.button>
+              </div>
+
+              <div style={{ textAlign: 'center', marginTop: '1.2rem' }}>
+                <p style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '4px', color: 'var(--primary)', opacity: 0.8 }}>
+                  Press Enter to reveal magic
+                </p>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </nav>

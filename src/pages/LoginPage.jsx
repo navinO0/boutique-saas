@@ -37,7 +37,7 @@ const LoginPage = () => {
                     <div style={{ background: '#fff0f0', width: '80px', height: '80px', borderRadius: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem' }}>
                         <Heart size={32} fill="var(--primary)" color="var(--primary)" />
                     </div>
-                    <h2 style={{ fontSize: '2.5rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '0.8rem' }}>Welcome Back</h2>
+                    <h2 style={{ fontSize: '2.5rem', fontFamily: 'Roboto', color: 'var(--secondary)', marginBottom: '0.8rem' }}>Welcome Back</h2>
                     <p style={{ color: 'var(--text-light)', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>Login to your dream account <Sparkles size={16} color="var(--primary)" /></p>
                 </div>
 

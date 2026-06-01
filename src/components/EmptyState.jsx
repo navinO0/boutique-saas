@@ -29,7 +29,7 @@ const EmptyState = ({ message = "We couldn't find any magic matching your search
       </div>
       <h3 style={{ 
         fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', 
-        fontFamily: 'Playfair Display', 
+        fontFamily: 'Roboto', 
         color: 'var(--secondary)', 
         marginBottom: '1rem' 
       }}>

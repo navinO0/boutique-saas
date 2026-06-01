@@ -10,7 +10,7 @@ const ContactPage = () => {
   return (
     <div className="container" style={{ padding: 'clamp(5rem, 10vw, 8rem) 1rem 4rem' }}>
       <div style={{ textAlign: 'center', marginBottom: 'clamp(2.5rem, 6vw, 5rem)' }}>
-        <h1 style={{ fontSize: 'clamp(2.2rem, 6vw, 4rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '0.8rem' }}>
+        <h1 style={{ fontSize: 'clamp(2.2rem, 6vw, 4rem)', fontFamily: 'Roboto', color: 'var(--secondary)', marginBottom: '0.8rem' }}>
           Connect with <span style={{ color: 'var(--primary)' }}>Amara</span>
         </h1>
         <p style={{ fontSize: 'clamp(0.85rem, 1.8vw, 1rem)', color: '#777', maxWidth: '520px', margin: '0 auto', lineHeight: 1.7 }}>

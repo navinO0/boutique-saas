@@ -5,8 +5,8 @@ const PookieLoader = ({ fullScreen = false }) => {
   const containerStyle = fullScreen ? {
     position: 'fixed',
     inset: 0,
-    background: 'rgba(255, 255, 255, 0.85)',
-    backdropFilter: 'blur(12px)',
+    background: 'rgba(255, 255, 255, 0.9)',
+    backdropFilter: 'blur(15px)',
     zIndex: 9999,
     display: 'flex',
     flexDirection: 'column',
@@ -21,65 +21,119 @@ const PookieLoader = ({ fullScreen = false }) => {
     width: '100%'
   };
 
+  const heartPath = "M 50, 28 C 50, 18 42, 8 28, 8 C 12, 8 8, 35 8, 45 C 8, 65 30, 85 50, 95 C 70, 85 92, 65 92, 45 C 92, 35 88, 8 72, 8 C 58, 8 50, 18 50, 28";
+  const totalLen = 310;
+
   return (
     <div style={containerStyle}>
-      <div style={{ position: 'relative', width: '120px', height: '120px' }}>
-        {/* The Animated "Sketch" Outline Loop - FIXED PATH & DIRECTION */}
-        <svg viewBox="0 0 100 100" style={{ width: '100%', height: '100%' }}>
-          <motion.path
-            // Perfectly symmetrical boutique heart
-            d="M 50, 28 
-               C 50, 18 42, 8 28, 8 
-               C 12, 8 8, 35 8, 45 
-               C 8, 65 30, 85 50, 95 
-               C 70, 85 92, 65 92, 45 
-               C 92, 35 88, 8 72, 8 
-               C 58, 8 50, 18 50, 28"
+      <style>{`
+        @keyframes heartCompleteFlow {
+          0% {
+            stroke-dasharray: 0, ${totalLen};
+            stroke-dashoffset: 0;
+            opacity: 1;
+          }
+          40% {
+            stroke-dasharray: ${totalLen}, ${totalLen};
+            stroke-dashoffset: 0;
+            opacity: 1;
+          }
+          60% {
+            stroke-dasharray: ${totalLen}, ${totalLen};
+            stroke-dashoffset: 0;
+            opacity: 1;
+          }
+          85% {
+            stroke-dasharray: ${totalLen}, ${totalLen};
+            stroke-dashoffset: -${totalLen};
+            opacity: 0;
+          }
+          100% {
+            stroke-dashoffset: -${totalLen};
+            opacity: 0;
+          }
+        }
+        @keyframes softPulse {
+          0% { transform: scale(1); opacity: 0.15; }
+          50% { transform: scale(1.6); opacity: 0; }
+          100% { transform: scale(1); opacity: 0; }
+        }
+        @keyframes hardPulse {
+          0% { transform: scale(1); }
+          15% { transform: scale(1.1); }
+          30% { transform: scale(1); }
+          45% { transform: scale(1.08); }
+          60% { transform: scale(1); }
+        }
+      `}</style>
+
+      <div style={{ position: 'relative', width: '130px', height: '130px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        
+        {/* Background Soft Pulse Effect */}
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ 
+            width: '80px', height: '80px', 
+            background: 'var(--primary)', 
+            borderRadius: '50%', 
+            filter: 'blur(25px)',
+            animation: 'softPulse 2s ease-out infinite' 
+          }} />
+        </div>
+
+        {/* The Outline Drawing Animation */}
+        <svg
+          viewBox="0 0 100 100"
+          style={{
+            width: '100%',
+            height: '100%',
+            zIndex: 2,
+            overflow: 'visible'
+          }}
+        >
+          <path
+            d={heartPath}
             fill="none"
             stroke="var(--primary)"
-            strokeWidth="3.5"
+            strokeWidth="3"
             strokeLinecap="round"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ 
-              pathLength: [0, 1],
-              opacity: [0, 1]
+            style={{
+              animation: 'heartCompleteFlow 2.5s ease-in-out infinite'
             }}
-            transition={{ 
-              duration: 2.2, 
-              repeat: Infinity, 
-              repeatType: "reverse",
-              ease: "easeInOut"
-            }}
-          />
-          
-          {/* Subtle Accent Sketch Line */}
-          <motion.path
-            d="M 38, 42 Q 50, 36 62, 42"
-            fill="none"
-            stroke="var(--primary)"
-            strokeWidth="1.2"
-            strokeDasharray="1,2"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.4, 0] }}
-            transition={{ duration: 2.2, repeat: Infinity, delay: 0.3 }}
           />
         </svg>
 
-        {/* Outer Glow / Halo Effect */}
-        <motion.div
-          animate={{ 
-            scale: [1, 1.1, 1],
-            opacity: [0.1, 0.3, 0.1]
+        {/* Center Static Guide Heart (Very Faint) */}
+        <svg
+          viewBox="0 0 100 100"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            opacity: 0.05,
+            zIndex: 1
           }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          style={{ 
-            position: 'absolute', 
-            inset: '-10px', 
-            background: 'radial-gradient(circle, var(--primary) 0%, transparent 70%)',
-            borderRadius: '50%',
-            zIndex: -1
-          }}
-        />
+        >
+          <path d={heartPath} fill="none" stroke="var(--primary)" strokeWidth="1" />
+        </svg>
+
+        {/* Center Hard Pulse Heart - INCREASED SIZE */}
+        <div style={{
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          animation: 'hardPulse 2s ease-in-out infinite',
+          zIndex: 3
+        }}>
+          <svg viewBox="0 0 100 100" style={{ width: '48px', height: '48px' }}>
+            <path
+              d={heartPath}
+              fill="var(--primary)"
+              style={{ filter: 'drop-shadow(0 0 12px rgba(233,163,163,0.6))' }}
+            />
+          </svg>
+        </div>
       </div>
       
       <motion.p
@@ -87,17 +141,16 @@ const PookieLoader = ({ fullScreen = false }) => {
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 2, repeat: Infinity }}
         style={{ 
-          fontFamily: 'Playfair Display', 
+          fontFamily: 'Roboto', 
           fontSize: '0.9rem', 
           color: 'var(--secondary)',
-          marginTop: '2rem',
-          letterSpacing: '3px',
-          fontWeight: 700,
-          textTransform: 'uppercase',
-          fontStyle: 'italic'
+          marginTop: '2.5rem',
+          letterSpacing: '5px',
+          fontWeight: 800,
+          textTransform: 'uppercase'
         }}
       >
-        Sprinkling Magic...
+        Sprinkling Magic
       </motion.p>
     </div>
   );

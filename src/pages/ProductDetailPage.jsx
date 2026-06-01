@@ -89,7 +89,7 @@ const ProductDetailPage = () => {
   }, [product?.id, isFullScreen, product?.images?.length, autoScrollPaused]);
 
 
-  if (isLoading || !product) return <PookieLoader />;
+  if (isLoading || !product) return <PookieLoader fullScreen={true} />;
 
 
   const itemVariants = {
@@ -99,7 +99,7 @@ const ProductDetailPage = () => {
 
   return (
     <div style={{ background: 'white', minHeight: '100vh', padding: 'clamp(5rem, 12vw, 8rem) 0 3rem' }}>
-      <div className="container">
+      <div style={{ width: '95%', maxWidth: '1800px', margin: '0 auto' }}>
         <button
           onClick={() => navigate(-1)}
           style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', background: 'none', border: 'none', color: 'var(--secondary)', fontWeight: 800, cursor: 'pointer', marginBottom: 'clamp(1.5rem, 4vw, 3rem)', fontSize: 'clamp(0.85rem, 2.5vw, 1rem)' }}
@@ -159,7 +159,7 @@ const ProductDetailPage = () => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.7rem',
-                  fontWeight: 900,
+                  fontWeight: 700,
                   color: 'var(--primary)',
                   boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
                   fontSize: '0.75rem',
@@ -234,7 +234,7 @@ const ProductDetailPage = () => {
                   </div>
                 )}
 
-                <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(10px)', padding: '0.5rem 1rem', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 900, color: 'var(--primary)', zIndex: 10 }}>
+                <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(10px)', padding: '0.5rem 1rem', borderRadius: '20px', fontSize: '0.7rem', fontWeight: 700, color: 'var(--primary)', zIndex: 10 }}>
                   {currentImageIndex + 1} / {(product.images?.length > 0 ? product.images : [product.image]).length}
                 </div>
               </div>
@@ -264,7 +264,7 @@ const ProductDetailPage = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.8rem', marginBottom: '2.5rem' }}>
                 {product.sizes?.length > 0 && (
                   <motion.div variants={itemVariants}>
-                    <p style={{ fontWeight: 900, color: 'var(--secondary)', marginBottom: '1.2rem', textTransform: 'uppercase', letterSpacing: '2px', fontSize: 'clamp(0.7rem, 2vw, 0.8rem)' }}>Tailoring Size:</p>
+                    <p style={{ fontWeight: 700, color: 'var(--secondary)', marginBottom: '1.2rem', textTransform: 'uppercase', letterSpacing: '2px', fontSize: 'clamp(0.7rem, 2vw, 0.8rem)' }}>Tailoring Size:</p>
                     <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
                       {product.sizes.map(size => (
                         <button
@@ -282,7 +282,7 @@ const ProductDetailPage = () => {
 
                 {product.colors?.length > 0 && (
                   <motion.div variants={itemVariants}>
-                    <p style={{ fontWeight: 900, color: 'var(--secondary)', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '2px', fontSize: 'clamp(0.7rem, 2vw, 0.8rem)' }}>Color Palette:</p>
+                    <p style={{ fontWeight: 700, color: 'var(--secondary)', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '2px', fontSize: 'clamp(0.7rem, 2vw, 0.8rem)' }}>Color Palette:</p>
                     <div style={{ display: 'flex', gap: '2rem' }}>
                       {product.colors.map(color => (
                         <button
@@ -369,29 +369,42 @@ const ProductDetailPage = () => {
         {similarProducts.length > 0 && (
           <div className="similar-dreams-section">
             <div style={{ textAlign: 'center', marginBottom: 'clamp(2rem, 5vw, 5rem)' }}>
-              <h2 style={{ fontSize: 'clamp(1.8rem, 5vw, 3.5rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>Similar Dreams  </h2>
+              <h2 style={{ fontSize: 'clamp(1.8rem, 5vw, 3.5rem)', fontFamily: 'Roboto', color: 'var(--secondary)' }}>Similar Dreams  </h2>
               <p style={{ color: '#888', marginTop: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '3px', fontSize: 'clamp(0.55rem, 2vw, 0.85rem)' }}>Discover More Magic</p>
             </div>
-            <div className="similar-dreams-grid">
-              {similarProducts.map((p, i) => (
-                <motion.div
-                  key={p.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  onClick={() => navigate(`/product/${p.id}`)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <div style={{ height: 'clamp(280px, 50vw, 480px)', borderRadius: 'clamp(20px, 4vw, 36px)', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.05)' }}>
-                    <img src={resolveImageUrl(p.images?.[0] || p.image)} style={{ width: '100%', height: '100%', objectFit: 'contain', background: '#fef5f5' }} alt={p.name} />
-                  </div>
-                  <div style={{ padding: 'clamp(1rem, 3vw, 2rem) 0.5rem', textAlign: 'center' }}>
-                    <h3 style={{ fontSize: 'clamp(1.1rem, 3vw, 1.8rem)', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>{p.name}</h3>
-                    <p style={{ color: 'var(--primary)', fontWeight: 900, fontSize: 'clamp(1rem, 2.5vw, 1.4rem)', marginTop: '0.5rem' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
-                  </div>
-                </motion.div>
-              ))}
+            <div className="similar-dreams-grid" style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: window.innerWidth < 768 ? '10px' : '15px' }}>
+              {similarProducts.map((p, i) => {
+                const isDreamMobile = window.innerWidth < 768;
+                return (
+                  <motion.div
+                    key={p.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    whileHover={{ y: -10 }}
+                    onClick={() => navigate(`/product/${p.id}`)}
+                    style={{ 
+                      cursor: 'pointer',
+                      background: 'white',
+                      padding: '0.5rem',
+                      borderRadius: '8px',
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.04)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      border: '1px solid #fff0f0'
+                    }}
+                  >
+                    <div style={{ height: isDreamMobile ? 'clamp(200px, 50vw, 280px)' : 'clamp(280px, 30vw, 380px)', borderRadius: '6px', overflow: 'hidden', flexShrink: 0, background: '#fef5f5' }}>
+                      <img src={resolveImageUrl(p.images?.[0] || p.image)} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt={p.name} />
+                    </div>
+                    <div style={{ padding: '0.8rem 0.5rem', textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                      <h3 style={{ fontSize: 'clamp(0.85rem, 2vw, 1.1rem)', fontFamily: 'Roboto', color: 'var(--secondary)', fontWeight: 700 }}>{p.name}</h3>
+                      <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: 'clamp(0.9rem, 2vw, 1.1rem)', marginTop: '0.4rem' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -495,7 +508,7 @@ const ProductDetailPage = () => {
             </div>
 
             <div style={{ position: 'absolute', bottom: '3rem', textAlign: 'center', color: 'white', zIndex: 5010, pointerEvents: 'none' }}>
-              <p style={{ fontSize: '1.2rem', fontFamily: 'Playfair Display', letterSpacing: '1px' }}>{product.name}</p>
+              <p style={{ fontSize: '1.2rem', fontFamily: 'Roboto', letterSpacing: '1px' }}>{product.name}</p>
               <p style={{ opacity: 0.6, fontSize: '0.8rem', marginTop: '0.5rem', letterSpacing: '4px', textTransform: 'uppercase' }}>{currentImageIndex + 1} / {(product.images?.length > 0 ? product.images : [product.image]).length}</p>
               <p style={{ fontSize: '0.65rem', marginTop: '1.5rem', color: 'var(--primary)', fontWeight: 800, letterSpacing: '2px' }}>SWIPE OR DRAG TO BROWSE</p>
             </div>

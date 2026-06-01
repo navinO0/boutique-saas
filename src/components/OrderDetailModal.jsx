@@ -45,7 +45,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, isAdmin, onApprove, isProces
           {/* Sticky Header */}
           <div style={{ padding: '1.5rem', borderBottom: '1px solid #f8f8f8', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', position: 'sticky', top: 0, zIndex: 10 }}>
             <div>
-              <h2 style={{ fontSize: '1.25rem', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>#{order.id.toString().padStart(6, '0')}</h2>
+              <h2 style={{ fontSize: '1.25rem', fontFamily: 'Roboto', color: 'var(--secondary)' }}>#{order.id.toString().padStart(6, '0')}</h2>
               <p style={{ fontSize: '0.7rem', color: '#aaa', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginTop: '0.2rem' }}>
                 Manifest Created {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} at {new Date(order.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
               </p>
@@ -57,7 +57,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, isAdmin, onApprove, isProces
             {/* 1. Status Section */}
             <div style={{ textAlign: 'center', background: '#fefafa', padding: '1.2rem', borderRadius: '25px', border: '1px solid #fff0f0' }}>
               <span style={{ 
-                padding: '0.5rem 1.2rem', borderRadius: '30px', fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1px',
+                padding: '0.5rem 1.2rem', borderRadius: '30px', fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px',
                 background: order.status === 'delivered' ? '#f0fdf4' : order.status === 'confirmed' ? '#f0fdf4' : '#fff7ed',
                 color: order.status === 'delivered' ? '#10b981' : order.status === 'confirmed' ? '#10b981' : '#f97316',
                 display: 'inline-block', marginBottom: isAdmin && order.status === 'pending' ? '1.2rem' : '0'
@@ -85,7 +85,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, isAdmin, onApprove, isProces
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--primary)' }}>
                   <MapPin size={14} />
-                  <h4 style={{ fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1.5px' }}>Shipping Details</h4>
+                  <h4 style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.5px' }}>Shipping Details</h4>
                 </div>
                 <div style={{ paddingLeft: '1rem', borderLeft: '2px solid #fff0f0' }}>
                   <p style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--secondary)' }}>{order.address?.name}</p>
@@ -98,11 +98,11 @@ const OrderDetailModal = ({ isOpen, onClose, order, isAdmin, onApprove, isProces
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--primary)' }}>
                   <CreditCard size={14} />
-                  <h4 style={{ fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1.5px' }}>Payment Context</h4>
+                  <h4 style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.5px' }}>Payment Context</h4>
                 </div>
                 <div style={{ paddingLeft: '1rem', borderLeft: '2px solid #fff0f0' }}>
                   <p style={{ fontSize: '0.6rem', fontWeight: 800, color: '#aaa', textTransform: 'uppercase', marginBottom: '0.2rem' }}>UTR / ID</p>
-                  <p style={{ fontWeight: 900, fontSize: '1rem', color: 'var(--secondary)', wordBreak: 'break-all' }}>{order.transactionId || 'NOT_PROVIDED'}</p>
+                  <p style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--secondary)', wordBreak: 'break-all' }}>{order.transactionId || 'NOT_PROVIDED'}</p>
                   <p style={{ fontSize: '0.65rem', color: '#888', marginTop: '0.4rem', fontStyle: 'italic' }}>Submitted via {order.paymentMethod}</p>
                 </div>
               </div>
@@ -112,7 +112,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, isAdmin, onApprove, isProces
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: 'var(--primary)' }}>
                 <ShoppingBag size={14} />
-                <h4 style={{ fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '1.5px' }}>Ordered Pieces</h4>
+                <h4 style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.5px' }}>Ordered Pieces</h4>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                 {order.OrderItems?.map((item, idx) => (
@@ -125,7 +125,7 @@ const OrderDetailModal = ({ isOpen, onClose, order, isAdmin, onApprove, isProces
                       <p style={{ fontSize: '0.7rem', color: '#888' }}>{item.size || 'Free Size'} • {item.color || 'Default'}</p>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '0.6rem' }}>
                         <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#666' }}>₹{parseFloat(item.price).toLocaleString()} x {item.quantity}</p>
-                        <p style={{ fontWeight: 900, fontSize: '0.9rem', color: 'var(--primary)' }}>₹{(parseFloat(item.price) * item.quantity).toLocaleString()}</p>
+                        <p style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--primary)' }}>₹{(parseFloat(item.price) * item.quantity).toLocaleString()}</p>
                       </div>
                     </div>
                   </div>
@@ -135,9 +135,9 @@ const OrderDetailModal = ({ isOpen, onClose, order, isAdmin, onApprove, isProces
 
             {/* 5. Manifest Total */}
             <div style={{ marginTop: '0.5rem', padding: '2rem 0', borderTop: '2px dashed #f5f5f5', textAlign: 'center' }}>
-              <p style={{ fontSize: '0.6rem', fontWeight: 900, color: '#bbb', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.4rem' }}>Manifest Total Value</p>
-              <p style={{ fontSize: 'clamp(2rem, 8vw, 2.5rem)', fontWeight: 950, color: 'var(--primary)', letterSpacing: '-1.5px' }}>₹{parseFloat(order.total).toLocaleString()}</p>
-              <p style={{ fontSize: '0.7rem', color: '#aaa', marginTop: '0.4rem', fontFamily: 'Playfair Display' }}>Including all atelier charges</p>
+              <p style={{ fontSize: '0.6rem', fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.4rem' }}>Manifest Total Value</p>
+              <p style={{ fontSize: 'clamp(2rem, 8vw, 2.5rem)', fontWeight: 700, color: 'var(--primary)', letterSpacing: '-1.5px' }}>₹{parseFloat(order.total).toLocaleString()}</p>
+              <p style={{ fontSize: '0.7rem', color: '#aaa', marginTop: '0.4rem', fontFamily: 'Roboto' }}>Including all atelier charges</p>
             </div>
 
             

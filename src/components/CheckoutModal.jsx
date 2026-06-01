@@ -94,7 +94,7 @@ const CheckoutModal = ({ isOpen, onClose, total }) => {
           {/* Header */}
           <div style={{ padding: '2rem 2rem 1.5rem', background: '#fefafa', borderBottom: '1px solid #fff0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <h2 style={{ fontSize: '1.4rem', fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>Final Manifest</h2>
+              <h2 style={{ fontSize: '1.4rem', fontFamily: 'Roboto', color: 'var(--secondary)' }}>Final Manifest</h2>
               <p style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 800 }}>Step {step} of 3</p>
             </div>
             <button onClick={onClose} style={{ background: 'white', border: '1px solid #eee', borderRadius: '50%', padding: '0.4rem', color: '#ccc' }}><X size={20} /></button>
@@ -107,7 +107,7 @@ const CheckoutModal = ({ isOpen, onClose, total }) => {
                 
                 {isAddingAddress ? (
                   <form onSubmit={handleSaveAddress} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', background: '#fffcfc', padding: '1.5rem', borderRadius: '25px', border: '1px solid #fff0f0' }}>
-                    <h4 style={{ fontSize: '0.8rem', fontWeight: 900, color: 'var(--primary)', textTransform: 'uppercase' }}>{editingAddressId ? 'Edit Address' : 'New Address'}</h4>
+                    <h4 style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase' }}>{editingAddressId ? 'Edit Address' : 'New Address'}</h4>
                     <input type="text" value={addressForm.name} placeholder="Recipient Name" required style={{ width: '100%', padding: '0.8rem 1.2rem', borderRadius: '15px', border: '1px solid #eee', outline: 'none' }} onChange={e => setAddressForm({...addressForm, name: e.target.value})} />
                     <input type="tel" value={addressForm.phone} placeholder="Mobile Number" required style={{ width: '100%', padding: '0.8rem 1.2rem', borderRadius: '15px', border: '1px solid #eee', outline: 'none' }} onChange={e => setAddressForm({...addressForm, phone: e.target.value})} />
                     <textarea value={addressForm.addressText} placeholder="House No, Street, Landmark" required style={{ width: '100%', padding: '0.8rem 1.2rem', borderRadius: '15px', border: '1px solid #eee', outline: 'none', height: '80px' }} onChange={e => setAddressForm({...addressForm, addressText: e.target.value})} />
@@ -178,22 +178,22 @@ const CheckoutModal = ({ isOpen, onClose, total }) => {
                   <p style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--secondary)', marginBottom: '1rem' }}>Steps to Manifest:</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'start' }}>
-                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 900, flexShrink: 0 }}>1</div>
+                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 700, flexShrink: 0 }}>1</div>
                       <p style={{ fontSize: '0.75rem', color: '#666', lineHeight: 1.4 }}>Scan the QR code below or use the UPI ID to pay the total amount.</p>
                     </div>
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'start' }}>
-                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 900, flexShrink: 0 }}>2</div>
+                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 700, flexShrink: 0 }}>2</div>
                       <p style={{ fontSize: '0.75rem', color: '#666', lineHeight: 1.4 }}>Take a screenshot of your successful transaction.</p>
                     </div>
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'start' }}>
-                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 900, flexShrink: 0 }}>3</div>
+                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'var(--primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 700, flexShrink: 0 }}>3</div>
                       <p style={{ fontSize: '0.75rem', color: '#666', lineHeight: 1.4 }}>Enter the Transaction ID below and click 'Complete Submission'.</p>
                     </div>
                   </div>
                 </div>
                 
                 <div style={{ background: '#fff9f9', padding: '1.5rem', borderRadius: '30px', margin: '0.5rem 0', position: 'relative' }}>
-                  <p style={{ fontSize: '0.7rem', fontWeight: 900, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '1rem' }}>Scan to Pay ₹{total.toLocaleString()}</p>
+                  <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '1rem' }}>Scan to Pay ₹{total.toLocaleString()}</p>
                   
                   {siteConfig.upiQR ? (
                     <div style={{ width: '180px', height: '180px', background: 'white', margin: '0 auto', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', border: '4px solid white', boxShadow: '0 10px 25px rgba(233,163,163,0.1)' }}>
@@ -210,7 +210,7 @@ const CheckoutModal = ({ isOpen, onClose, total }) => {
                 </div>
 
                 <div style={{ textAlign: 'left' }}>
-                  <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 950, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.8rem', paddingLeft: '0.5rem' }}>Transaction ID / UTR Number</label>
+                  <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.8rem', paddingLeft: '0.5rem' }}>Transaction ID / UTR Number</label>
                   <div style={{ position: 'relative' }}>
                     <input 
                       type="text" 
@@ -246,7 +246,7 @@ const CheckoutModal = ({ isOpen, onClose, total }) => {
                 <div style={{ background: '#f0fff4', color: '#22c55e', width: '80px', height: '80px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 2rem' }}>
                   <CheckCircle size={48} />
                 </div>
-                <h3 style={{ fontSize: '1.8rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '1rem' }}>Magic Initiated!</h3>
+                <h3 style={{ fontSize: '1.8rem', fontFamily: 'Roboto', color: 'var(--secondary)', marginBottom: '1rem' }}>Magic Initiated!</h3>
                 <p style={{ color: '#666', lineHeight: 1.6, maxWidth: '300px', margin: '0 auto' }}>Your order is being reviewed by our atelier. Once payment is verified, your designs will be dispatched!</p>
                 <button 
                   onClick={onClose}
@@ -277,7 +277,7 @@ const CheckoutModal = ({ isOpen, onClose, total }) => {
                   background: 'var(--primary)', 
                   color: 'white', 
                   borderRadius: '20px', 
-                  fontWeight: 900, 
+                  fontWeight: 700, 
                   border: 'none', 
                   fontSize: '0.9rem',
                   display: 'flex',

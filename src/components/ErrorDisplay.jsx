@@ -53,7 +53,7 @@ const ErrorDisplay = ({ message = "The magic was interrupted...", onRetry }) => 
       </div>
 
       <h2 style={{
-        fontFamily: 'Playfair Display',
+        fontFamily: 'Roboto',
         fontSize: '2rem',
         color: 'var(--secondary)',
         marginBottom: '1rem'

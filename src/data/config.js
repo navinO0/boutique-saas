@@ -59,6 +59,7 @@ export const BOUTIQUE_CONFIG = {
     { id: "frocks", name: "Long Frocks", image: "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217780/variation_lehenga_prs2qt.jpg" },
     { id: "blouses", name: "Designer Blouses", image: "https://res.cloudinary.com/dzapdxkgc/image/upload/v1779217779/variation_saree_y80fby.jpg" }
   ],
+  sizes: ["XS", "S", "M", "L", "XL", "XXL", "Free Size"],
   themes: {
     blush: {
       name: "Blush Pink",

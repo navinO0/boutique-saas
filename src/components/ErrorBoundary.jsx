@@ -50,7 +50,7 @@ class ErrorBoundary extends React.Component {
             </div>
             
             <h1 style={{ 
-              fontFamily: 'Playfair Display', 
+              fontFamily: 'Roboto', 
               fontSize: '2rem', 
               color: 'var(--secondary)', 
               marginBottom: '1rem' 
