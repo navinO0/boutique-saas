@@ -78,7 +78,7 @@ const BannerCarousel = ({ banners = [], fullWidth = false }) => {
           
           <div className="banner-content" style={{ 
             position: 'absolute', 
-            bottom: '12%', 
+            bottom: '22%', 
             left: '6%', 
             color: 'white', 
             width: 'fit-content',

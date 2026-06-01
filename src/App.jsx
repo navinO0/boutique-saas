@@ -133,7 +133,17 @@ const Navbar = ({ onOpenCart }) => {
         </div>
 
         {/* Mobile Navbar Items */}
-        <div style={{ display: 'none', width: '100%', justifyContent: 'space-between', alignItems: 'center', padding: '0.3rem 0.6rem calc(0.6rem + env(safe-area-inset-bottom))', gap: '0.4rem' }} className="mobile-only">
+        <div 
+          style={{ 
+            display: 'flex', 
+            width: '100%', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            padding: '4px 8px', 
+            gap: '0.2rem' 
+          }} 
+          className="mobile-only"
+        >
           <Link to="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0 0.2rem' }}>
             <motion.div whileTap={{ scale: 0.8 }}><ShoppingBag size={18} color="var(--primary)" /></motion.div>
             <span style={{ fontSize: '0.45rem', fontWeight: 800, textTransform: 'uppercase' }}>Home</span>

@@ -639,15 +639,9 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
       const el = scrollRef.current;
       if (!el) return;
       
-      if (!isPaused && !isDragging) {
-        // Very slow speed for mobile to prevent 'yanking'
-        const speed = isMobile ? 0.35 : 0.55;
-        el.scrollLeft += speed;
-        
-        // Loop logic: if we've scrolled past the second set, jump back to the first
-        if (el.scrollLeft >= oneThird * 2) {
-          el.scrollLeft -= oneThird;
-        }
+      if (!isMobile && !isPaused && !isDragging) {
+        el.scrollLeft += 0.55;
+        if (el.scrollLeft >= oneThird * 2) el.scrollLeft -= oneThird;
       }
       frameId = requestAnimationFrame(animate);
     };
@@ -680,7 +674,6 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
         className="no-scrollbar"
         onTouchStart={() => setIsPaused(true)}
         onTouchEnd={() => {
-          // Grace period after touch before auto-scroll resumes
           setTimeout(() => setIsPaused(false), 2000);
         }}
         onMouseDown={handleMouseDown}
@@ -698,24 +691,26 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
           padding: isMobile ? '10px 10px 15px' : '15px 5vw 30px',
           gap: isMobile ? '12px' : '25px',
           cursor: 'grab',
-          scrollSnapType: (isDragging || isPaused) ? 'none' : 'none', // Disable snap during auto-scroll
-          scrollBehavior: 'smooth'
+          scrollSnapType: isMobile ? 'x mandatory' : 'none',
+          scrollBehavior: 'smooth',
+          WebkitOverflowScrolling: 'touch'
         }}
       >
         {displayItems.map((p, pIdx) => (
           <motion.div
             key={`${p.id}-${pIdx}`}
-            whileHover={{ y: -12 }}
+            whileHover={!isMobile ? { y: -12 } : {}}
             onClick={() => !isDragging && onProductClick(p.id)}
             style={{
               flexShrink: 0,
-              width: isMobile ? '240px' : 'clamp(280px, 25vw, 360px)',
+              width: isMobile ? '70vw' : 'clamp(280px, 25vw, 360px)',
               background: 'white',
               borderRadius: '12px',
               padding: '0.8rem',
               boxShadow: '0 20px 40px rgba(233,163,163,0.08)',
               border: '1px solid #fff5f5',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              scrollSnapAlign: isMobile ? 'center' : 'none'
             }}
           >
             <div style={{ height: isMobile ? '280px' : 'clamp(320px, 45vh, 420px)', borderRadius: '8px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
