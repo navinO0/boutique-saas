@@ -109,45 +109,114 @@ const Hero = ({ onBook }) => {
       </div>
 
       <div className="container" style={{ position: 'relative', zIndex: 10 }}>
-        <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          style={glassStyle}
-        >
-          <div style={{ padding: '0.4rem 1rem', background: 'var(--primary)', borderRadius: '10px', color: 'white', width: 'fit-content', fontWeight: 800, letterSpacing: '3px', fontSize: 'clamp(0.5rem, 1.5vw, 0.65rem)', textTransform: 'uppercase', marginBottom: 'clamp(1rem, 3vw, 2rem)', boxShadow: '0 10px 20px rgba(233,163,163,0.3)' }}>
-            Couture House • Est 2026
-          </div>
-          <h1 style={{ fontSize: 'clamp(2.5rem, 9vw, 7.5rem)', color: 'white', lineHeight: '0.9', marginBottom: 'clamp(1.2rem, 3vw, 2.5rem)', fontFamily: 'Roboto', letterSpacing: 'clamp(-1px, -0.4vw, -3px)', textShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
-            Unfold Your <br />
-            <motion.span initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} style={{ color: 'var(--primary)', paddingLeft: 'clamp(0.8rem, 2.5vw, 2.5rem)', display: 'inline-block' }}>Aura.</motion.span>
-          </h1>
-          <p style={{ fontSize: 'clamp(0.78rem, 2vw, 1.1rem)', color: 'rgba(255,255,255,0.95)', maxWidth: '560px', marginBottom: 'clamp(1.8rem, 5vw, 3.5rem)', lineHeight: '1.9', letterSpacing: '0.01em', fontWeight: 500 }}>
-            Bridging timeless heritage with futuristic silhouettes. We don't just stitch; we sculpt your dreams into wearable reality.
-          </p>
-          <div className="hero-cta-group">
-            <motion.button
-              whileHover={{ scale: 1.04, backgroundColor: 'white', color: 'var(--primary)' }}
-              whileTap={{ scale: 0.96 }}
-              onClick={onBook}
-              style={{ padding: 'clamp(0.8rem, 2.5vw, 1.3rem) clamp(1.6rem, 4vw, 3rem)', background: 'var(--primary)', color: 'white', borderRadius: '32px', fontWeight: 800, border: 'none', fontSize: 'clamp(0.8rem, 2vw, 0.95rem)', cursor: 'pointer', whiteSpace: 'nowrap', letterSpacing: '0.5px', boxShadow: '0 15px 35px rgba(233,163,163,0.4)', transition: '0.3s' }}
-            >
-              Start Your Journey
-            </motion.button>
-            <Link to="/products" style={{ fontWeight: 800, color: 'white', textTransform: 'uppercase', letterSpacing: '2px', fontSize: 'clamp(0.65rem, 1.5vw, 0.78rem)', borderBottom: '2px solid var(--primary)', paddingBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.6rem', whiteSpace: 'nowrap' }}>
-              The Gallery <ArrowRight size={14} />
-            </Link>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', maxWidth: '900px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', opacity: 0.8 }}>
+               <div style={{ width: '40px', height: '1px', background: 'var(--primary)' }} />
+               <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '5px', textTransform: 'uppercase', fontFamily: 'Outfit' }}>Couture House Est. 2026</span>
+            </div>
+            
+            <h1 style={{ 
+              fontSize: 'clamp(4rem, 12vw, 10rem)', 
+              color: 'white', 
+              lineHeight: '0.9', 
+              fontFamily: 'Playfair Display', 
+              letterSpacing: '-3px',
+              textShadow: '0 20px 40px rgba(0,0,0,0.4)',
+              margin: '1rem 0'
+            }}>
+              Unfold <br />
+              <motion.span 
+                initial={{ opacity: 0, y: 40 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ duration: 1, delay: 0.5 }}
+                style={{ color: 'var(--primary)', fontStyle: 'italic', fontWeight: 500 }}
+              >
+                Your Aura.
+              </motion.span>
+            </h1>
+
+            <div style={{ maxWidth: '520px' }}>
+              <p style={{ 
+                fontSize: 'clamp(1rem, 2vw, 1.25rem)', 
+                color: 'rgba(255,255,255,0.95)', 
+                lineHeight: '1.8', 
+                fontFamily: 'Outfit',
+                marginBottom: '4rem',
+                fontWeight: 300
+              }}>
+                Bridging timeless heritage with futuristic silhouettes. We sculpt your dreams into wearable reality.
+              </p>
+              
+              <div className="hero-cta-group" style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
+                <motion.button
+                  whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(233,163,163,0.4)' }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={onBook}
+                  style={{ 
+                    padding: '1.4rem 3.5rem', 
+                    background: 'var(--primary)', 
+                    color: 'white', 
+                    borderRadius: '50px', 
+                    fontWeight: 900, 
+                    border: 'none', 
+                    fontSize: '0.9rem', 
+                    cursor: 'pointer', 
+                    letterSpacing: '2px', 
+                    textTransform: 'uppercase',
+                    fontFamily: 'Outfit'
+                  }}
+                >
+                  Start Journey
+                </motion.button>
+                <Link to="/products" style={{ 
+                  fontWeight: 900, 
+                  color: 'white', 
+                  textTransform: 'uppercase', 
+                  letterSpacing: '4px', 
+                  fontSize: '0.75rem', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '1.2rem',
+                  fontFamily: 'Outfit',
+                  borderBottom: '2px solid var(--primary)',
+                  paddingBottom: '0.8rem'
+                }}>
+                  View Catalog <ArrowRight size={18} />
+                </Link>
+              </div>
+            </div>
           </div>
 
+          {/* Minimalist Floating Stats Pill */}
           <motion.div
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            style={{ position: 'absolute', bottom: '-20px', right: '40px', background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(20px)', padding: '1.5rem 2.5rem', borderRadius: '8px', boxShadow: '0 30px 60px rgba(0,0,0,0.2)', textAlign: 'center', border: '1px solid rgba(255,255,255,0.2)', color: 'white' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1 }}
+            style={{ 
+              position: 'absolute', 
+              bottom: '4rem', 
+              right: '4rem', 
+              background: 'rgba(255,255,255,0.1)', 
+              backdropFilter: 'blur(30px)', 
+              padding: '1rem 2rem', 
+              borderRadius: '50px', 
+              border: '1px solid rgba(255,255,255,0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1.5rem',
+              color: 'white'
+            }}
           >
-            <h4 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontFamily: 'Roboto', color: 'var(--primary)', lineHeight: 1 }}>500+</h4>
-            <p style={{ fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', marginTop: '0.3rem' }}>Masterpieces</p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+               <h4 style={{ fontSize: '1.8rem', fontFamily: 'Playfair Display', fontWeight: 900 }}>500+</h4>
+               <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', opacity: 0.7 }}>Masterpieces</span>
+            </div>
+            <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.2)' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+               <Sparkles size={14} color="var(--primary)" />
+               <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', opacity: 0.7 }}>Est. 2026</span>
+            </div>
           </motion.div>
-        </motion.div>
       </div>
     </section>
   );
@@ -160,8 +229,8 @@ const Services = ({ services }) => {
     <section style={{ background: 'var(--white)', overflow: 'hidden', padding: '1rem 0 3rem' }}>
       <div className="container" style={{ marginBottom: '2rem' }}>
         <div style={{ textAlign: 'left' }}>
-          <span style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '5px', textTransform: 'uppercase', fontSize: 'clamp(0.55rem, 1.5vw, 0.72rem)' }}>Craftsmanship</span>
-          <h2 style={{ fontSize: 'clamp(2.2rem, 6vw, 4.5rem)', fontFamily: 'Roboto', color: 'var(--secondary)', lineHeight: 1.05, marginTop: '0.6rem' }}>Pure Artistry</h2>
+          <span style={{ color: 'var(--secondary)', fontWeight: 800, letterSpacing: '5px', textTransform: 'uppercase', fontSize: 'clamp(0.55rem, 1.5vw, 0.72rem)', fontFamily: 'Outfit' }}>Craftsmanship</span>
+          <h2 style={{ fontSize: 'clamp(2.2rem, 6vw, 4.5rem)', fontFamily: 'Playfair Display', color: 'var(--primary)', lineHeight: 1.05, marginTop: '0.6rem' }}>Pure Artistry</h2>
         </div>
       </div>
       
@@ -204,7 +273,7 @@ const Services = ({ services }) => {
               color: 'white'
             }}>
               <span style={{ color: 'var(--primary)', fontWeight: 800, fontSize: isMobile ? '0.8rem' : 'clamp(0.8rem, 2vw, 1.1rem)', letterSpacing: '4px', display: 'block', marginBottom: '0.5rem' }}>0{idx + 1}</span>
-              <h3 style={{ fontSize: isMobile ? '1.8rem' : 'clamp(1.8rem, 4vw, 3rem)', fontFamily: 'Roboto', marginBottom: isMobile ? '0.5rem' : '1.2rem', whiteSpace: 'nowrap' }}>{service.title}</h3>
+              <h3 style={{ fontSize: isMobile ? '1.8rem' : 'clamp(1.8rem, 4vw, 3rem)', fontFamily: 'Playfair Display', color: 'white', marginBottom: isMobile ? '0.5rem' : '1.2rem', whiteSpace: 'nowrap', textShadow: '0 10px 20px rgba(0,0,0,0.3)' }}>{service.title}</h3>
               <p style={{ 
                 fontSize: '0.9rem', 
                 lineHeight: 1.6, 
@@ -254,7 +323,7 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
     }
 
     let animationFrameId;
-    const speed = 0.8; // pixels per frame for auto-scroll
+    const speed = 0.55; // slightly increased to ensure fluid resumption
 
     const animateScroll = () => {
       if (!isDown && !isPaused) {
@@ -274,8 +343,11 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
 
     animationFrameId = requestAnimationFrame(animateScroll);
 
+    const handleWindowMouseUp = () => setIsDown(false);
+    if (isDown) window.addEventListener('mouseup', handleWindowMouseUp);
     return () => {
       cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('mouseup', handleWindowMouseUp);
     };
   }, [isDown, isPaused, catalog]);
 
@@ -306,7 +378,7 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
     const container = containerRef.current;
     if (!container) return;
     const x = e.pageX - container.offsetLeft;
-    const walk = (x - startX) * 1.5; // scroll speed multiplier
+    const walk = (x - startX) * 2.2; // increased multiplier for snappier boutique feel
     container.scrollLeft = scrollLeft - walk;
   };
 
@@ -359,7 +431,7 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
           msOverflowStyle: 'none',
           paddingLeft: '5vw',
           paddingBottom: 'clamp(2rem, 4vw, 4rem)',
-          userSelect: 'none',
+          userSelect: isDown ? 'none' : 'auto',
           scrollBehavior: 'auto'
         }}
       >
@@ -430,7 +502,7 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
     }
 
     let animationFrameId;
-    const speed = 0.5;
+    const speed = 0.35; // slower for categorical browse
 
     const animateScroll = () => {
       if (!isDown && !isPaused) {
@@ -447,7 +519,12 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
     };
 
     animationFrameId = requestAnimationFrame(animateScroll);
-    return () => cancelAnimationFrame(animationFrameId);
+    const handleWindowMouseUp = () => setIsDown(false);
+    if (isDown) window.addEventListener('mouseup', handleWindowMouseUp);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('mouseup', handleWindowMouseUp);
+    };
   }, [isDown, isPaused, categories]);
 
   const handleMouseDown = (e) => {
@@ -462,7 +539,7 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
     e.preventDefault();
     setHasDragged(true);
     const x = e.pageX - containerRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5;
+    const walk = (x - startX) * 2.2;
     containerRef.current.scrollLeft = scrollLeft - walk;
   };
 
@@ -535,14 +612,19 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
     let frameId;
     const animate = () => {
       if (!isPaused && !isDragging) {
-        el.scrollLeft += 0.8; // slightly faster for visibility
+        el.scrollLeft += 0.55; // stabilized speed for infinite loop
         if (el.scrollLeft >= oneThird * 2) el.scrollLeft -= oneThird;
       }
       frameId = requestAnimationFrame(animate);
     };
 
     frameId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(frameId);
+    const onGlobalMouseUp = () => setIsDragging(false);
+    if (isDragging) window.addEventListener('mouseup', onGlobalMouseUp);
+    return () => {
+      cancelAnimationFrame(frameId);
+      window.removeEventListener('mouseup', onGlobalMouseUp);
+    };
   }, [isPaused, isDragging]);
 
   const handleMouseDown = (e) => {
@@ -566,7 +648,7 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
         if (!isDragging) return;
         e.preventDefault();
         const x = e.pageX - scrollRef.current.offsetLeft;
-        const walk = (x - startX) * 1.5;
+        const walk = (x - startX) * 2.2;
         scrollRef.current.scrollLeft = scrollLeft - walk;
       }}
       style={{

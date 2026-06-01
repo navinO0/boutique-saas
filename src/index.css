@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Outfit:wght@100..900&display=swap');
 
 :root {
   /* Signature Aesthetic Palette */
@@ -27,27 +27,21 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  overflow-x: hidden !important;
-  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Outfit', sans-serif;
   background-color: var(--background);
   color: var(--text);
   line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, .serif {
-  font-family: 'Roboto', sans-serif;
+h1, h2, h3, h4, .serif, .display-font {
+  font-family: 'Playfair Display', serif;
   font-weight: 700;
+  color: var(--secondary);
 }
 
 .container {
