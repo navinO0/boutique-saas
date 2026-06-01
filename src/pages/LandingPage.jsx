@@ -636,9 +636,18 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
 
     let frameId;
     const animate = () => {
+      const el = scrollRef.current;
+      if (!el) return;
+      
       if (!isPaused && !isDragging) {
-        el.scrollLeft += 0.55; // stabilized speed for infinite loop
-        if (el.scrollLeft >= oneThird * 2) el.scrollLeft -= oneThird;
+        // Very slow speed for mobile to prevent 'yanking'
+        const speed = isMobile ? 0.35 : 0.55;
+        el.scrollLeft += speed;
+        
+        // Loop logic: if we've scrolled past the second set, jump back to the first
+        if (el.scrollLeft >= oneThird * 2) {
+          el.scrollLeft -= oneThird;
+        }
       }
       frameId = requestAnimationFrame(animate);
     };
@@ -650,7 +659,7 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
       cancelAnimationFrame(frameId);
       window.removeEventListener('mouseup', onGlobalMouseUp);
     };
-  }, [isPaused, isDragging]);
+  }, [isPaused, isDragging, isMobile]);
 
   const handleMouseDown = (e) => {
     const el = scrollRef.current;
@@ -670,6 +679,10 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
         ref={scrollRef}
         className="no-scrollbar"
         onTouchStart={() => setIsPaused(true)}
+        onTouchEnd={() => {
+          // Grace period after touch before auto-scroll resumes
+          setTimeout(() => setIsPaused(false), 2000);
+        }}
         onMouseDown={handleMouseDown}
         onMouseUp={() => setIsDragging(false)}
         onMouseMove={(e) => {
@@ -761,7 +774,12 @@ const GroupedCollectionCarousels = ({ categories, products, onProductClick, onCa
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '15px' : '40px', padding: '10px 0' }}>
       {categories.map((cat, idx) => {
-        const catProducts = products.filter(p => p.category === cat.id);
+        // Limit to 15 latest products
+        const catProducts = products
+          .filter(p => p.category === cat.id)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .slice(0, 15);
+          
         if (catProducts.length === 0) return null;
 
         return (
