@@ -99,7 +99,7 @@ const ProductDetailPage = () => {
 
   return (
     <div style={{ background: 'white', minHeight: '100vh', padding: 'clamp(5rem, 12vw, 8rem) 0 3rem' }}>
-      <div style={{ width: '95%', maxWidth: '1800px', margin: '0 auto' }}>
+      <div style={{ width: '80%', maxWidth: '80%', margin: '0 auto' }}>
         <button
           onClick={() => navigate(-1)}
           style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', background: 'none', border: 'none', color: 'var(--secondary)', fontWeight: 800, cursor: 'pointer', marginBottom: 'clamp(1.5rem, 4vw, 3rem)', fontSize: 'clamp(0.85rem, 2.5vw, 1rem)' }}
