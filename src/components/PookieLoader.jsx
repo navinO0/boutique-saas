@@ -67,34 +67,35 @@ const PookieLoader = ({ fullScreen = false }) => {
         }
       `}</style>
 
-      <div style={{ position: 'relative', width: '130px', height: '130px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ position: 'relative', width: '80px', height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         
-        {/* Background Soft Pulse Effect */}
+        {/* Background Soft Pulse Effect - Tightened */}
         <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ 
-            width: '80px', height: '80px', 
+            width: '40px', height: '40px', 
             background: 'var(--primary)', 
             borderRadius: '50%', 
-            filter: 'blur(25px)',
+            filter: 'blur(15px)',
             animation: 'softPulse 2s ease-out infinite' 
           }} />
         </div>
 
-        {/* The Outline Drawing Animation */}
+        {/* The Outline Drawing Animation - Soft Finishing */}
         <svg
           viewBox="0 0 100 100"
           style={{
             width: '100%',
             height: '100%',
             zIndex: 2,
-            overflow: 'visible'
+            overflow: 'visible',
+            filter: 'drop-shadow(0 0 4px rgba(233,163,163,0.4))' // Soft finishing around the draw
           }}
         >
           <path
             d={heartPath}
             fill="none"
             stroke="var(--primary)"
-            strokeWidth="3"
+            strokeWidth="2.5"
             strokeLinecap="round"
             style={{
               animation: 'heartCompleteFlow 2.5s ease-in-out infinite'
@@ -102,7 +103,7 @@ const PookieLoader = ({ fullScreen = false }) => {
           />
         </svg>
 
-        {/* Center Static Guide Heart (Very Faint) */}
+        {/* Center Static Guide Heart (Subtle Finishing) */}
         <svg
           viewBox="0 0 100 100"
           style={{
@@ -110,14 +111,15 @@ const PookieLoader = ({ fullScreen = false }) => {
             inset: 0,
             width: '100%',
             height: '100%',
-            opacity: 0.05,
-            zIndex: 1
+            opacity: 0.1,
+            zIndex: 1,
+            filter: 'blur(0.5px)'
           }}
         >
-          <path d={heartPath} fill="none" stroke="var(--primary)" strokeWidth="1" />
+          <path d={heartPath} fill="none" stroke="var(--primary)" strokeWidth="0.8" strokeDasharray="2 4" />
         </svg>
 
-        {/* Center Hard Pulse Heart - INCREASED SIZE */}
+        {/* Center Hard Pulse Heart - Scaled Down */}
         <div style={{
           position: 'absolute',
           display: 'flex',
@@ -126,11 +128,11 @@ const PookieLoader = ({ fullScreen = false }) => {
           animation: 'hardPulse 2s ease-in-out infinite',
           zIndex: 3
         }}>
-          <svg viewBox="0 0 100 100" style={{ width: '48px', height: '48px' }}>
+          <svg viewBox="0 0 100 100" style={{ width: '30px', height: '30px' }}>
             <path
               d={heartPath}
               fill="var(--primary)"
-              style={{ filter: 'drop-shadow(0 0 12px rgba(233,163,163,0.6))' }}
+              style={{ filter: 'drop-shadow(0 0 8px rgba(233,163,163,0.5))' }}
             />
           </svg>
         </div>
@@ -142,10 +144,10 @@ const PookieLoader = ({ fullScreen = false }) => {
         transition={{ duration: 2, repeat: Infinity }}
         style={{ 
           fontFamily: 'Roboto', 
-          fontSize: '0.9rem', 
+          fontSize: '0.75rem', 
           color: 'var(--secondary)',
-          marginTop: '2.5rem',
-          letterSpacing: '5px',
+          marginTop: '1.5rem',
+          letterSpacing: '4px',
           fontWeight: 800,
           textTransform: 'uppercase'
         }}

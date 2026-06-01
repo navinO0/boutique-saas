@@ -53,7 +53,8 @@ const Navbar = ({ onOpenCart }) => {
   const isAdminUser = isAdminLoggedIn;
 
   return (
-    <nav
+    <>
+      <nav
       className="main-navbar"
       style={{
         position: 'fixed',
@@ -278,6 +279,83 @@ const Navbar = ({ onOpenCart }) => {
         )}
       </AnimatePresence>
     </nav>
+    <AnimatePresence>
+      {isSearchOpen && (
+        <div style={{ position: 'fixed', top: 'clamp(0.5rem, 3vh, 3rem)', left: 0, right: 0, zIndex: 9999, display: 'flex', justifyContent: 'center' }}>
+          {/* Enhanced Soft Backdrop - High Blur, Low Opacity to prevent "White Box" feel */}
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            onClick={() => setIsSearchOpen(false)}
+            style={{ position: 'fixed', inset: 0, background: 'rgba(255, 255, 255, 0.4)', backdropFilter: 'blur(25px)', zIndex: -1 }}
+          />
+          
+          <motion.div
+            initial={{ y: -30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -30, opacity: 0 }}
+            style={{ 
+              position: 'relative', 
+              width: '94%', 
+              maxWidth: '650px',
+              zIndex: 1
+            }}
+          >
+            <div style={{ 
+              background: 'white', 
+              padding: 'clamp(0.6rem, 2vw, 1rem) clamp(1rem, 3vw, 2rem)', 
+              borderRadius: '40px', 
+              boxShadow: '0 25px 60px rgba(233,163,163,0.25)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              border: '2px solid #fff0f0'
+            }}>
+              <Search size={22} color="var(--primary)" />
+              <input
+                autoFocus
+                placeholder="Find excellence..."
+                style={{ 
+                  flex: 1,
+                  border: 'none',
+                  outline: 'none',
+                  fontSize: 'clamp(1rem, 4vw, 1.25rem)',
+                  fontFamily: 'Playfair Display',
+                  fontWeight: 700,
+                  color: 'var(--secondary)',
+                  padding: '0.6rem 0'
+                }}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && searchQuery.trim()) {
+                    navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
+                    setIsSearchOpen(false);
+                    setSearchQuery('');
+                  }
+                }}
+              />
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setIsSearchOpen(false)}
+                style={{ background: '#fff0f0', border: 'none', borderRadius: '50%', width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--primary)', cursor: 'pointer', flexShrink: 0 }}
+              >
+                <X size={20} />
+              </motion.button>
+            </div>
+            
+            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+               <p style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '4px', color: 'var(--primary)', textShadow: '0 2px 5px rgba(255,255,255,1)' }}>
+                  PRESS ENTER TO SEARCH
+               </p>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+    </>
   );
 };
 
