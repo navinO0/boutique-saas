@@ -307,6 +307,7 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   // Triple the catalog for a seamless loop in both directions
   const displayItems = (catalog && catalog.length > 0) ? [...catalog, ...catalog, ...catalog] : [];
@@ -383,7 +384,7 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
   };
 
   return (
-    <section style={{ background: 'var(--secondary)', overflow: 'hidden', position: 'relative', padding: 'clamp(4rem, 8vw, 8rem) 0' }}>
+    <section style={{ background: 'var(--secondary)', overflow: 'hidden', position: 'relative', padding: 'clamp(2.5rem, 5vw, 4rem) 0' }}>
       {/* Decorative Background Text - Optimized */}
       <div
         style={{
@@ -398,21 +399,32 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
         ATELIER ATELIER ATELIER
       </div>
 
-      <div className='container' style={{ marginBottom: 'clamp(2.5rem, 5vw, 5rem)', color: 'white', position: 'relative', zIndex: 2 }}>
-        <motion.span
+      <div className='container' style={{ marginBottom: 'clamp(1.5rem, 3vw, 2.5rem)', color: 'white', position: 'relative', zIndex: 2 }}>
+        <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
-          style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '6px', textTransform: 'uppercase', display: 'block', fontSize: '0.7rem' }}
+          style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.8rem' }}
         >
-          Artisanal Heritage
-        </motion.span>
+          <div style={{ width: '50px', height: '2px', background: 'var(--primary)' }} />
+          <span style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '6px', textTransform: 'uppercase', fontSize: '0.65rem', fontFamily: 'Outfit' }}>Artisanal Heritage</span>
+        </motion.div>
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          style={{ fontSize: 'clamp(2.2rem, 5vw, 4rem)', fontFamily: 'Roboto', marginTop: '1rem', lineHeight: 1.05 }}
+          transition={{ delay: 0.1 }}
+          style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontFamily: 'Playfair Display', marginTop: '0', lineHeight: 1.0, fontWeight: 700, fontStyle: 'italic', color: 'white', letterSpacing: '-1px' }}
         >
-          The Digital Gallery
+          The Digital
+          <span style={{ color: 'var(--primary)', display: 'block', fontWeight: 500 }}>Gallery.</span>
         </motion.h2>
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', fontFamily: 'Outfit', fontWeight: 300, marginTop: '0.8rem', letterSpacing: '0.5px' }}
+        >
+          Drag to explore • Click to discover
+        </motion.p>
       </div>
 
       <div 
@@ -457,21 +469,22 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
                   style={{
                     width: '100%',
                     height: '100%',
-                    objectFit: 'contain', borderRadius: '8px', background: '#fef5f5',
+                    objectFit: 'cover',
                     pointerEvents: 'none',
-                    userSelect: 'none'
+                    userSelect: 'none',
+                    transition: 'transform 0.8s cubic-bezier(0.19,1,0.22,1)'
                   }}
                   alt={p.name}
                   loading="lazy"
                   draggable="false"
                 />
                 <div className="card-glass-overlay" style={{ pointerEvents: 'none' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                    <div>
-                      <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '4px', marginBottom: '0.5rem' }}>{p.category}</p>
-                      <h3 style={{ color: 'white', fontSize: '2.2rem', fontFamily: 'Playfair Display', lineHeight: 1.1 }}>{p.name}</h3>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '0.5rem' }}>
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: isMobile ? '0.55rem' : '0.65rem', textTransform: 'uppercase', letterSpacing: '3px', marginBottom: isMobile ? '0.3rem' : '0.4rem' }}>{p.category}</p>
+                      <h3 style={{ color: 'white', fontSize: isMobile ? '1rem' : '1.4rem', fontFamily: 'Playfair Display', lineHeight: 1.15, fontStyle: 'italic', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{p.name}</h3>
                     </div>
-                    <div style={{ background: 'var(--primary)', padding: '0.8rem', borderRadius: '8px', color: 'white', display: 'flex' }}><ArrowRight size={20} /></div>
+                    <div style={{ background: 'var(--primary)', padding: isMobile ? '0.4rem' : '0.55rem', borderRadius: '8px', color: 'white', display: 'flex', flexShrink: 0 }}><ArrowRight size={isMobile ? 14 : 18} /></div>
                   </div>
                 </div>
               </div>
@@ -486,9 +499,9 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
             e.stopPropagation();
             if (containerRef.current) containerRef.current.scrollBy({ left: -450 });
           }}
-          style={{ position: 'absolute', left: '2rem', top: '40%', background: 'rgba(255, 255, 255, 0.6)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '60px', height: '60px', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 12px 35px rgba(0,0,0,0.15)', pointerEvents: 'auto' }}
+          style={{ position: 'absolute', left: '2rem', top: '40%', background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '50%', width: '44px', height: '44px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 8px 20px rgba(0,0,0,0.2)', pointerEvents: 'auto' }}
         >
-          <ChevronLeft size={30} />
+          <ChevronLeft size={20} />
         </button>
         <button
           className="desktop-only"
@@ -496,9 +509,9 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
             e.stopPropagation();
             if (containerRef.current) containerRef.current.scrollBy({ left: 450 });
           }}
-          style={{ position: 'absolute', right: '2rem', top: '40%', background: 'rgba(255, 255, 255, 0.6)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '60px', height: '60px', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 12px 35px rgba(0,0,0,0.15)', pointerEvents: 'auto' }}
+          style={{ position: 'absolute', right: '2rem', top: '40%', background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '50%', width: '44px', height: '44px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 8px 20px rgba(0,0,0,0.2)', pointerEvents: 'auto' }}
         >
-          <ChevronRight size={30} />
+          <ChevronRight size={20} />
         </button>
       </div>
     </section>
@@ -594,21 +607,21 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
           onClick={() => { if (!hasDragged) onCategoryClick(cat.id); }}
           style={{
             flexShrink: 0,
-            width: 'clamp(280px, 40vw, 450px)',
-            height: 'clamp(400px, 50vh, 600px)',
+            width: 'clamp(140px, 20vw, 225px)',
+            height: 'clamp(200px, 25vh, 300px)',
             position: 'relative',
             borderRadius: '8px',
             overflow: 'hidden',
-            boxShadow: '0 25px 50px rgba(0,0,0,0.15)',
+            boxShadow: '0 12px 25px rgba(0,0,0,0.15)',
             transition: '0.4s'
           }}
-          whileHover={{ y: -15, scale: 1.02 }}
+          whileHover={{ y: -10, scale: 1.02 }}
         >
           <img src={cat.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={cat.name} draggable="false" />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent 70%)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '2.5rem' }}>
-            <h3 style={{ color: 'white', fontSize: '2rem', fontFamily: 'Roboto', marginBottom: '0.5rem' }}>{cat.name}</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', color: 'var(--primary)', fontWeight: 800, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '3px' }}>
-              Explore <ArrowRight size={18} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent 70%)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1.2rem' }}>
+            <h3 style={{ color: 'white', fontSize: '1.1rem', fontFamily: 'Roboto', marginBottom: '0.3rem' }}>{cat.name}</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary)', fontWeight: 800, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '2px' }}>
+              Explore <ArrowRight size={14} />
             </div>
           </div>
         </motion.div>
@@ -688,7 +701,7 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
         style={{
           display: 'flex',
           overflowX: 'auto',
-          padding: isMobile ? '10px 10px 15px' : '15px 5vw 30px',
+          padding: isMobile ? '1px 1px 1px' : '15px 5vw 30px',
           gap: isMobile ? '12px' : '25px',
           cursor: 'grab',
           scrollSnapType: isMobile ? 'x mandatory' : 'none',
@@ -703,29 +716,29 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
             onClick={() => !isDragging && onProductClick(p.id)}
             style={{
               flexShrink: 0,
-              width: isMobile ? '70vw' : 'clamp(280px, 25vw, 360px)',
+              width: isMobile ? '40vw' : 'clamp(140px, 12.5vw, 180px)',
               background: 'white',
               borderRadius: '12px',
-              padding: '0.8rem',
+              padding: '0.1rem',
               boxShadow: '0 20px 40px rgba(233,163,163,0.08)',
               border: '1px solid #fff5f5',
               cursor: 'pointer',
               scrollSnapAlign: isMobile ? 'center' : 'none'
             }}
           >
-            <div style={{ height: isMobile ? '280px' : 'clamp(320px, 45vh, 420px)', borderRadius: '8px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
+            <div style={{ height: isMobile ? '120px' : 'clamp(160px, 22vh, 210px)', borderRadius: '8px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
               <img src={p.images?.[0] || p.image} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt={p.name} />
               <div style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'var(--primary)', color: 'white', padding: '0.4rem 1rem', borderRadius: '6px', fontWeight: 800, fontSize: '0.7rem', boxShadow: '0 5px 15px rgba(233,163,163,0.3)' }}>
                 LATEST
               </div>
             </div>
-            <div style={{ padding: '1.2rem 0.6rem 0.5rem' }}>
-              <p style={{ color: 'var(--primary)', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '0.4rem' }}>{p.category}</p>
-              <h3 style={{ fontSize: isMobile ? '1.1rem' : '1.3rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '0.6rem', fontWeight: 700 }}>{p.name}</h3>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #fef0f0', paddingTop: '0.8rem' }}>
-                <p style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '1.2rem' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
-                <div style={{ background: 'var(--primary)', padding: '0.6rem', borderRadius: '50%', display: 'flex', color: 'white' }}>
-                  <ArrowRight size={16} />
+            <div style={{ padding: '0.6rem 0.3rem 0.3rem' }}>
+              <p style={{ color: 'var(--primary)', fontSize: '0.5rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.2rem' }}>{p.category}</p>
+              <h3 style={{ fontSize: isMobile ? '0.75rem' : '0.85rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '0.3rem', fontWeight: 700, lineHeight: '1.2' }}>{p.name}</h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #fef0f0', paddingTop: '0.4rem' }}>
+                <p style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.8rem' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
+                <div style={{ background: 'var(--primary)', padding: '0.35rem', borderRadius: '50%', display: 'flex', color: 'white' }}>
+                  <ArrowRight size={10} />
                 </div>
               </div>
             </div>
@@ -780,23 +793,23 @@ const GroupedCollectionCarousels = ({ categories, products, onProductClick, onCa
         return (
           <section key={cat.id} style={{ 
             overflow: 'hidden', 
-            padding: isMobile ? '15px 0' : '40px 0',
+            padding: isMobile ? '1px 0' : '1px 0',
             background: idx % 2 === 0 ? 'white' : 'rgba(233,163,163,0.02)'
           }}>
-            <div className="container" style={{ marginBottom: isMobile ? '15px' : '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1rem' }}>
+            <div className="container" style={{ marginBottom: isMobile ? '15px' : '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '1px' }}>
                   <div style={{ width: isMobile ? '40px' : '80px', height: '3px', background: 'var(--primary)', borderRadius: '2px' }}></div>
-                  <span style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '5px', textTransform: 'uppercase', fontSize: isMobile ? '0.6rem' : '0.8rem' }}>Exquisite Selection</span>
+                  <span style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '4px', textTransform: 'uppercase', fontSize: isMobile ? '0.7rem' : '0.75rem' }}>Exquisite Selection</span>
                 </div>
                 <h2 style={{ 
-                  fontSize: isMobile ? '2.2rem' : 'clamp(2.5rem, 6vw, 4.5rem)', 
+                  fontSize: isMobile ? '1.5rem' : 'clamp(1.8rem, 4vw, 2.8rem)', 
                   fontFamily: 'Playfair Display', 
                   color: 'var(--secondary)', 
-                  lineHeight: 1,
+                  lineHeight: 1.1,
                   fontWeight: 900,
                   fontStyle: 'italic',
-                  letterSpacing: '-1px'
+                  letterSpacing: '-0.5px'
                 }}>{cat.name}</h2>
               </div>
               <motion.button 
@@ -804,24 +817,24 @@ const GroupedCollectionCarousels = ({ categories, products, onProductClick, onCa
                 whileTap={{ scale: 0.95 }}
                 onClick={() => onCategoryClick(cat.id)}
                 style={{ 
-                  padding: isMobile ? '0.8rem 1.5rem' : '1.2rem 2.8rem', 
+                  padding: isMobile ? '0.4rem 0.8rem' : '0.7rem 1.8rem', 
                   background: 'white', 
-                  border: '2px solid var(--primary)', 
-                  borderRadius: '12px', 
+                  border: '1.5px solid var(--primary)', 
+                  borderRadius: '7px', 
                   color: 'var(--primary)', 
                   fontWeight: 900, 
-                  fontSize: isMobile ? '0.75rem' : '0.9rem', 
+                  fontSize: isMobile ? '0.65rem' : '0.75rem', 
                   cursor: 'pointer', 
                   display: 'flex', 
                   alignItems: 'center', 
-                  gap: '0.8rem',
+                  gap: '0.1rem',
                   textTransform: 'uppercase',
-                  letterSpacing: '2px',
-                  boxShadow: '0 10px 25px rgba(233,163,163,0.15)',
+                  letterSpacing: '1px',
+                  boxShadow: '0 8px 20px rgba(233,163,163,0.12)',
                   transition: 'all 0.4s'
                 }}
               >
-                Discover Collection <ArrowRight size={18} />
+                Discover Collection <ArrowRight size={isMobile ? 12 : 16} />
               </motion.button>
             </div>
 
