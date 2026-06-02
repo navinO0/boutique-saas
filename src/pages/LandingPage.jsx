@@ -227,67 +227,101 @@ const Services = ({ services }) => {
 
   return (
     <section style={{ background: 'var(--white)', overflow: 'hidden', padding: '1rem 0 3rem' }}>
-      <div className="container" style={{ marginBottom: '2rem' }}>
+      <div className="container" style={{ marginBottom: '1.2rem' }}>
         <div style={{ textAlign: 'left' }}>
           <span style={{ color: 'var(--secondary)', fontWeight: 800, letterSpacing: '5px', textTransform: 'uppercase', fontSize: 'clamp(0.55rem, 1.5vw, 0.72rem)', fontFamily: 'Outfit' }}>Craftsmanship</span>
-          <h2 style={{ fontSize: 'clamp(2.2rem, 6vw, 4.5rem)', fontFamily: 'Playfair Display', color: 'var(--primary)', lineHeight: 1.05, marginTop: '0.6rem' }}>Pure Artistry</h2>
+          <h2 className="section-heading" style={{ fontSize: 'clamp(2.2rem, 6vw, 4.5rem)', fontFamily: 'Playfair Display', color: 'var(--primary)', lineHeight: 1.05, marginTop: '0.6rem' }}>Pure Artistry</h2>
         </div>
       </div>
       
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: isMobile ? 'column' : 'row',
-        width: '100%', 
-        height: isMobile ? 'auto' : 'clamp(400px, 60vh, 700px)', 
-        gap: '10px', 
-        padding: '0 10px' 
-      }}>
-        {services.map((service, idx) => (
-          <motion.div
-            key={service.id}
-            initial={isMobile ? { height: '350px' } : { flex: 1 }}
-            whileHover={!isMobile ? { flex: 2.5 } : { scale: 1.02 }}
-            transition={{ type: 'spring', stiffness: 200, damping: 25 }}
-            style={{
-              position: 'relative',
-              overflow: 'hidden',
-              cursor: 'pointer',
-              borderRadius: '8px',
-              height: isMobile ? '300px' : '100%',
-              flex: isMobile ? 'none' : '1'
-            }}
-          >
-            <img 
-              src={service.image} 
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-              alt={service.title} 
-            />
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%, rgba(0,0,0,0.2) 100%)' }}></div>
-            
-            <div style={{ 
-              position: 'absolute', 
-              bottom: '0', 
-              left: '0', 
-              width: '100%', 
-              padding: isMobile ? '1.5rem' : 'clamp(1.5rem, 4vw, 3.5rem)',
-              color: 'white'
-            }}>
-              <span style={{ color: 'var(--primary)', fontWeight: 800, fontSize: isMobile ? '0.8rem' : 'clamp(0.8rem, 2vw, 1.1rem)', letterSpacing: '4px', display: 'block', marginBottom: '0.5rem' }}>0{idx + 1}</span>
-              <h3 style={{ fontSize: isMobile ? '1.8rem' : 'clamp(1.8rem, 4vw, 3rem)', fontFamily: 'Playfair Display', color: 'white', marginBottom: isMobile ? '0.5rem' : '1.2rem', whiteSpace: 'nowrap', textShadow: '0 10px 20px rgba(0,0,0,0.3)' }}>{service.title}</h3>
-              <p style={{ 
-                fontSize: '0.9rem', 
-                lineHeight: 1.6, 
-                opacity: isMobile ? 1 : 0, 
-                transform: isMobile ? 'none' : 'translateY(20px)',
-                transition: '0.5s',
-                maxWidth: '400px'
-              }} className="service-panel-desc">
-                {service.description}
-              </p>
+      {isMobile ? (
+        /* 2-column grid on mobile */
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: '8px',
+          padding: '0 10px'
+        }}>
+          {services.map((service, idx) => (
+            <div
+              key={service.id}
+              style={{
+                position: 'relative',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                borderRadius: '10px',
+                height: '180px',
+              }}
+            >
+              <img
+                src={service.image}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                alt={service.title}
+              />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 65%)' }} />
+              <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '0.8rem' }}>
+                <span style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.6rem', letterSpacing: '3px', display: 'block', marginBottom: '0.25rem' }}>0{idx + 1}</span>
+                <h3 style={{ fontSize: '0.95rem', fontFamily: 'Playfair Display', color: 'white', lineHeight: 1.2, fontWeight: 700 }}>{service.title}</h3>
+              </div>
             </div>
-          </motion.div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        /* Expanding accordion panels on desktop */
+        <div style={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100%',
+          height: 'clamp(400px, 60vh, 700px)',
+          gap: '10px',
+          padding: '0 10px'
+        }}>
+          {services.map((service, idx) => (
+            <motion.div
+              key={service.id}
+              initial={{ flex: 1 }}
+              whileHover={{ flex: 2.5 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+              style={{
+                position: 'relative',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                borderRadius: '8px',
+                height: '100%',
+                flex: 1
+              }}
+            >
+              <img
+                src={service.image}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                alt={service.title}
+              />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%, rgba(0,0,0,0.2) 100%)' }} />
+              <div style={{
+                position: 'absolute',
+                bottom: '0',
+                left: '0',
+                width: '100%',
+                padding: 'clamp(1.5rem, 4vw, 3.5rem)',
+                color: 'white'
+              }}>
+                <span style={{ color: 'var(--primary)', fontWeight: 800, fontSize: 'clamp(0.8rem, 2vw, 1.1rem)', letterSpacing: '4px', display: 'block', marginBottom: '0.5rem' }}>0{idx + 1}</span>
+                <h3 style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', fontFamily: 'Playfair Display', color: 'white', marginBottom: '1.2rem', whiteSpace: 'nowrap', textShadow: '0 10px 20px rgba(0,0,0,0.3)' }}>{service.title}</h3>
+                <p style={{
+                  fontSize: '0.9rem',
+                  lineHeight: 1.6,
+                  opacity: 0,
+                  transform: 'translateY(20px)',
+                  transition: '0.5s',
+                  maxWidth: '400px'
+                }} className="service-panel-desc">
+                  {service.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
       {!isMobile && (
         <style>{`
           div:hover .service-panel-desc {
@@ -413,6 +447,7 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontFamily: 'Playfair Display', marginTop: '0', lineHeight: 1.0, fontWeight: 700, fontStyle: 'italic', color: 'white', letterSpacing: '-1px' }}
+          className="section-heading"
         >
           The Digital
           <span style={{ color: 'var(--primary)', display: 'block', fontWeight: 500 }}>Gallery.</span>
@@ -701,8 +736,8 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
         style={{
           display: 'flex',
           overflowX: 'auto',
-          padding: isMobile ? '1px 1px 1px' : '15px 5vw 30px',
-          gap: isMobile ? '12px' : '25px',
+          padding: isMobile ? '8px 12px 16px' : '15px 5vw 30px',
+          gap: isMobile ? '10px' : '25px',
           cursor: 'grab',
           scrollSnapType: isMobile ? 'x mandatory' : 'none',
           scrollBehavior: 'smooth',
@@ -728,7 +763,7 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
           >
             <div style={{ height: isMobile ? '120px' : 'clamp(160px, 22vh, 210px)', borderRadius: '8px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
               <img src={p.images?.[0] || p.image} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt={p.name} />
-              <div style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'var(--primary)', color: 'white', padding: '0.4rem 1rem', borderRadius: '6px', fontWeight: 800, fontSize: '0.7rem', boxShadow: '0 5px 15px rgba(233,163,163,0.3)' }}>
+              <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', background: 'var(--primary)', color: 'white', padding: '0.2rem 0.5rem', borderRadius: '4px', fontWeight: 800, fontSize: '0.5rem', letterSpacing: '1px', boxShadow: '0 3px 8px rgba(233,163,163,0.3)' }}>
                 LATEST
               </div>
             </div>
@@ -780,7 +815,7 @@ const GroupedCollectionCarousels = ({ categories, products, onProductClick, onCa
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '15px' : '40px', padding: '10px 0' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '8px' : '30px', padding: isMobile ? '8px 0 16px' : '16px 0 32px' }}>
       {categories.map((cat, idx) => {
         // Limit to 15 latest products
         const catProducts = products
@@ -791,9 +826,9 @@ const GroupedCollectionCarousels = ({ categories, products, onProductClick, onCa
         if (catProducts.length === 0) return null;
 
         return (
-          <section key={cat.id} style={{ 
-            overflow: 'hidden', 
-            padding: isMobile ? '1px 0' : '1px 0',
+          <section key={cat.id} className="collection-section" style={{ 
+            overflow: 'hidden',
+            paddingTop: isMobile ? '12px' : '20px',
             background: idx % 2 === 0 ? 'white' : 'rgba(233,163,163,0.02)'
           }}>
             <div className="container" style={{ marginBottom: isMobile ? '15px' : '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
@@ -871,7 +906,7 @@ const LandingPage = () => {
       <Services services={siteConfig.services} />
       
       {/* Grouped Collection Carousels */}
-      <section style={{ background: 'var(--accent)', padding: '10px 0' }}>
+      <section className="collection-wrapper" style={{ background: 'var(--accent)' }}>
         <GroupedCollectionCarousels 
           categories={siteConfig.categories} 
           products={products} 
