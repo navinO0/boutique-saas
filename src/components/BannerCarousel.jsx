@@ -42,10 +42,10 @@ const BannerCarousel = ({ banners = [], fullWidth = false }) => {
         className="banner-swiper"
         style={{ 
             width: '100%',
-            aspectRatio: typeof window !== 'undefined' && window.innerWidth < 768 ? '4 / 5' : '16 / 7',
-            minHeight: typeof window !== 'undefined' && window.innerWidth < 768 ? '520px' : 'auto',
+            height: typeof window !== 'undefined' && window.innerWidth < 768 ? '75vh' : 'auto',
+            aspectRatio: typeof window !== 'undefined' && window.innerWidth < 768 ? 'none' : '21 / 9',
             borderRadius: fullWidth ? '0' : '24px', 
-            background: 'var(--secondary)'
+            background: '#000'
         }}
       >
         {banners.map((banner, i) => (
@@ -64,7 +64,7 @@ const BannerCarousel = ({ banners = [], fullWidth = false }) => {
               <div style={{ 
                 position: 'absolute', 
                 inset: 0, 
-                background: 'linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)', 
+                background: 'linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, transparent 100%), linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 20%)', 
                 pointerEvents: 'none' 
               }} />
               
