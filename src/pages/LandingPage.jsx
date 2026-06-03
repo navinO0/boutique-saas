@@ -9,6 +9,14 @@ import BannerCarousel from '../components/BannerCarousel';
 import PookieLoader from '../components/PookieLoader';
 import { resolveImageUrl } from '../utils/imageUtils';
 
+// Swiper Imports
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Navigation, Pagination, FreeMode } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/free-mode';
+
 const BookingModal = ({ isOpen, onClose }) => {
   const shop = useShop();
   const [formData, setFormData] = useState({ customer: '', phone: '', service: 'Custom Stitching', date: '', time: '' });
@@ -335,115 +343,18 @@ const Services = ({ services }) => {
 };
 
 const CustomCarousel = ({ catalog, onProductClick }) => {
-  const containerRef = useRef(null);
-  const [isDown, setIsDown] = useState(false);
-  const [hasDragged, setHasDragged] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-
-  // Triple the catalog for a seamless loop in both directions
-  const displayItems = (catalog && catalog.length > 0) ? [...catalog] : [];
-
-  useEffect(() => {
-    if (!catalog || catalog.length === 0) return;
-    const container = containerRef.current;
-    if (!container) return;
-
-    // Start in the middle copy for seamless scrolling in both directions
-    const oneThird = container.scrollWidth / 3;
-    if (container.scrollLeft === 0) {
-      container.scrollLeft = oneThird;
-    }
-
-    let animationFrameId;
-    const speed = 0.55;
-
-    const animateScroll = () => {
-      // Auto-scroll on all devices when NOT interacting
-      if (!isDown && !isPaused) {
-        container.scrollLeft += speed;
-
-        const currentScroll = container.scrollLeft;
-        const thirdWidth = container.scrollWidth / 3;
-
-        if (currentScroll >= thirdWidth * 2) {
-          container.scrollLeft = currentScroll - thirdWidth;
-        } else if (currentScroll <= 0) {
-          container.scrollLeft = currentScroll + thirdWidth;
-        }
-      }
-      animationFrameId = requestAnimationFrame(animateScroll);
-    };
-
-    animationFrameId = requestAnimationFrame(animateScroll);
-
-    // Sync jump on manual scroll (mobile optimization)
-    const handleScroll = () => {
-      if (isDown) return; // Don't jump while user is dragging
-      const currentScroll = container.scrollLeft;
-      const thirdWidth = container.scrollWidth / 3;
-      if (currentScroll >= thirdWidth * 2) {
-        container.scrollLeft = currentScroll - thirdWidth;
-      } else if (currentScroll <= 0) {
-        container.scrollLeft = currentScroll + thirdWidth;
-      }
-    };
-
-    container.addEventListener('scroll', handleScroll, { passive: true });
-
-    const handleWindowMouseUp = () => setIsDown(false);
-    if (isDown) window.addEventListener('mouseup', handleWindowMouseUp);
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      container.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mouseup', handleWindowMouseUp);
-    };
-  }, [isDown, isPaused, catalog]);
-
   if (!catalog || catalog.length === 0) return null;
-
-  const handleMouseDown = (e) => {
-    const container = containerRef.current;
-    if (!container) return;
-    setIsDown(true);
-    setHasDragged(false);
-    setStartX(e.pageX - container.offsetLeft);
-    setScrollLeft(container.scrollLeft);
-  };
-
-  const handleMouseLeave = () => {
-    setIsDown(false);
-    setIsPaused(false);
-  };
-
-  const handleMouseUp = () => {
-    setIsDown(false);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDown || isMobile) return; // Native scroll handles mobile
-    e.preventDefault();
-    setHasDragged(true);
-    const container = containerRef.current;
-    if (!container) return;
-    const x = e.pageX - container.offsetLeft;
-    const walk = (x - startX) * 2.2;
-    container.scrollLeft = scrollLeft - walk;
-  };
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   return (
     <section style={{ background: 'var(--secondary)', overflow: 'hidden', position: 'relative', padding: 'clamp(2.5rem, 5vw, 4rem) 0' }}>
-      {/* Decorative Background Text - Optimized */}
+      {/* Decorative Background Text */}
       <div
         style={{
           position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
           fontSize: '25vw', fontWeight: 700, color: 'var(--primary)', opacity: 0.03,
           whiteSpace: 'nowrap', zIndex: 0, fontFamily: 'Roboto', pointerEvents: 'none',
-          userSelect: 'none',
-          maxWidth: '100vw',
-          overflow: 'hidden'
+          userSelect: 'none', maxWidth: '100vw', overflow: 'hidden'
         }}
       >
         ATELIER ATELIER ATELIER
@@ -461,412 +372,203 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
           style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontFamily: 'Playfair Display', marginTop: '0', lineHeight: 1.0, fontWeight: 700, fontStyle: 'italic', color: 'white', letterSpacing: '-1px' }}
           className="section-heading"
         >
           The Digital
           <span style={{ color: 'var(--primary)', display: 'block', fontWeight: 500 }}>Gallery.</span>
         </motion.h2>
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', fontFamily: 'Outfit', fontWeight: 300, marginTop: '0.8rem', letterSpacing: '0.5px' }}
-        >
-          Drag to explore • Click to discover
-        </motion.p>
       </div>
 
-      <div
-        style={{ position: 'relative' }}
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => { setIsPaused(false); setIsDown(false); }}
-        onTouchStart={() => setIsPaused(true)}
-        onTouchEnd={() => {
-          // Resume auto-scroll after a delay following user interaction
-          setTimeout(() => setIsPaused(false), 2500);
-        }}
-      >
-        <div
-          ref={containerRef}
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          onMouseMove={handleMouseMove}
-          className="no-scrollbar"
-          style={{
-            display: 'flex',
-            overflowX: 'auto',
-            cursor: isDown ? 'grabbing' : 'grab',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            paddingLeft: '5vw',
-            paddingBottom: 'clamp(2rem, 4vw, 4rem)',
-            userSelect: isDown ? 'none' : 'auto',
-            scrollSnapType: isMobile ? 'x proximity' : 'none',
-            scrollBehavior: 'smooth'
+      <div style={{ position: 'relative', padding: '0 5vw' }}>
+        <Swiper
+          modules={[Autoplay, Navigation, FreeMode]}
+          spaceBetween={isMobile ? 15 : 30}
+          slidesPerView={'auto'}
+          loop={true}
+          freeMode={true}
+          speed={1000}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
           }}
+          navigation={{
+            nextEl: '.gallery-next',
+            prevEl: '.gallery-prev',
+          }}
+          className="luxury-gallery-swiper"
+          style={{ overflow: 'visible' }}
         >
-          <div className="luxury-gallery-track">
-            {displayItems.map((p, idx) => (
-              <div
-                key={`${p.id}-${idx}`}
+          {catalog.map((p, idx) => (
+            <SwiperSlide key={`${p.id}-${idx}`} style={{ width: 'auto' }}>
+              <motion.div
                 className="premium-gallery-card"
-                onClick={() => {
-                  if (!hasDragged && onProductClick) onProductClick(p.id);
-                }}
+                onClick={() => onProductClick(p.id)}
                 style={{
                   userSelect: 'none',
                   flexShrink: 0,
                   cursor: 'pointer',
-                  scrollSnapAlign: isMobile ? 'center' : 'none'
+                  width: isMobile ? '280px' : '380px',
+                  height: isMobile ? '380px' : '520px'
                 }}
               >
                 <img
                   src={resolveImageUrl(p.images?.[0] || p.image)}
                   style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    pointerEvents: 'none',
-                    userSelect: 'none',
+                    width: '100%', height: '100%', objectFit: 'cover',
                     transition: 'transform 0.8s cubic-bezier(0.19,1,0.22,1)'
                   }}
                   alt={p.name}
-                  loading="lazy"
-                  draggable="false"
                 />
-                <div className="card-glass-overlay" style={{ pointerEvents: 'none' }}>
+                <div className="card-glass-overlay">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '0.5rem' }}>
                     <div style={{ minWidth: 0 }}>
-                      <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: isMobile ? '0.55rem' : '0.65rem', textTransform: 'uppercase', letterSpacing: '3px', marginBottom: isMobile ? '0.3rem' : '0.4rem' }}>{p.category}</p>
-                      <h3 style={{ color: 'white', fontSize: isMobile ? '1rem' : '1.4rem', fontFamily: 'Playfair Display', lineHeight: 1.15, fontStyle: 'italic', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{p.name}</h3>
+                      <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '3px', marginBottom: '0.4rem' }}>{p.category}</p>
+                      <h3 style={{ color: 'white', fontSize: isMobile ? '1.1rem' : '1.4rem', fontFamily: 'Playfair Display', lineHeight: 1.15, fontStyle: 'italic' }}>{p.name}</h3>
                     </div>
-                    <div style={{ background: 'var(--primary)', padding: isMobile ? '0.4rem' : '0.55rem', borderRadius: '8px', color: 'white', display: 'flex', flexShrink: 0 }}><ArrowRight size={isMobile ? 14 : 18} /></div>
+                    <div style={{ background: 'var(--primary)', padding: '0.55rem', borderRadius: '8px', color: 'white' }}><ArrowRight size={18} /></div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
+              </motion.div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
-        {/* Desktop Navigation Arrows */}
-        <button
-          className="desktop-only"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (containerRef.current) containerRef.current.scrollBy({ left: -450 });
-          }}
-          style={{ position: 'absolute', left: '2rem', top: '40%', background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '50%', width: '44px', height: '44px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 8px 20px rgba(0,0,0,0.2)', pointerEvents: 'auto' }}
-        >
-          <ChevronLeft size={20} />
-        </button>
-        <button
-          className="desktop-only"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (containerRef.current) containerRef.current.scrollBy({ left: 450 });
-          }}
-          style={{ position: 'absolute', right: '2rem', top: '40%', background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '50%', width: '44px', height: '44px', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 8px 20px rgba(0,0,0,0.2)', pointerEvents: 'auto' }}
-        >
-          <ChevronRight size={20} />
-        </button>
+        {/* Global Transparent Navigation */}
+        <button className="gallery-prev swiper-custom-nav" style={{ left: '1rem' }}><ChevronLeft size={24} /></button>
+        <button className="gallery-next swiper-custom-nav" style={{ right: '1rem' }}><ChevronRight size={24} /></button>
       </div>
+
+      <style>{`
+        .swiper-custom-nav {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 100;
+          background: rgba(255,255,255,0.1);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255,255,255,0.2);
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: 0.3s;
+        }
+        .swiper-custom-nav:hover { background: var(--primary); border-color: var(--primary); }
+        .swiper-custom-nav.swiper-button-disabled { opacity: 0; pointer-events: none; }
+        @media (max-width: 768px) { .swiper-custom-nav { display: none; } }
+      `}</style>
     </section>
   );
 };
 
+
 import ErrorDisplay from '../components/ErrorDisplay';
 
 const CategoryCarousel = ({ categories, onCategoryClick }) => {
-  const containerRef = useRef(null);
-  const [isDown, setIsDown] = useState(false);
-  const [hasDragged, setHasDragged] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  if (!categories || categories.length === 0) return null;
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
-  const displayItems = (categories && categories.length > 0) ? [...categories] : [];
-
-  useEffect(() => {
-    if (!categories || categories.length === 0) return;
-    const container = containerRef.current;
-    if (!container) return;
-
-    const oneThird = container.scrollWidth / 3;
-    if (container.scrollLeft === 0) {
-      container.scrollLeft = oneThird;
-    }
-
-    let animationFrameId;
-    const speed = 0.35;
-
-    const animateScroll = () => {
-      if (!isMobile && !isDown && !isPaused) {
-        container.scrollLeft += speed;
-        const currentScroll = container.scrollLeft;
-        const thirdWidth = container.scrollWidth / 3;
-        if (currentScroll >= thirdWidth * 2) {
-          container.scrollLeft = currentScroll - thirdWidth;
-        } else if (currentScroll <= 0) {
-          container.scrollLeft = currentScroll + thirdWidth;
-        }
-      }
-      animationFrameId = requestAnimationFrame(animateScroll);
-    };
-
-    animationFrameId = requestAnimationFrame(animateScroll);
-
-    const handleScroll = () => {
-      if (isDown) return;
-      const currentScroll = container.scrollLeft;
-      const thirdWidth = container.scrollWidth / 3;
-      if (currentScroll >= thirdWidth * 2) {
-        container.scrollLeft = currentScroll - thirdWidth;
-      } else if (currentScroll <= 0) {
-        container.scrollLeft = currentScroll + thirdWidth;
-      }
-    };
-
-    container.addEventListener('scroll', handleScroll, { passive: true });
-
-    const handleWindowMouseUp = () => setIsDown(false);
-    if (isDown) window.addEventListener('mouseup', handleWindowMouseUp);
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      container.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mouseup', handleWindowMouseUp);
-    };
-  }, [isDown, isPaused, categories]);
-
-  const handleMouseDown = (e) => {
-    setIsDown(true);
-    setHasDragged(false);
-    setStartX(e.pageX - containerRef.current.offsetLeft);
-    setScrollLeft(containerRef.current.scrollLeft);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDown || isMobile) return;
-    e.preventDefault();
-    setHasDragged(true);
-    const x = e.pageX - containerRef.current.offsetLeft;
-    const walk = (x - startX) * 2.2;
-    containerRef.current.scrollLeft = scrollLeft - walk;
-  };
-
   return (
-    <div
-      ref={containerRef}
-      onMouseDown={handleMouseDown}
-      onMouseLeave={() => { setIsDown(false); setIsPaused(false); }}
-      onMouseUp={() => setIsDown(false)}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsPaused(true)}
-      style={{
-        display: 'flex',
-        overflowX: 'auto',
-        cursor: isDown ? 'grabbing' : 'grab',
-        scrollbarWidth: 'none',
-        msOverflowStyle: 'none',
-        padding: '1rem 5vw 1rem',
-        gap: '2.5rem',
-        userSelect: 'none',
-        scrollSnapType: isMobile ? 'x proximity' : 'none',
-        scrollBehavior: 'smooth'
-      }}
-    >
-      {displayItems.map((cat, idx) => (
-        <motion.div
-          key={`${cat.id}-${idx}`}
-          onClick={() => { if (!hasDragged) onCategoryClick(cat.id); }}
-          style={{
-            flexShrink: 0,
-            width: 'clamp(140px, 20vw, 225px)',
-            height: 'clamp(200px, 25vh, 300px)',
-            position: 'relative',
-            borderRadius: '8px',
-            overflow: 'hidden',
-            boxShadow: '0 12px 25px rgba(0,0,0,0.15)',
-            transition: '0.4s',
-            scrollSnapAlign: isMobile ? 'center' : 'none'
-          }}
-          whileHover={{ y: -10, scale: 1.02 }}
-        >
-          <img src={cat.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={cat.name} draggable="false" />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent 70%)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1.2rem' }}>
-            <h3 style={{ color: 'white', fontSize: '1.1rem', fontFamily: 'Roboto', marginBottom: '0.3rem' }}>{cat.name}</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary)', fontWeight: 800, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '2px' }}>
-              Explore <ArrowRight size={14} />
-            </div>
-          </div>
-        </motion.div>
-      ))}
-    </div>
-  );
-};
-
-const CollectionRow = ({ products, onProductClick, isMobile }) => {
-  const scrollRef = useRef(null);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-
-  // Triple items for infinite feel
-  const displayItems = [...products];
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const oneThird = el.scrollWidth / 3;
-    if (el.scrollLeft === 0) el.scrollLeft = oneThird;
-
-    let frameId;
-    const animate = () => {
-      const el = scrollRef.current;
-      if (!el) return;
-
-      if (!isMobile && !isPaused && !isDragging) {
-        el.scrollLeft += 0.55;
-        if (el.scrollLeft >= oneThird * 2) el.scrollLeft -= oneThird;
-      }
-      frameId = requestAnimationFrame(animate);
-    };
-
-    frameId = requestAnimationFrame(animate);
-
-    const handleScroll = () => {
-      if (isDragging) return;
-      const currentScroll = el.scrollLeft;
-      const thirdWidth = el.scrollWidth / 3;
-      if (currentScroll >= thirdWidth * 2) {
-        el.scrollLeft = currentScroll - thirdWidth;
-      } else if (currentScroll <= 0) {
-        el.scrollLeft = currentScroll + thirdWidth;
-      }
-    };
-
-    el.addEventListener('scroll', handleScroll, { passive: true });
-
-    const onGlobalMouseUp = () => setIsDragging(false);
-    if (isDragging) window.addEventListener('mouseup', onGlobalMouseUp);
-    return () => {
-      cancelAnimationFrame(frameId);
-      el.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mouseup', onGlobalMouseUp);
-    };
-  }, [isPaused, isDragging, isMobile]);
-
-  const handleMouseDown = (e) => {
-    const el = scrollRef.current;
-    setIsDragging(true);
-    setStartX(e.pageX - el.offsetLeft);
-    setScrollLeft(el.scrollLeft);
-    el.style.cursor = 'grabbing';
-  };
-
-  return (
-    <div
-      style={{ position: 'relative' }}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => { setIsPaused(false); setIsDragging(false); }}
-    >
-      <div
-        ref={scrollRef}
-        className="no-scrollbar"
-        onTouchStart={() => setIsPaused(true)}
-        onTouchEnd={() => {
-          setTimeout(() => setIsPaused(false), 2000);
-        }}
-        onMouseDown={handleMouseDown}
-        onMouseUp={() => setIsDragging(false)}
-        onMouseMove={(e) => {
-          if (!isDragging || isMobile) return;
-          e.preventDefault();
-          const x = e.pageX - scrollRef.current.offsetLeft;
-          const walk = (x - startX) * 2.2;
-          scrollRef.current.scrollLeft = scrollLeft - walk;
-        }}
-        style={{
-          display: 'flex',
-          overflowX: 'auto',
-          padding: isMobile ? '8px 12px 16px' : '15px 5vw 30px',
-          gap: isMobile ? '10px' : '25px',
-          cursor: 'grab',
-          scrollSnapType: isMobile ? 'x proximity' : 'none',
-          scrollBehavior: 'smooth',
-          WebkitOverflowScrolling: 'touch'
-        }}
+    <div style={{ padding: '1rem 0' }}>
+      <Swiper
+        modules={[FreeMode, Navigation]}
+        spaceBetween={20}
+        slidesPerView={'auto'}
+        freeMode={true}
+        className="category-swiper"
+        style={{ padding: '1rem 5vw' }}
       >
-        {displayItems.map((p, pIdx) => (
-          <motion.div
-            key={`${p.id}-${pIdx}`}
-            whileHover={!isMobile ? { y: -12 } : {}}
-            onClick={() => !isDragging && onProductClick(p.id)}
-            style={{
-              flexShrink: 0,
-              width: isMobile ? '58vw' : 'clamp(140px, 12.5vw, 180px)',
-              background: 'white',
-              borderRadius: '10px',
-              padding: '0.1rem',
-              boxShadow: '0 20px 40px rgba(233,163,163,0.08)',
-              border: '1px solid #fff5f5',
-              cursor: 'pointer',
-              scrollSnapAlign: isMobile ? 'center' : 'none'
-            }}
-          >
-            <div style={{ height: isMobile ? '240px' : 'clamp(160px, 22vh, 210px)', borderRadius: '10px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
-              <img src={p.images?.[0] || p.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={p.name} />
-              <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', background: 'var(--primary)', color: 'white', padding: '0.2rem 0.5rem', borderRadius: '4px', fontWeight: 800, fontSize: '0.5rem', letterSpacing: '1px', boxShadow: '0 3px 8px rgba(233,163,163,0.3)' }}>
-                LATEST
-              </div>
-            </div>
-            <div style={{ padding: '0.6rem 0.3rem 0.3rem' }}>
-              <p style={{ color: 'var(--primary)', fontSize: '0.5rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.2rem' }}>{p.category}</p>
-              <h3 style={{ fontSize: isMobile ? '0.75rem' : '0.85rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', marginBottom: '0.3rem', fontWeight: 700, lineHeight: '1.2' }}>{p.name}</h3>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #fef0f0', paddingTop: '0.4rem' }}>
-                <p style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.8rem' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
-                <div style={{ background: 'var(--primary)', padding: '0.35rem', borderRadius: '50%', display: 'flex', color: 'white' }}>
-                  <ArrowRight size={10} />
+        {categories.map((cat, idx) => (
+          <SwiperSlide key={`${cat.id}-${idx}`} style={{ width: 'auto' }}>
+            <motion.div
+              onClick={() => onCategoryClick(cat.id)}
+              whileHover={{ y: -10, scale: 1.02 }}
+              style={{
+                width: 'clamp(140px, 20vw, 225px)',
+                height: 'clamp(200px, 25vh, 300px)',
+                position: 'relative',
+                borderRadius: '8px',
+                overflow: 'hidden',
+                boxShadow: '0 12px 25px rgba(0,0,0,0.15)',
+                transition: '0.4s',
+                cursor: 'pointer'
+              }}
+            >
+              <img src={cat.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={cat.name} draggable="false" />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent 70%)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1.2rem' }}>
+                <h3 style={{ color: 'white', fontSize: '1.1rem', fontFamily: 'Roboto', marginBottom: '0.3rem' }}>{cat.name}</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary)', fontWeight: 800, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '2px' }}>
+                  Explore <ArrowRight size={14} />
                 </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </SwiperSlide>
         ))}
-      </div>
-
-      {!isMobile && (
-        <>
-          {!isMobile && (
-            <>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (scrollRef.current) scrollRef.current.scrollBy({ left: -450 });
-                }}
-                style={{ position: 'absolute', left: '1rem', top: '45%', transform: 'translateY(-50%)', background: 'rgba(255, 255, 255, 0.6)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '50px', height: '50px', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 8px 25px rgba(0,0,0,0.15)', pointerEvents: 'auto' }}
-              >
-                <ChevronLeft size={28} />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (scrollRef.current) scrollRef.current.scrollBy({ left: 450 });
-                }}
-                style={{ position: 'absolute', right: '1rem', top: '45%', transform: 'translateY(-50%)', background: 'rgba(255, 255, 255, 0.6)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '50px', height: '50px', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 8px 25px rgba(0,0,0,0.15)', pointerEvents: 'auto' }}
-              >
-                <ChevronRight size={28} />
-              </button>
-            </>
-          )}
-        </>
-      )}
+      </Swiper>
     </div>
   );
 };
+
+
+const CollectionRow = ({ products, onProductClick, isMobile }) => {
+  if (!products || products.length === 0) return null;
+
+  return (
+    <div style={{ position: 'relative', padding: '0 5vw' }}>
+      <Swiper
+        modules={[FreeMode, Navigation]}
+        spaceBetween={isMobile ? 12 : 25}
+        slidesPerView={'auto'}
+        freeMode={true}
+        className="collection-swiper"
+        style={{ padding: '15px 0 30px' }}
+      >
+        {products.map((p, pIdx) => (
+          <SwiperSlide key={`${p.id}-${pIdx}`} style={{ width: 'auto' }}>
+            <motion.div
+              whileHover={!isMobile ? { y: -12 } : {}}
+              onClick={() => onProductClick(p.id)}
+              style={{
+                width: isMobile ? '70vw' : 'clamp(160px, 15vw, 220px)',
+                background: 'white',
+                borderRadius: '12px',
+                padding: '0.5rem',
+                boxShadow: '0 20px 40px rgba(233,163,163,0.08)',
+                border: '1px solid #fff5f5',
+                cursor: 'pointer'
+              }}
+            >
+              <div style={{ height: isMobile ? '320px' : '260px', borderRadius: '10px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
+                <img src={p.images?.[0] || p.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={p.name} />
+                <div style={{ position: 'absolute', top: '0.8rem', right: '0.8rem', background: 'var(--primary)', color: 'white', padding: '0.3rem 0.6rem', borderRadius: '4px', fontWeight: 800, fontSize: '0.6rem', letterSpacing: '1px' }}>
+                  LATEST
+                </div>
+              </div>
+              <div style={{ padding: '0.8rem 0.5rem 0.5rem' }}>
+                <p style={{ color: 'var(--primary)', fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>{p.category}</p>
+                <h3 style={{ fontSize: '0.95rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', margin: '0.4rem 0', fontWeight: 700 }}>{p.name}</h3>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #fef0f0', paddingTop: '0.6rem' }}>
+                  <p style={{ color: 'var(--primary)', fontWeight: 800 }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
+                  <div style={{ background: 'var(--primary)', padding: '0.4rem', borderRadius: '50%', color: 'white', display: 'flex' }}>
+                    <ArrowRight size={12} />
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+  );
+};
+
+
+
 
 const GroupedCollectionCarousels = ({ categories, products, onProductClick, onCategoryClick }) => {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
