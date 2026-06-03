@@ -27,6 +27,14 @@ const ProductDetailPage = () => {
     fetchProductDetails(id);
   }, [id]);
 
+  // Initial scroll position setup
+  useEffect(() => {
+    if (scrollRef.current && product?.images?.length > 1) {
+      const el = scrollRef.current;
+      el.scrollLeft = el.clientWidth * product.images.length;
+    }
+  }, [product, isLoading]);
+
   const fetchProductDetails = async (productId) => {
     setIsLoading(true);
     try {
@@ -43,6 +51,17 @@ const ProductDetailPage = () => {
       navigate('/products');
     } finally {
       setIsLoading(false);
+      // Reset scroll positions to center copy
+      setTimeout(() => {
+        if (scrollRef.current && product?.images?.length > 1) {
+          const width = scrollRef.current.clientWidth;
+          scrollRef.current.scrollLeft = width * (product.images?.length || 1);
+        }
+        if (fullScreenScrollRef.current && product?.images?.length > 1) {
+          const width = fullScreenScrollRef.current.clientWidth;
+          fullScreenScrollRef.current.scrollLeft = width * (product.images?.length || 1);
+        }
+      }, 150);
     }
   };
 
@@ -78,7 +97,16 @@ const ProductDetailPage = () => {
     if (!product?.images?.length || product.images.length <= 1 || isFullScreen || autoScrollPaused) return;
 
     autoScrollRef.current = setInterval(() => {
-      setCurrentImageIndex(prev => (prev + 1) % (product.images?.length || 1));
+      if (window.innerWidth < 768 && scrollRef.current) {
+        // Smoothly scroll the container on mobile
+        const el = scrollRef.current;
+        el.scrollTo({
+          left: el.scrollLeft + el.clientWidth,
+          behavior: 'smooth'
+        });
+      } else {
+        setCurrentImageIndex(prev => (prev + 1) % (product.images?.length || 1));
+      }
     }, 5000);
 
     return () => {
@@ -139,7 +167,7 @@ const ProductDetailPage = () => {
                 <div className="carousel-tap-area carousel-tap-right" onClick={handleNextImage} />
 
                 {/* Desktop Micro-indicators */}
-                <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '0.6rem', zIndex: 30, background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)', padding: '0.6rem 1.2rem', borderRadius: '30px' }}>
+                <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '0.6rem', zIndex: 30, background: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)', padding: '0.6rem 1.2rem', borderRadius: '10px' }}>
                   {(product.images?.length > 0 ? product.images : [product.image]).map((_, idx) => (
                     <div 
                       key={idx} 
@@ -185,29 +213,40 @@ const ProductDetailPage = () => {
 
             {/* Mobile/Tablet View */}
             <div className="mobile-only" style={{ flexDirection: 'column' }}>
-              <div style={{ position: 'relative', borderRadius: '40px', overflow: 'hidden' }}>
+              <div style={{ position: 'relative', borderRadius: '10px', overflow: 'hidden' }}>
                 <div 
                   ref={scrollRef}
                   className="mobile-image-carousel no-scrollbar" 
                   onTouchStart={() => setAutoScrollPaused(true)}
                   onTouchEnd={() => setTimeout(() => setAutoScrollPaused(false), 2000)}
-                  style={{ background: '#fef5f5', overflowX: 'auto', display: 'flex', scrollSnapType: 'x mandatory' }}
+                  style={{ background: '#fefafa', overflowX: 'auto', display: 'flex', scrollSnapType: 'x mandatory', scrollBehavior: 'auto' }}
                   onScroll={(e) => {
                     const container = e.target;
                     const scrollWidth = container.clientWidth;
                     if (scrollWidth > 0) {
-                      const index = Math.round(container.scrollLeft / scrollWidth);
-                      if (index !== currentImageIndex) setCurrentImageIndex(index);
+                      const totalItems = (product.images?.length > 0 ? product.images : [product.image]).length;
+                      const rawIndex = Math.round(container.scrollLeft / scrollWidth);
+                      
+                      // Seamless Loop Logic (Triple copy)
+                      if (container.scrollLeft >= scrollWidth * totalItems * 2) {
+                        container.scrollLeft = scrollWidth * totalItems;
+                      } else if (container.scrollLeft <= 0) {
+                        container.scrollLeft = scrollWidth * totalItems;
+                      }
+                      
+                      const actualIndex = rawIndex % totalItems;
+                      if (actualIndex !== currentImageIndex) setCurrentImageIndex(actualIndex);
                     }
                   }}
                 >
-                  {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
-                    <div key={idx} className="carousel-item" style={{ minWidth: '100%', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center', scrollSnapAlign: 'center', background: '#fefafa' }}>
+                  {/* Triple images for infinite effect */}
+                  {[...(product.images?.length > 0 ? product.images : [product.image]), ...(product.images?.length > 0 ? product.images : [product.image]), ...(product.images?.length > 0 ? product.images : [product.image])].map((img, idx) => (
+                    <div key={idx} className="carousel-item" style={{ minWidth: '100%', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center', scrollSnapAlign: 'center' }}>
                       <img
                         src={resolveImageUrl(img)}
                         alt=""
                         style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                        onClick={() => { setCurrentImageIndex(idx); setIsFullScreen(true); }}
+                        onClick={() => setIsFullScreen(true)}
                       />
                     </div>
                   ))}
@@ -306,7 +345,7 @@ const ProductDetailPage = () => {
                     padding: 'clamp(0.9rem, 2vw, 1.2rem) clamp(1rem, 2vw, 1.5rem)', 
                     background: product.stock === 0 ? '#ccc' : 'var(--primary)', 
                     color: 'white', 
-                    borderRadius: '32px', 
+                    borderRadius: '10px', 
                     border: 'none', 
                     fontWeight: 700, 
                     fontSize: 'clamp(0.8rem, 2vw, 0.92rem)', 
@@ -456,27 +495,29 @@ const ProductDetailPage = () => {
             </div>
 
 
-            <div style={{ width: '100%', height: '100%', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
-              <motion.div
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                onDragEnd={(e, { offset, velocity }) => {
-                  const swipeThreshold = 50;
-                  const images = product?.images?.length > 0 ? product.images : [product.image];
-                  if (offset.x < -swipeThreshold) handleNextImage();
-                  else if (offset.x > swipeThreshold) handlePrevImage();
-                }}
-                animate={{ x: `-${currentImageIndex * 100}%` }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                style={{
-                  display: 'flex',
-                  width: '100%',
-                  height: '100%',
-                  cursor: 'grab'
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
+            <div 
+              ref={fullScreenScrollRef}
+              className="no-scrollbar"
+              style={{ width: '100%', height: '100%', overflowX: 'auto', display: 'flex', scrollSnapType: 'x mandatory', cursor: 'grab' }}
+              onScroll={(e) => {
+                const container = e.target;
+                const scrollWidth = container.clientWidth;
+                if (scrollWidth > 0) {
+                  const totalItems = (product.images?.length > 0 ? product.images : [product.image]).length;
+                  const rawIndex = Math.round(container.scrollLeft / scrollWidth);
+                  
+                  if (container.scrollLeft >= scrollWidth * totalItems * 2) {
+                    container.scrollLeft = scrollWidth * totalItems;
+                  } else if (container.scrollLeft <= 0) {
+                    container.scrollLeft = scrollWidth * totalItems;
+                  }
+                  
+                  const actualIndex = rawIndex % totalItems;
+                  if (actualIndex !== currentImageIndex) setCurrentImageIndex(actualIndex);
+                }
+              }}
+            >
+                {[...(product.images?.length > 0 ? product.images : [product.image]), ...(product.images?.length > 0 ? product.images : [product.image]), ...(product.images?.length > 0 ? product.images : [product.image])].map((img, idx) => (
                   <div
                     key={idx}
                     style={{
@@ -485,7 +526,8 @@ const ProductDetailPage = () => {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      padding: '1rem'
+                      padding: '1rem',
+                      scrollSnapAlign: 'center'
                     }}
                   >
                     <motion.img
@@ -504,7 +546,6 @@ const ProductDetailPage = () => {
                     />
                   </div>
                 ))}
-              </motion.div>
             </div>
 
             <div style={{ position: 'absolute', bottom: '3rem', textAlign: 'center', color: 'white', zIndex: 5010, pointerEvents: 'none' }}>

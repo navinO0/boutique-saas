@@ -36,7 +36,7 @@ const BookingModal = ({ isOpen, onClose }) => {
             maxWidth: '550px',
             width: '100%',
             background: 'white',
-            borderRadius: '12px 12px 0 0',
+            borderRadius: '10px 10px 0 0',
             position: 'relative',
             boxShadow: '0 -20px 60px rgba(233,163,163,0.3)',
             border: '2px solid #fff0f0',
@@ -87,7 +87,7 @@ const Hero = ({ onBook }) => {
     backdropFilter: 'blur(35px) saturate(160%)',
     WebkitBackdropFilter: 'blur(35px) saturate(160%)',
     border: '1px solid rgba(255, 255, 255, 0.3)',
-    borderRadius: '8px',
+    borderRadius: '10px',
     boxShadow: '0 40px 120px rgba(0, 0, 0, 0.3)',
     padding: 'clamp(2.5rem, 6vw, 5rem)',
     maxWidth: '800px',
@@ -249,8 +249,8 @@ const Services = ({ services }) => {
                 position: 'relative',
                 overflow: 'hidden',
                 cursor: 'pointer',
-                borderRadius: '10px',
-                height: '180px',
+                borderRadius: '12px',
+                height: '200px',
               }}
             >
               <img
@@ -358,9 +358,10 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
     }
 
     let animationFrameId;
-    const speed = 0.55; // slightly increased to ensure fluid resumption
+    const speed = 0.55; 
 
     const animateScroll = () => {
+      // Auto-scroll on all devices when NOT interacting
       if (!isDown && !isPaused) {
         container.scrollLeft += speed;
 
@@ -378,10 +379,25 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
 
     animationFrameId = requestAnimationFrame(animateScroll);
 
+    // Sync jump on manual scroll (mobile optimization)
+    const handleScroll = () => {
+      if (isDown) return; // Don't jump while user is dragging
+      const currentScroll = container.scrollLeft;
+      const thirdWidth = container.scrollWidth / 3;
+      if (currentScroll >= thirdWidth * 2) {
+        container.scrollLeft = currentScroll - thirdWidth;
+      } else if (currentScroll <= 0) {
+        container.scrollLeft = currentScroll + thirdWidth;
+      }
+    };
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
+
     const handleWindowMouseUp = () => setIsDown(false);
     if (isDown) window.addEventListener('mouseup', handleWindowMouseUp);
     return () => {
       cancelAnimationFrame(animationFrameId);
+      container.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mouseup', handleWindowMouseUp);
     };
   }, [isDown, isPaused, catalog]);
@@ -407,13 +423,13 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
   };
 
   const handleMouseMove = (e) => {
-    if (!isDown) return;
+    if (!isDown || isMobile) return; // Native scroll handles mobile
     e.preventDefault();
     setHasDragged(true);
     const container = containerRef.current;
     if (!container) return;
     const x = e.pageX - container.offsetLeft;
-    const walk = (x - startX) * 2.2; // increased multiplier for snappier boutique feel
+    const walk = (x - startX) * 2.2;
     container.scrollLeft = scrollLeft - walk;
   };
 
@@ -466,6 +482,11 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
         style={{ position: 'relative' }}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => { setIsPaused(false); setIsDown(false); }}
+        onTouchStart={() => setIsPaused(true)}
+        onTouchEnd={() => {
+          // Resume auto-scroll after a delay following user interaction
+          setTimeout(() => setIsPaused(false), 2500);
+        }}
       >
         <div
           ref={containerRef}
@@ -482,6 +503,7 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
             paddingLeft: '5vw',
             paddingBottom: 'clamp(2rem, 4vw, 4rem)',
             userSelect: isDown ? 'none' : 'auto',
+            scrollSnapType: isMobile ? 'x proximity' : 'none',
             scrollBehavior: 'smooth'
           }}
         >
@@ -496,7 +518,8 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
                 style={{
                   userSelect: 'none',
                   flexShrink: 0,
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  scrollSnapAlign: isMobile ? 'center' : 'none'
                 }}
               >
                 <img
@@ -562,6 +585,7 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   const displayItems = (categories && categories.length > 0) ? [...categories, ...categories, ...categories] : [];
 
@@ -576,10 +600,10 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
     }
 
     let animationFrameId;
-    const speed = 0.35; // slower for categorical browse
+    const speed = 0.35; 
 
     const animateScroll = () => {
-      if (!isDown && !isPaused) {
+      if (!isMobile && !isDown && !isPaused) {
         container.scrollLeft += speed;
         const currentScroll = container.scrollLeft;
         const thirdWidth = container.scrollWidth / 3;
@@ -593,10 +617,25 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
     };
 
     animationFrameId = requestAnimationFrame(animateScroll);
+
+    const handleScroll = () => {
+      if (isDown) return;
+      const currentScroll = container.scrollLeft;
+      const thirdWidth = container.scrollWidth / 3;
+      if (currentScroll >= thirdWidth * 2) {
+        container.scrollLeft = currentScroll - thirdWidth;
+      } else if (currentScroll <= 0) {
+        container.scrollLeft = currentScroll + thirdWidth;
+      }
+    };
+
+    container.addEventListener('scroll', handleScroll, { passive: true });
+
     const handleWindowMouseUp = () => setIsDown(false);
     if (isDown) window.addEventListener('mouseup', handleWindowMouseUp);
     return () => {
       cancelAnimationFrame(animationFrameId);
+      container.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mouseup', handleWindowMouseUp);
     };
   }, [isDown, isPaused, categories]);
@@ -609,7 +648,7 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
   };
 
   const handleMouseMove = (e) => {
-    if (!isDown) return;
+    if (!isDown || isMobile) return;
     e.preventDefault();
     setHasDragged(true);
     const x = e.pageX - containerRef.current.offsetLeft;
@@ -633,7 +672,9 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
         msOverflowStyle: 'none',
         padding: '1rem 5vw 1rem',
         gap: '2.5rem',
-        userSelect: 'none'
+        userSelect: 'none',
+        scrollSnapType: isMobile ? 'x proximity' : 'none',
+        scrollBehavior: 'smooth'
       }}
     >
       {displayItems.map((cat, idx) => (
@@ -648,7 +689,8 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
             borderRadius: '8px',
             overflow: 'hidden',
             boxShadow: '0 12px 25px rgba(0,0,0,0.15)',
-            transition: '0.4s'
+            transition: '0.4s',
+            scrollSnapAlign: isMobile ? 'center' : 'none'
           }}
           whileHover={{ y: -10, scale: 1.02 }}
         >
@@ -695,10 +737,25 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
     };
 
     frameId = requestAnimationFrame(animate);
+
+    const handleScroll = () => {
+      if (isDragging) return;
+      const currentScroll = el.scrollLeft;
+      const thirdWidth = el.scrollWidth / 3;
+      if (currentScroll >= thirdWidth * 2) {
+        el.scrollLeft = currentScroll - thirdWidth;
+      } else if (currentScroll <= 0) {
+        el.scrollLeft = currentScroll + thirdWidth;
+      }
+    };
+
+    el.addEventListener('scroll', handleScroll, { passive: true });
+
     const onGlobalMouseUp = () => setIsDragging(false);
     if (isDragging) window.addEventListener('mouseup', onGlobalMouseUp);
     return () => {
       cancelAnimationFrame(frameId);
+      el.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mouseup', onGlobalMouseUp);
     };
   }, [isPaused, isDragging, isMobile]);
@@ -727,7 +784,7 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
         onMouseDown={handleMouseDown}
         onMouseUp={() => setIsDragging(false)}
         onMouseMove={(e) => {
-          if (!isDragging) return;
+          if (!isDragging || isMobile) return;
           e.preventDefault();
           const x = e.pageX - scrollRef.current.offsetLeft;
           const walk = (x - startX) * 2.2;
@@ -739,7 +796,7 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
           padding: isMobile ? '8px 12px 16px' : '15px 5vw 30px',
           gap: isMobile ? '10px' : '25px',
           cursor: 'grab',
-          scrollSnapType: isMobile ? 'x mandatory' : 'none',
+          scrollSnapType: isMobile ? 'x proximity' : 'none',
           scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch'
         }}
@@ -751,9 +808,9 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
             onClick={() => !isDragging && onProductClick(p.id)}
             style={{
               flexShrink: 0,
-              width: isMobile ? '40vw' : 'clamp(140px, 12.5vw, 180px)',
+              width: isMobile ? '58vw' : 'clamp(140px, 12.5vw, 180px)',
               background: 'white',
-              borderRadius: '12px',
+              borderRadius: '10px',
               padding: '0.1rem',
               boxShadow: '0 20px 40px rgba(233,163,163,0.08)',
               border: '1px solid #fff5f5',
@@ -761,8 +818,8 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
               scrollSnapAlign: isMobile ? 'center' : 'none'
             }}
           >
-            <div style={{ height: isMobile ? '120px' : 'clamp(160px, 22vh, 210px)', borderRadius: '8px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
-              <img src={p.images?.[0] || p.image} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt={p.name} />
+            <div style={{ height: isMobile ? '240px' : 'clamp(160px, 22vh, 210px)', borderRadius: '10px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
+              <img src={p.images?.[0] || p.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={p.name} />
               <div style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', background: 'var(--primary)', color: 'white', padding: '0.2rem 0.5rem', borderRadius: '4px', fontWeight: 800, fontSize: '0.5rem', letterSpacing: '1px', boxShadow: '0 3px 8px rgba(233,163,163,0.3)' }}>
                 LATEST
               </div>

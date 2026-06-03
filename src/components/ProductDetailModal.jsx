@@ -58,10 +58,31 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
       console.error('Error fetching product details:', error);
     } finally {
       setIsLoading(false);
+      // Reset scroll positions to center copy
+      setTimeout(() => {
+        if (carouselRef.current && product?.images?.length > 1) {
+          const width = carouselRef.current.clientWidth;
+          carouselRef.current.scrollLeft = width * product.images.length;
+        }
+        if (fullScreenCarouselRef.current && product?.images?.length > 1) {
+          const width = fullScreenCarouselRef.current.clientWidth;
+          fullScreenCarouselRef.current.scrollLeft = width * product.images.length;
+        }
+      }, 100);
     }
   };
 
   const [autoScrollPaused, setAutoScrollPaused] = useState(false);
+  const autoScrollRef = useRef(null);
+
+  // Initialize scroll position for mobile carousel
+  useEffect(() => {
+    if (carouselRef.current && product?.images?.length > 1) {
+      const el = carouselRef.current;
+      const width = el.clientWidth;
+      el.scrollLeft = width * (product.images.length);
+    }
+  }, [product, isOpen]);
 
   // Auto-scroll images with intelligent pausing
   useEffect(() => {
@@ -73,7 +94,16 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
     if (!product?.images?.length || product.images.length <= 1 || !isOpen || isFullScreen || autoScrollPaused) return;
     
     autoScrollRef.current = setInterval(() => {
-      setCurrentImageIndex(prev => (prev + 1) % (product.images?.length || 1));
+      if (window.innerWidth < 768 && carouselRef.current) {
+        // Smoothly scroll the container on mobile
+        const el = carouselRef.current;
+        el.scrollTo({
+          left: el.scrollLeft + el.clientWidth,
+          behavior: 'smooth'
+        });
+      } else {
+        setCurrentImageIndex(prev => (prev + 1) % (product.images?.length || 1));
+      }
     }, 5000);
     
     return () => {
@@ -148,7 +178,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
               <div className="responsive-modal-grid" style={{ padding: '1rem' }}>
                 {/* Image skeleton */}
                 <div style={{ padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <SkeletonBlock h='clamp(350px, 60vw, 550px)' radius='24px' />
+                  <SkeletonBlock h='clamp(350px, 60vw, 550px)' radius='10px' />
                   <div style={{ display: 'flex', gap: '0.8rem' }}>
                     {[1,2,3,4].map(i => <SkeletonBlock key={i} w='80px' h='80px' radius='14px' />)}
                   </div>
@@ -171,7 +201,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                     <SkeletonBlock h='52px' radius='24px' />
                     <SkeletonBlock w='60px' h='52px' radius='24px' />
                   </div>
-                  <SkeletonBlock h='48px' radius='24px' />
+                  <SkeletonBlock h='48px' radius='10px' />
                 </div>
               </div>
             )}
@@ -186,7 +216,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                     onMouseEnter={() => setAutoScrollPaused(true)}
                     onMouseLeave={() => setAutoScrollPaused(false)}
                     className="modal-main-image product-main-image-container"
-                    style={{ width: '100%', position: 'relative', aspectRatio: '3/4', overflow: 'hidden', borderRadius: '32px', boxShadow: '0 20px 50px rgba(233,163,163,0.1)' }}
+                    style={{ width: '100%', position: 'relative', aspectRatio: '3/4', overflow: 'hidden', borderRadius: '10px', boxShadow: '0 20px 50px rgba(233,163,163,0.1)' }}
                   >
                     <AnimatePresence mode="wait">
                       <motion.img 
@@ -254,28 +284,42 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
 
                 {/* Mobile/Tablet Scrollable Gallery */}
                 <div className="mobile-only" style={{ flexDirection: 'column' }}>
-                  <div style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden' }}>
+                  <div style={{ position: 'relative', borderRadius: '10px', overflow: 'hidden' }}>
                     <div 
+                      ref={carouselRef}
                       className="mobile-image-carousel no-scrollbar" 
                       onTouchStart={() => setAutoScrollPaused(true)}
-                      onTouchEnd={() => setTimeout(() => setAutoScrollPaused(false), 2000)}
-                      style={{ background: '#fef5f5', overflowX: 'auto', display: 'flex', scrollSnapType: 'x mandatory' }}
+                      onTouchEnd={() => {
+                        setTimeout(() => setAutoScrollPaused(false), 2000);
+                      }}
+                      style={{ background: '#fefafa', overflowX: 'auto', display: 'flex', scrollSnapType: 'x mandatory', scrollBehavior: 'auto' }}
                       onScroll={(e) => {
                         const container = e.target;
                         const scrollWidth = container.clientWidth;
                         if (scrollWidth > 0) {
-                          const index = Math.round(container.scrollLeft / scrollWidth);
-                          if (index !== currentImageIndex) setCurrentImageIndex(index);
+                          const totalItems = (product.images?.length > 0 ? product.images : [product.image]).length;
+                          const rawIndex = Math.round(container.scrollLeft / scrollWidth);
+                          
+                          // Seamless Loop Logic (Triple copy)
+                          if (container.scrollLeft >= scrollWidth * totalItems * 2) {
+                            container.scrollLeft = scrollWidth * totalItems;
+                          } else if (container.scrollLeft <= 0) {
+                            container.scrollLeft = scrollWidth * totalItems;
+                          }
+                          
+                          const actualIndex = rawIndex % totalItems;
+                          if (actualIndex !== currentImageIndex) setCurrentImageIndex(actualIndex);
                         }
                       }}
                     >
-                      {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
-                        <div key={idx} className="carousel-item" style={{ minWidth: '100%', height: '350px', display: 'flex', alignItems: 'center', justifyContent: 'center', scrollSnapAlign: 'center', background: '#fefafa' }}>
+                      {/* Triple images for infinite effect */}
+                      {[...(product.images?.length > 0 ? product.images : [product.image]), ...(product.images?.length > 0 ? product.images : [product.image]), ...(product.images?.length > 0 ? product.images : [product.image])].map((img, idx) => (
+                        <div key={idx} className="carousel-item" style={{ minWidth: '100%', height: '350px', display: 'flex', alignItems: 'center', justifyContent: 'center', scrollSnapAlign: 'center' }}>
                           <img 
                             src={resolveImageUrl(img)} 
                             alt="" 
                             style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                            onClick={() => { setCurrentImageIndex(idx); setIsFullScreen(true); }}
+                            onClick={() => setIsFullScreen(true)}
                           />
                         </div>
                       ))}
@@ -364,7 +408,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                       background: product.stock === 0 ? '#ccc' : 'var(--primary)', 
                       color: 'white', 
                       border: 'none', 
-                      borderRadius: '24px', 
+                      borderRadius: '10px', 
                       fontWeight: 700, 
                       fontSize: 'clamp(0.78rem, 2vw, 0.92rem)', 
                       display: 'flex', 
@@ -425,7 +469,7 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
             {similarProducts.length > 0 && (
               <motion.div 
                 initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
-                style={{ padding: 'clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 3rem)', background: '#fff9f9', borderRadius: '40px 40px 0 0' }}
+                style={{ padding: 'clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 3rem)', background: '#fff9f9', borderRadius: '10px 10px 0 0' }}
               >
                 <h3 style={{ fontSize: 'clamp(1.4rem, 4vw, 2.2rem)', fontFamily: 'Roboto', marginBottom: 'clamp(1.5rem, 4vw, 3rem)', display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                   More Magic <Sparkles size={24} color="var(--primary)" />
@@ -508,26 +552,29 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                <X size={24} color="#000" />
             </motion.button>
 
-            <div style={{ width: '100%', height: '100%', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
-              <motion.div
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                onDragEnd={(e, { offset }) => {
-                  const swipeThreshold = 50;
-                  if (offset.x < -swipeThreshold) handleNextImage();
-                  else if (offset.x > swipeThreshold) handlePrevImage();
-                }}
-                animate={{ x: `-${currentImageIndex * 100}%` }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                style={{
-                  display: 'flex',
-                  width: '100%',
-                  height: '100%',
-                  cursor: 'grab'
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {(product.images?.length > 0 ? product.images : [product.image]).map((img, idx) => (
+            <div 
+              ref={fullScreenCarouselRef}
+              className="no-scrollbar"
+              style={{ width: '100%', height: '100%', overflowX: 'auto', display: 'flex', scrollSnapType: 'x mandatory', cursor: 'grab' }}
+              onScroll={(e) => {
+                const container = e.target;
+                const scrollWidth = container.clientWidth;
+                if (scrollWidth > 0) {
+                  const totalItems = (product.images?.length > 0 ? product.images : [product.image]).length;
+                  const rawIndex = Math.round(container.scrollLeft / scrollWidth);
+                  
+                  if (container.scrollLeft >= scrollWidth * totalItems * 2) {
+                    container.scrollLeft = scrollWidth * totalItems;
+                  } else if (container.scrollLeft <= 0) {
+                    container.scrollLeft = scrollWidth * totalItems;
+                  }
+                  
+                  const actualIndex = rawIndex % totalItems;
+                  if (actualIndex !== currentImageIndex) setCurrentImageIndex(actualIndex);
+                }
+              }}
+            >
+                {[...(product.images?.length > 0 ? product.images : [product.image]), ...(product.images?.length > 0 ? product.images : [product.image]), ...(product.images?.length > 0 ? product.images : [product.image])].map((img, idx) => (
                   <div
                     key={idx}
                     style={{
@@ -536,7 +583,8 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      padding: '1rem'
+                      padding: '1rem',
+                      scrollSnapAlign: 'center'
                     }}
                   >
                     <motion.img
@@ -555,7 +603,6 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                     />
                   </div>
                 ))}
-              </motion.div>
             </div>
 
             <div className="desktop-only">

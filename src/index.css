@@ -20,7 +20,7 @@
   
   --transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
   --shadow: 0 15px 45px rgba(233, 163, 163, 0.15);
-  --radius: 30px; /* High signature curvature */
+  --radius: 10px; /* Aligned with new 10px box requirement */
 }
 
 * {
@@ -80,7 +80,7 @@ h1, h2, h3, h4, .serif, .display-font {
   
   .premium-card-blur {
     padding: 1.5rem !important;
-    border-radius: 20px !important;
+    border-radius: 10px !important;
   }
 }
 
@@ -406,7 +406,7 @@ div:hover > .service-img {
   width: 280px;
   height: 400px;
   flex-shrink: 0;
-  border-radius: 20px;
+  border-radius: 10px;
   overflow: hidden;
   position: relative;
   transition: var(--transition);
@@ -432,7 +432,7 @@ div:hover > .service-img {
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+  border-radius: 10px;
   z-index: 2;
   transition: var(--transition);
 }
@@ -454,14 +454,14 @@ div:hover > .service-img {
   }
   
   .luxury-gallery-track {
-    gap: 1.5rem;
+    gap: 2rem;
     animation-duration: 40s;
   }
   
   .premium-gallery-card {
-    width: 200px;
-    height: 290px;
-    border-radius: 14px;
+    width: 240px;
+    height: 340px;
+    border-radius: 10px;
   }
   
   .card-glass-overlay {
@@ -469,7 +469,7 @@ div:hover > .service-img {
     left: 0.8rem;
     right: 0.8rem;
     padding: 1rem;
-    border-radius: 12px;
+    border-radius: 10px;
   }
 }
 
