@@ -95,7 +95,7 @@ const PookieLoader = ({ fullScreen = false }) => {
           textTransform: 'uppercase'
         }}
       >
-        POOKIE IS BREWING
+        LOADING...
       </motion.p>
     </div>
   );
