@@ -361,7 +361,7 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
               <motion.div
                 className="premium-gallery-card"
                 onClick={() => onProductClick(p.id)}
-                style={{ userSelect: 'none', flexShrink: 0, cursor: 'pointer', width: isMobile ? '240px' : '320px', height: isMobile ? '320px' : '440px' }}
+                style={{ userSelect: 'none', flexShrink: 0, cursor: 'pointer', width: isMobile ? '160px' : '320px', height: isMobile ? '230px' : '440px' }}
               >
                 <img
                   src={resolveImageUrl(p.images?.[0] || p.image)}
@@ -463,14 +463,14 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
               whileHover={!isMobile ? { y: -12 } : {}}
               onClick={() => onProductClick(p.id)}
               style={{
-                width: isMobile ? '62vw' : 'clamp(140px, 12vw, 190px)',
-                background: 'white', borderRadius: '12px', padding: '0.5rem',
+                width: isMobile ? '42vw' : 'clamp(140px, 12vw, 190px)',
+                background: 'white', borderRadius: '12px', padding: '0.4rem',
                 boxShadow: '0 20px 40px rgba(233,163,163,0.08)', border: '1px solid #fff5f5', cursor: 'pointer'
               }}
             >
-              <div style={{ height: isMobile ? '280px' : '230px', borderRadius: '10px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
+              <div style={{ height: isMobile ? '190px' : '230px', borderRadius: '10px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
                 <img src={p.images?.[0] || p.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={p.name} />
-                <div style={{ position: 'absolute', top: '0.8rem', right: '0.8rem', background: 'var(--primary)', color: 'white', padding: '0.3rem 0.6rem', borderRadius: '4px', fontWeight: 800, fontSize: '0.6rem', letterSpacing: '1px' }}>
+                <div style={{ position: 'absolute', top: '0.8rem', right: '0.8rem', background: 'var(--primary)', color: 'white', padding: '0.3rem 0.6rem', borderRadius: '4px', fontWeight: 800, fontSize: '0.5rem', letterSpacing: '1px' }}>
                   LATEST
                 </div>
               </div>
@@ -565,20 +565,20 @@ const HandpickedCollection = ({ products, onProductClick }) => {
                           whileHover={{ y: -15 }}
                           onClick={() => onProductClick(p.id)}
                           style={{ 
-                              width: isMobile ? '240px' : '300px', 
+                              width: isMobile ? '160px' : '300px', 
                               cursor: 'pointer',
                               position: 'relative'
                           }}
                       >
-                          <div style={{ height: isMobile ? '320px' : '420px', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px rgba(233,163,163,0.12)', border: '1px solid #fff0f0' }}>
+                          <div style={{ height: isMobile ? '220px' : '420px', borderRadius: '18px', overflow: 'hidden', boxShadow: '0 25px 50px rgba(233,163,163,0.12)', border: '1px solid #fff0f0' }}>
                               <img src={resolveImageUrl(p.images?.[0] || p.image)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={p.name} />
-                              <div style={{ position: 'absolute', top: '1.5rem', left: '1.5rem', background: 'white', padding: '0.5rem 1rem', borderRadius: '50px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
-                                  <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Masterpiece 0{idx+1}</span>
+                              <div style={{ position: 'absolute', top: '1rem', left: '1rem', background: 'white', padding: '0.3rem 0.7rem', borderRadius: '50px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
+                                  <span style={{ fontSize: '0.55rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>0{idx+1}</span>
                               </div>
                           </div>
                           <div style={{ padding: '2rem 1rem 0', textAlign: 'center' }}>
-                              <p style={{ color: 'var(--primary)', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '4px', marginBottom: '0.6rem' }}>{p.category}</p>
-                              <h3 style={{ fontSize: '1.4rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', fontWeight: 700, fontStyle: 'italic' }}>{p.name}</h3>
+                              <p style={{ color: 'var(--primary)', fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '4px', marginBottom: '0.6rem' }}>{p.category}</p>
+                              <h3 style={{ fontSize: '1rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', fontWeight: 700, fontStyle: 'italic' }}>{p.name}</h3>
                               <div style={{ width: '30px', height: '2px', background: 'var(--primary)', margin: '1rem auto' }} />
                               <p style={{ fontWeight: 900, color: 'var(--secondary)', fontSize: '1.1rem' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
                           </div>
