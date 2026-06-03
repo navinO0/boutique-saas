@@ -7,12 +7,13 @@ import { useShop } from '../context/ShopContext';
 import { resolveImageUrl } from '../utils/imageUtils';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Keyboard, Zoom, Autoplay } from 'swiper/modules';
+import { Navigation, Pagination, Keyboard, Zoom, Autoplay, EffectFade } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/zoom';
 import 'swiper/css/keyboard';
+import 'swiper/css/effect-fade';
 
 const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToCart }) => {
   const [product, setProduct] = useState(initialProduct);
@@ -185,13 +186,16 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
               {/* Image Section */}
               <div style={{ padding: '0.5rem' }}>
                 {/* Unified Image Gallery (Swiper) */}
-                <div style={{ position: 'relative', width: '100%', aspectRatio: '3/4', borderRadius: '10px', overflow: 'hidden', background: '#fefafa' }}>
+                <div className="modal-main-image-wrapper">
                   <Swiper
-                    modules={[Navigation, Pagination, Autoplay, Keyboard]}
+                    modules={[Navigation, Pagination, Autoplay, Keyboard, EffectFade]}
+                    effect="fade"
+                    fadeEffect={{ crossFade: true }}
+                    speed={1200}
                     onSwiper={setSwiperInstance}
                     onSlideChange={(s) => setCurrentImageIndex(s.realIndex)}
                     loop={product?.images?.length > 1}
-                    autoplay={!autoScrollPaused ? { delay: 5000, disableOnInteraction: false } : false}
+                    autoplay={!autoScrollPaused ? { delay: 6000, disableOnInteraction: false } : false}
                     keyboard={{ enabled: true }}
                     pagination={{ clickable: true }}
                     className="modal-gallery-swiper"
@@ -220,6 +224,18 @@ const ProductDetailModal = ({ isOpen, onClose, product: initialProduct, onAddToC
                     }}>
                        <Sparkles size={11} /> Artisan Made
                   </div>
+
+                  {product.isHandpicked && (
+                    <div style={{ 
+                      position: 'absolute', top: '1.2rem', right: '1.2rem', background: 'rgba(233,163,163,0.9)', 
+                      backdropFilter: 'blur(10px)', padding: '0.4rem 0.8rem', borderRadius: '10px', 
+                      display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 900, fontSize: '0.6rem', 
+                      color: 'white', zIndex: 10, boxShadow: '0 8px 20px rgba(233,163,163,0.3)',
+                      textTransform: 'uppercase', letterSpacing: '1px'
+                    }}>
+                       <Star size={11} fill="white" /> Handpicked
+                    </div>
+                  )}
                 </div>
 
                 {/* Thumbnails Section (Desktop Only) */}

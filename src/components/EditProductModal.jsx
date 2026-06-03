@@ -21,7 +21,8 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
     colors: [],
     sizes: [],
     description: '',
-    isIcon: false
+    isIcon: false,
+    isHandpicked: false
   });
 
   const [imageUrlInput, setImageUrlInput] = useState('');
@@ -38,7 +39,8 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
         collections: product.collections || (product.category ? [product.category] : []),
         colors: product.colors || [],
         sizes: product.sizes || [],
-        isIcon: product.isIcon || false
+        isIcon: product.isIcon || false,
+        isHandpicked: product.isHandpicked || false
       });
     } else {
       setFormData({
@@ -52,7 +54,9 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
         images: [],
         colors: [],
         sizes: [],
-        description: ''
+        description: '',
+        isIcon: false,
+        isHandpicked: false
       });
     }
   }, [product, isOpen]);
@@ -371,17 +375,32 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
                 <textarea rows="3" required value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Describe the soul of this design..." style={{ width: '100%', padding: '0.85rem 1rem', border: 'none', background: '#fff9f9', borderRadius: '18px', outline: 'none', resize: 'none', fontSize: '0.88rem' }} />
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.5rem' }}>
-                <input
-                  type="checkbox"
-                  id="isIcon"
-                  checked={formData.isIcon}
-                  onChange={(e) => setFormData({ ...formData, isIcon: e.target.checked })}
-                  style={{ width: '20px', height: '20px', accentColor: 'var(--primary)', cursor: 'pointer' }}
-                />
-                <label htmlFor="isIcon" style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--secondary)', cursor: 'pointer' }}>
-                  Show on Landing Page (Icons Section)
-                </label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.5rem', background: '#fefafa', borderRadius: '15px' }}>
+                  <input
+                    type="checkbox"
+                    id="isIcon"
+                    checked={formData.isIcon}
+                    onChange={(e) => setFormData({ ...formData, isIcon: e.target.checked })}
+                    style={{ width: '20px', height: '20px', accentColor: 'var(--primary)', cursor: 'pointer' }}
+                  />
+                  <label htmlFor="isIcon" style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--secondary)', cursor: 'pointer' }}>
+                    Icons Section
+                  </label>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.5rem', background: '#fefafa', borderRadius: '15px' }}>
+                  <input
+                    type="checkbox"
+                    id="isHandpicked"
+                    checked={formData.isHandpicked}
+                    onChange={(e) => setFormData({ ...formData, isHandpicked: e.target.checked })}
+                    style={{ width: '20px', height: '20px', accentColor: 'var(--primary)', cursor: 'pointer' }}
+                  />
+                  <label htmlFor="isHandpicked" style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--secondary)', cursor: 'pointer' }}>
+                    Handpicked Collection
+                  </label>
+                </div>
               </div>
 
               <button 

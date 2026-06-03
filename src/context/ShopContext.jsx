@@ -11,6 +11,7 @@ export const ShopProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [adminProducts, setAdminProducts] = useState([]);
   const [iconProducts, setIconProducts] = useState([]);
+  const [handpickedProducts, setHandpickedProducts] = useState([]);
   const [catalog, setCatalog] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1 });
@@ -102,6 +103,28 @@ export const ShopProvider = ({ children }) => {
     } catch (err) {
       console.error('Error fetching icon products:', err);
       setError('Could not retrieve featured items. ');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [getHeaders, getCachedData, setCachedData]);
+
+  const fetchHandpickedProducts = useCallback(async () => {
+    const cached = getCachedData('handpicked_collection');
+    if (cached) {
+      setHandpickedProducts(cached);
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(`${API_BASE_URL}/products`, { 
+        params: { isHandpicked: 'true', limit: 8 },
+        headers: getHeaders() 
+      });
+      setHandpickedProducts(response.data.products);
+      setCachedData('handpicked_collection', response.data.products);
+    } catch (err) {
+      console.error('Error fetching handpicked products:', err);
     } finally {
       setIsLoading(false);
     }
@@ -598,8 +621,8 @@ export const ShopProvider = ({ children }) => {
   }, [getHeaders, showToast]);
 
   const value = useMemo(() => ({
-    products, adminProducts, iconProducts, catalog, isLoading, error, clearError, 
-    pagination, adminPagination, fetchProducts, fetchAdminProducts, fetchIconProducts, fetchCatalog,
+    products, adminProducts, iconProducts, handpickedProducts, catalog, isLoading, error, clearError, 
+    pagination, adminPagination, fetchProducts, fetchAdminProducts, fetchIconProducts, fetchHandpickedProducts, fetchCatalog,
     addProduct, updateProduct, deleteProduct,
     addCatalogItem, updateCatalogItem, deleteCatalogItem,
     cart, wishlist, toggleWishlist, addToCart, removeFromCart, updateQuantity, loginUser, logoutUser, registerUser, updateUserProfile, currentUser,
@@ -610,8 +633,8 @@ export const ShopProvider = ({ children }) => {
     getHeaders,
     isAdminLoggedIn: currentUser?.role === 'admin'
   }), [
-    products, adminProducts, iconProducts, catalog, isLoading, error, clearError, pagination, adminPagination,
-    fetchProducts, fetchAdminProducts, fetchIconProducts, fetchCatalog, addProduct, updateProduct, deleteProduct,
+    products, adminProducts, iconProducts, handpickedProducts, catalog, isLoading, error, clearError, pagination, adminPagination,
+    fetchProducts, fetchAdminProducts, fetchIconProducts, fetchHandpickedProducts, fetchCatalog, addProduct, updateProduct, deleteProduct,
     addCatalogItem, updateCatalogItem, deleteCatalogItem, cart, wishlist, toggleWishlist, addToCart, 
     removeFromCart, updateQuantity, loginUser, logoutUser, registerUser, updateUserProfile, currentUser, placeOrder, 
     siteConfig, updateSiteConfig, toast, showToast, allOrders, myOrders, appointments, fetchAllOrders, 

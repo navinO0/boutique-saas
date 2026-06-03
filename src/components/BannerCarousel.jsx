@@ -1,6 +1,5 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 // Swiper Imports
@@ -36,7 +35,10 @@ const BannerCarousel = ({ banners = [], fullWidth = false }) => {
             bulletActiveClass: 'banner-bullet-active',
             bulletClass: 'banner-bullet'
         }}
-        navigation={banners.length > 1}
+        navigation={{
+            nextEl: '.banner-next',
+            prevEl: '.banner-prev',
+        }}
         className="banner-swiper"
         style={{ 
             width: '100%',
@@ -48,6 +50,7 @@ const BannerCarousel = ({ banners = [], fullWidth = false }) => {
       >
         {banners.map((banner, i) => (
           <SwiperSlide key={i} onClick={() => banner.link && (banner.link.startsWith('http') ? window.open(banner.link, '_blank') : navigate(banner.link))}>
+            {/* Same slide content */}
             <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', cursor: banner.link ? 'pointer' : 'default' }}>
               <picture>
                 <source media="(max-width: 767px)" srcSet={banner.mobileImage || banner.image} />
@@ -58,20 +61,29 @@ const BannerCarousel = ({ banners = [], fullWidth = false }) => {
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </picture>
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 30%, transparent 60%)', pointerEvents: 'none' }}></div>
+              <div style={{ 
+                position: 'absolute', 
+                inset: 0, 
+                background: 'linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)', 
+                pointerEvents: 'none' 
+              }} />
               
               <div className="banner-content" style={{ 
                 position: 'absolute', 
-                bottom: '18%', 
+                bottom: '15%', 
                 left: '6.5%', 
                 color: 'white', 
                 zIndex: 5,
                 display: 'flex',
-                gap: '2.5rem'
+                gap: '2rem',
+                padding: '0',
+                background: 'transparent',
+                backdropFilter: 'none',
+                border: 'none'
               }}>
-                <div style={{ width: '1.5px', background: 'var(--primary)', height: '150px', alignSelf: 'center', opacity: 1 }} className="desktop-only" />
+                <div style={{ width: '2px', background: 'var(--primary)', height: '120px', alignSelf: 'center', opacity: 0.8 }} className="desktop-only" />
                 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                   <motion.span
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -79,28 +91,28 @@ const BannerCarousel = ({ banners = [], fullWidth = false }) => {
                       color: 'var(--primary)', 
                       fontWeight: 800, 
                       textTransform: 'uppercase', 
-                      letterSpacing: '5px', 
-                      fontSize: '0.7rem', 
+                      letterSpacing: '4px', 
+                      fontSize: '0.62rem', 
                       fontFamily: 'Outfit',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '12px'
+                      gap: '10px'
                     }}
                   >
-                    <Sparkles size={16} /> {banner.subtitle || 'Haute Couture'}
+                    <Sparkles size={14} /> {banner.subtitle || 'Haute Couture'}
                   </motion.span>
                   
                   <motion.h2
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     style={{ 
-                      fontSize: 'clamp(2.5rem, 6vw, 5.5rem)', 
+                      fontSize: 'clamp(1.8rem, 5vw, 4rem)', 
                       fontFamily: 'Playfair Display', 
                       marginBottom: '1rem', 
                       lineHeight: 0.95, 
                       color: 'white', 
-                      letterSpacing: '-2px',
-                      textShadow: '0 15px 35px rgba(0,0,0,0.4)',
+                      letterSpacing: '-1.5px',
+                      textShadow: '0 10px 20px rgba(0,0,0,0.5)',
                       fontWeight: 500,
                       fontStyle: 'italic'
                     }}
@@ -114,13 +126,13 @@ const BannerCarousel = ({ banners = [], fullWidth = false }) => {
                       whileInView={{ opacity: 1 }}
                       className="banner-cta"
                       style={{
-                        padding: '1.2rem 3rem',
+                        padding: typeof window !== 'undefined' && window.innerWidth < 768 ? '0.8rem 1.8rem' : '1.1rem 2.5rem',
                         background: 'var(--primary)',
                         color: 'white',
-                        borderRadius: '50px',
+                        borderRadius: '10px',
                         border: 'none',
                         fontWeight: 900,
-                        fontSize: '0.85rem',
+                        fontSize: typeof window !== 'undefined' && window.innerWidth < 768 ? '0.75rem' : '0.85rem',
                         letterSpacing: '2px',
                         textTransform: 'uppercase',
                         cursor: 'pointer',
@@ -139,42 +151,76 @@ const BannerCarousel = ({ banners = [], fullWidth = false }) => {
         ))}
       </Swiper>
 
+      {/* Custom Premium Arrows */}
+      {banners.length > 1 && (
+        <div className="desktop-only">
+          <motion.button 
+            whileHover={{ scale: 1.1, background: 'var(--primary)' }}
+            whileTap={{ scale: 0.9 }}
+            className="banner-prev banner-nav-btn" 
+            style={{ left: '2rem' }}
+          >
+            <ChevronLeft size={28} />
+          </motion.button>
+          <motion.button 
+            whileHover={{ scale: 1.1, background: 'var(--primary)' }}
+            whileTap={{ scale: 0.9 }}
+            className="banner-next banner-nav-btn" 
+            style={{ right: '2rem' }}
+          >
+            <ChevronRight size={28} />
+          </motion.button>
+        </div>
+      )}
+
       <style>{`
         .banner-bullet {
-            width: 10px;
-            height: 10px;
-            background: rgba(255,255,255,0.4);
+            width: 7px;
+            height: 7px;
+            background: rgba(255,255,255,0.35);
             border-radius: 50%;
             display: inline-block;
-            margin: 0 6px !important;
+            margin: 0 4px !important;
             cursor: pointer;
             transition: 0.4s;
         }
         .banner-bullet-active {
-            width: 35px;
-            border-radius: 6px;
+            width: 20px;
+            border-radius: 4px;
             background: var(--primary) !important;
         }
         .banner-swiper .swiper-pagination {
-            bottom: 3rem !important;
-            right: 4rem !important;
+            bottom: 1.5rem !important;
+            right: 2.5rem !important;
             width: auto !important;
             left: auto !important;
+            display: flex;
+            align-items: center;
         }
-        .banner-swiper .swiper-button-next, .banner-swiper .swiper-button-prev {
-            color: white;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(15px);
-            width: 60px;
-            height: 60px;
+        .banner-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
-            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
-        .banner-swiper .swiper-button-next::after, .banner-swiper .swiper-button-prev::after {
-            font-size: 24px;
+        .banner-nav-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(233,163,163,0.4);
         }
         @media (max-width: 768px) {
-            .banner-swiper .swiper-button-next, .banner-swiper .swiper-button-prev { display: none; }
             .banner-swiper .swiper-pagination { right: 50% !important; transform: translateX(50%); bottom: 2rem !important; }
         }
       `}</style>
