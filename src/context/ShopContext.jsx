@@ -137,7 +137,10 @@ export const ShopProvider = ({ children }) => {
   const fetchAdminProducts = useCallback(async (params = {}) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/products`, { params, headers: getHeaders() });
+      const response = await axios.get(`${API_BASE_URL}/products`, { 
+        params: { ...params, view: 'all' }, 
+        headers: getHeaders() 
+      });
       setAdminProducts(response.data.products);
       setAdminPagination({
         currentPage: response.data.currentPage,

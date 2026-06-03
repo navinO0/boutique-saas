@@ -109,114 +109,114 @@ const Hero = ({ onBook }) => {
       </div>
 
       <div className="container" style={{ position: 'relative', zIndex: 10 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', maxWidth: '900px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', opacity: 0.8 }}>
-               <div style={{ width: '40px', height: '1px', background: 'var(--primary)' }} />
-               <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '5px', textTransform: 'uppercase', fontFamily: 'Outfit' }}>Couture House Est. 2026</span>
-            </div>
-            
-            <h1 style={{ 
-              fontSize: 'clamp(4rem, 12vw, 10rem)', 
-              color: 'white', 
-              lineHeight: '0.9', 
-              fontFamily: 'Playfair Display', 
-              letterSpacing: '-3px',
-              textShadow: '0 20px 40px rgba(0,0,0,0.4)',
-              margin: '1rem 0'
-            }}>
-              Unfold <br />
-              <motion.span 
-                initial={{ opacity: 0, y: 40 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ duration: 1, delay: 0.5 }}
-                style={{ color: 'var(--primary)', fontStyle: 'italic', fontWeight: 500 }}
-              >
-                Your Aura.
-              </motion.span>
-            </h1>
-
-            <div style={{ maxWidth: '520px' }}>
-              <p style={{ 
-                fontSize: 'clamp(1rem, 2vw, 1.25rem)', 
-                color: 'rgba(255,255,255,0.95)', 
-                lineHeight: '1.8', 
-                fontFamily: 'Outfit',
-                marginBottom: '4rem',
-                fontWeight: 300
-              }}>
-                Bridging timeless heritage with futuristic silhouettes. We sculpt your dreams into wearable reality.
-              </p>
-              
-              <div className="hero-cta-group" style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
-                <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(233,163,163,0.4)' }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={onBook}
-                  style={{ 
-                    padding: '1.4rem 3.5rem', 
-                    background: 'var(--primary)', 
-                    color: 'white', 
-                    borderRadius: '50px', 
-                    fontWeight: 900, 
-                    border: 'none', 
-                    fontSize: '0.9rem', 
-                    cursor: 'pointer', 
-                    letterSpacing: '2px', 
-                    textTransform: 'uppercase',
-                    fontFamily: 'Outfit'
-                  }}
-                >
-                  Start Journey
-                </motion.button>
-                <Link to="/products" style={{ 
-                  fontWeight: 900, 
-                  color: 'white', 
-                  textTransform: 'uppercase', 
-                  letterSpacing: '4px', 
-                  fontSize: '0.75rem', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '1.2rem',
-                  fontFamily: 'Outfit',
-                  borderBottom: '2px solid var(--primary)',
-                  paddingBottom: '0.8rem'
-                }}>
-                  View Catalog <ArrowRight size={18} />
-                </Link>
-              </div>
-            </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem', maxWidth: '900px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', opacity: 0.8 }}>
+            <div style={{ width: '40px', height: '1px', background: 'var(--primary)' }} />
+            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '5px', textTransform: 'uppercase', fontFamily: 'Outfit' }}>Couture House Est. 2026</span>
           </div>
 
-          {/* Minimalist Floating Stats Pill */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-            style={{ 
-              position: 'absolute', 
-              bottom: '4rem', 
-              right: '4rem', 
-              background: 'rgba(255,255,255,0.1)', 
-              backdropFilter: 'blur(30px)', 
-              padding: '1rem 2rem', 
-              borderRadius: '50px', 
-              border: '1px solid rgba(255,255,255,0.2)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1.5rem',
-              color: 'white'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-               <h4 style={{ fontSize: '1.8rem', fontFamily: 'Playfair Display', fontWeight: 900 }}>500+</h4>
-               <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', opacity: 0.7 }}>Masterpieces</span>
+          <h1 style={{
+            fontSize: 'clamp(4rem, 12vw, 10rem)',
+            color: 'white',
+            lineHeight: '0.9',
+            fontFamily: 'Playfair Display',
+            letterSpacing: '-3px',
+            textShadow: '0 20px 40px rgba(0,0,0,0.4)',
+            margin: '1rem 0'
+          }}>
+            Unfold <br />
+            <motion.span
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+              style={{ color: 'var(--primary)', fontStyle: 'italic', fontWeight: 500 }}
+            >
+              Your Aura.
+            </motion.span>
+          </h1>
+
+          <div style={{ maxWidth: '520px' }}>
+            <p style={{
+              fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+              color: 'rgba(255,255,255,0.95)',
+              lineHeight: '1.8',
+              fontFamily: 'Outfit',
+              marginBottom: '4rem',
+              fontWeight: 300
+            }}>
+              Bridging timeless heritage with futuristic silhouettes. We sculpt your dreams into wearable reality.
+            </p>
+
+            <div className="hero-cta-group" style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(233,163,163,0.4)' }}
+                whileTap={{ scale: 0.95 }}
+                onClick={onBook}
+                style={{
+                  padding: '1.4rem 3.5rem',
+                  background: 'var(--primary)',
+                  color: 'white',
+                  borderRadius: '50px',
+                  fontWeight: 900,
+                  border: 'none',
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  letterSpacing: '2px',
+                  textTransform: 'uppercase',
+                  fontFamily: 'Outfit'
+                }}
+              >
+                Start Journey
+              </motion.button>
+              <Link to="/products" style={{
+                fontWeight: 900,
+                color: 'white',
+                textTransform: 'uppercase',
+                letterSpacing: '4px',
+                fontSize: '0.75rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1.2rem',
+                fontFamily: 'Outfit',
+                borderBottom: '2px solid var(--primary)',
+                paddingBottom: '0.8rem'
+              }}>
+                View Catalog <ArrowRight size={18} />
+              </Link>
             </div>
-            <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.2)' }} />
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-               <Sparkles size={14} color="var(--primary)" />
-               <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', opacity: 0.7 }}>Est. 2026</span>
-            </div>
-          </motion.div>
+          </div>
+        </div>
+
+        {/* Minimalist Floating Stats Pill */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 }}
+          style={{
+            position: 'absolute',
+            bottom: '4rem',
+            right: '4rem',
+            background: 'rgba(255,255,255,0.1)',
+            backdropFilter: 'blur(30px)',
+            padding: '1rem 2rem',
+            borderRadius: '50px',
+            border: '1px solid rgba(255,255,255,0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1.5rem',
+            color: 'white'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <h4 style={{ fontSize: '1.8rem', fontFamily: 'Playfair Display', fontWeight: 900 }}>500+</h4>
+            <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', opacity: 0.7 }}>Masterpieces</span>
+          </div>
+          <div style={{ width: '1px', height: '20px', background: 'rgba(255,255,255,0.2)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Sparkles size={14} color="var(--primary)" />
+            <span style={{ fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', opacity: 0.7 }}>Est. 2026</span>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -233,7 +233,7 @@ const Services = ({ services }) => {
           <h2 className="section-heading" style={{ fontSize: 'clamp(2.2rem, 6vw, 4.5rem)', fontFamily: 'Playfair Display', color: 'var(--primary)', lineHeight: 1.05, marginTop: '0.6rem' }}>Pure Artistry</h2>
         </div>
       </div>
-      
+
       {isMobile ? (
         /* 2-column grid on mobile */
         <div style={{
@@ -344,7 +344,7 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   // Triple the catalog for a seamless loop in both directions
-  const displayItems = (catalog && catalog.length > 0) ? [...catalog, ...catalog, ...catalog] : [];
+  const displayItems = (catalog && catalog.length > 0) ? [...catalog] : [];
 
   useEffect(() => {
     if (!catalog || catalog.length === 0) return;
@@ -358,7 +358,7 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
     }
 
     let animationFrameId;
-    const speed = 0.55; 
+    const speed = 0.55;
 
     const animateScroll = () => {
       // Auto-scroll on all devices when NOT interacting
@@ -478,7 +478,7 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
         </motion.p>
       </div>
 
-      <div 
+      <div
         style={{ position: 'relative' }}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => { setIsPaused(false); setIsDown(false); }}
@@ -587,7 +587,7 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
   const [isPaused, setIsPaused] = useState(false);
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
-  const displayItems = (categories && categories.length > 0) ? [...categories, ...categories, ...categories] : [];
+  const displayItems = (categories && categories.length > 0) ? [...categories] : [];
 
   useEffect(() => {
     if (!categories || categories.length === 0) return;
@@ -600,7 +600,7 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
     }
 
     let animationFrameId;
-    const speed = 0.35; 
+    const speed = 0.35;
 
     const animateScroll = () => {
       if (!isMobile && !isDown && !isPaused) {
@@ -664,8 +664,8 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
       onMouseUp={() => setIsDown(false)}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsPaused(true)}
-          style={{
-            display: 'flex',
+      style={{
+        display: 'flex',
         overflowX: 'auto',
         cursor: isDown ? 'grabbing' : 'grab',
         scrollbarWidth: 'none',
@@ -715,7 +715,7 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
   const [scrollLeft, setScrollLeft] = useState(0);
 
   // Triple items for infinite feel
-  const displayItems = [...products, ...products, ...products];
+  const displayItems = [...products];
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -728,7 +728,7 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
     const animate = () => {
       const el = scrollRef.current;
       if (!el) return;
-      
+
       if (!isMobile && !isPaused && !isDragging) {
         el.scrollLeft += 0.55;
         if (el.scrollLeft >= oneThird * 2) el.scrollLeft -= oneThird;
@@ -769,12 +769,12 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
   };
 
   return (
-    <div 
+    <div
       style={{ position: 'relative' }}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => { setIsPaused(false); setIsDragging(false); }}
     >
-      <div 
+      <div
         ref={scrollRef}
         className="no-scrollbar"
         onTouchStart={() => setIsPaused(true)}
@@ -840,28 +840,28 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
 
       {!isMobile && (
         <>
-      {!isMobile && (
-        <>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              if (scrollRef.current) scrollRef.current.scrollBy({ left: -450 });
-            }}
-            style={{ position: 'absolute', left: '1rem', top: '45%', transform: 'translateY(-50%)', background: 'rgba(255, 255, 255, 0.6)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '50px', height: '50px', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 8px 25px rgba(0,0,0,0.15)', pointerEvents: 'auto' }}
-          >
-            <ChevronLeft size={28} />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              if (scrollRef.current) scrollRef.current.scrollBy({ left: 450 });
-            }}
-            style={{ position: 'absolute', right: '1rem', top: '45%', transform: 'translateY(-50%)', background: 'rgba(255, 255, 255, 0.6)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '50px', height: '50px', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 8px 25px rgba(0,0,0,0.15)', pointerEvents: 'auto' }}
-          >
-            <ChevronRight size={28} />
-          </button>
-        </>
-      )}
+          {!isMobile && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (scrollRef.current) scrollRef.current.scrollBy({ left: -450 });
+                }}
+                style={{ position: 'absolute', left: '1rem', top: '45%', transform: 'translateY(-50%)', background: 'rgba(255, 255, 255, 0.6)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '50px', height: '50px', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 8px 25px rgba(0,0,0,0.15)', pointerEvents: 'auto' }}
+              >
+                <ChevronLeft size={28} />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (scrollRef.current) scrollRef.current.scrollBy({ left: 450 });
+                }}
+                style={{ position: 'absolute', right: '1rem', top: '45%', transform: 'translateY(-50%)', background: 'rgba(255, 255, 255, 0.6)', backdropFilter: 'blur(15px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '50%', width: '50px', height: '50px', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 100, boxShadow: '0 8px 25px rgba(0,0,0,0.15)', pointerEvents: 'auto' }}
+              >
+                <ChevronRight size={28} />
+              </button>
+            </>
+          )}
         </>
       )}
     </div>
@@ -879,11 +879,11 @@ const GroupedCollectionCarousels = ({ categories, products, onProductClick, onCa
           .filter(p => p.category === cat.id)
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
           .slice(0, 15);
-          
+
         if (catProducts.length === 0) return null;
 
         return (
-          <section key={cat.id} className="collection-section" style={{ 
+          <section key={cat.id} className="collection-section" style={{
             overflow: 'hidden',
             paddingTop: isMobile ? '12px' : '20px',
             background: idx % 2 === 0 ? 'white' : 'rgba(233,163,163,0.02)'
@@ -894,31 +894,31 @@ const GroupedCollectionCarousels = ({ categories, products, onProductClick, onCa
                   <div style={{ width: isMobile ? '40px' : '80px', height: '3px', background: 'var(--primary)', borderRadius: '2px' }}></div>
                   <span style={{ color: 'var(--primary)', fontWeight: 800, letterSpacing: '4px', textTransform: 'uppercase', fontSize: isMobile ? '0.7rem' : '0.75rem' }}>Exquisite Selection</span>
                 </div>
-                <h2 style={{ 
-                  fontSize: isMobile ? '1.5rem' : 'clamp(1.8rem, 4vw, 2.8rem)', 
-                  fontFamily: 'Playfair Display', 
-                  color: 'var(--secondary)', 
+                <h2 style={{
+                  fontSize: isMobile ? '1.5rem' : 'clamp(1.8rem, 4vw, 2.8rem)',
+                  fontFamily: 'Playfair Display',
+                  color: 'var(--secondary)',
                   lineHeight: 1.1,
                   fontWeight: 900,
                   fontStyle: 'italic',
                   letterSpacing: '-0.5px'
                 }}>{cat.name}</h2>
               </div>
-              <motion.button 
+              <motion.button
                 whileHover={{ scale: 1.05, background: 'var(--primary)', color: 'white' }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => onCategoryClick(cat.id)}
-                style={{ 
-                  padding: isMobile ? '0.4rem 0.8rem' : '0.7rem 1.8rem', 
-                  background: 'white', 
-                  border: '1.5px solid var(--primary)', 
-                  borderRadius: '7px', 
-                  color: 'var(--primary)', 
-                  fontWeight: 900, 
-                  fontSize: isMobile ? '0.65rem' : '0.75rem', 
-                  cursor: 'pointer', 
-                  display: 'flex', 
-                  alignItems: 'center', 
+                style={{
+                  padding: isMobile ? '0.4rem 0.8rem' : '0.7rem 1.8rem',
+                  background: 'white',
+                  border: '1.5px solid var(--primary)',
+                  borderRadius: '7px',
+                  color: 'var(--primary)',
+                  fontWeight: 900,
+                  fontSize: isMobile ? '0.65rem' : '0.75rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
                   gap: '0.1rem',
                   textTransform: 'uppercase',
                   letterSpacing: '1px',
@@ -961,12 +961,12 @@ const LandingPage = () => {
       )}
 
       <Services services={siteConfig.services} />
-      
+
       {/* Grouped Collection Carousels */}
       <section className="collection-wrapper" style={{ background: 'var(--accent)' }}>
-        <GroupedCollectionCarousels 
-          categories={siteConfig.categories} 
-          products={products} 
+        <GroupedCollectionCarousels
+          categories={siteConfig.categories}
+          products={products}
           onProductClick={(id) => navigate(`/product/${id}`)}
           onCategoryClick={(id) => navigate(`/products?category=${id}`)}
         />
