@@ -7,6 +7,40 @@ import API_BASE_URL from '../config/api';
 import { useShop } from '../context/ShopContext';
 import PookieLoader from '../components/PookieLoader';
 import { resolveImageUrl } from '../utils/imageUtils';
+import ShimmerImage from '../components/ShimmerImage';
+
+const ProductPageSkeleton = () => {
+  const isMobile = window.innerWidth < 768;
+  return (
+    <div style={{ background: 'white', minHeight: '100vh', padding: 'clamp(5rem, 12vw, 8rem) 0 3rem' }}>
+      <div style={{ width: isMobile ? '95%' : '80%', margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '4rem' }}>
+          <div style={{ height: '500px', background: '#f8f9fa', borderRadius: '40px' }} className="skeleton-shimmer" />
+          <div>
+            <div style={{ width: '30%', height: '15px', background: '#f8f9fa', marginBottom: '20px' }} className="skeleton-shimmer" />
+            <div style={{ width: '80%', height: '40px', background: '#f8f9fa', marginBottom: '20px' }} className="skeleton-shimmer" />
+            <div style={{ width: '40%', height: '30px', background: '#f8f9fa', marginBottom: '40px' }} className="skeleton-shimmer" />
+            {[...Array(4)].map((_, i) => (
+              <div key={i} style={{ width: '100%', height: '20px', background: '#f8f9fa', marginBottom: '10px' }} className="skeleton-shimmer" />
+            ))}
+            <div style={{ width: '100%', height: '60px', background: '#f8f9fa', marginTop: '40px', borderRadius: '12px' }} className="skeleton-shimmer" />
+          </div>
+        </div>
+      </div>
+      <style>{`
+        .skeleton-shimmer {
+          background: linear-gradient(90deg, #f0f0f0 25%, #f9f9f9 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          animation: skeleton-wave 1.5s infinite linear;
+        }
+        @keyframes skeleton-wave {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+      `}</style>
+    </div>
+  );
+};
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -112,7 +146,7 @@ const ProductDetailPage = () => {
   }, [product?.id, isFullScreen, product?.images?.length, autoScrollPaused]);
 
 
-  if (isLoading || !product) return <PookieLoader fullScreen={true} />;
+  if (isLoading || !product) return <ProductPageSkeleton />;
 
 
   const itemVariants = {
@@ -144,12 +178,8 @@ const ProductDetailPage = () => {
                 style={{ boxShadow: '0 40px 100px rgba(233,163,163,0.15)' }}
               >
                 <AnimatePresence mode="wait">
-                  <motion.img
+                  <ShimmerImage
                     key={currentImageIndex}
-                    initial={{ opacity: 0, scale: 1.1 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.6, ease: "circOut" }}
                     src={resolveImageUrl(product.images?.[currentImageIndex] || product.image)}
                     onClick={() => setIsFullScreen(true)}
                     className="premium-full-box-image"
@@ -226,13 +256,12 @@ const ProductDetailPage = () => {
                 >
                   {(product.images?.length > 1 ? [...product.images, product.images[0]] : (product.images?.length > 0 ? product.images : [product.image])).map((img, idx) => (
                     <div key={idx} className="carousel-item" style={{ minWidth: '100%', height: '420px', display: 'flex', alignItems: 'center', justifyContent: 'center', scrollSnapAlign: 'center', background: '#fefafa' }}>
-                      <img
+                      <ShimmerImage
                         src={resolveImageUrl(img)}
                         alt=""
-                        style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                        style={{ maxWidth: '100%', maxHeight: '100%' }}
                         onClick={() => { 
                           if (idx === (product.images?.length || 1)) {
-                            // If user clicked the clone, they are effectively at index 0
                             setCurrentImageIndex(0);
                           } else {
                             setCurrentImageIndex(idx);
@@ -496,7 +525,7 @@ const ProductDetailPage = () => {
                     }}
                   >
                     <div style={{ height: isDreamMobile ? 'clamp(200px, 50vw, 280px)' : 'clamp(280px, 30vw, 380px)', borderRadius: '6px', overflow: 'hidden', flexShrink: 0, background: '#fef5f5' }}>
-                      <img src={resolveImageUrl(p.images?.[0] || p.image)} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt={p.name} />
+                      <ShimmerImage src={resolveImageUrl(p.images?.[0] || p.image)} style={{ width: '100%', height: '100%' }} alt={p.name} />
                     </div>
                     <div style={{ padding: '0.8rem 0.5rem', textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                       <h3 style={{ fontSize: 'clamp(0.85rem, 2vw, 1.1rem)', fontFamily: 'Roboto', color: 'var(--secondary)', fontWeight: 700 }}>{p.name}</h3>

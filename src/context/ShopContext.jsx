@@ -130,6 +130,24 @@ export const ShopProvider = ({ children }) => {
     }
   }, [getHeaders, getCachedData, setCachedData]);
 
+  const fetchHomeLayout = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const resp = await axios.get(`${API_BASE_URL}/products/home-layout`, { headers: getHeaders() });
+      const { icons, handpicked, collectionsData } = resp.data;
+      
+      setIconProducts(icons);
+      setHandpickedProducts(handpicked);
+      
+      return collectionsData;
+    } catch (err) {
+      console.error('Error fetching home layout:', err);
+      return {};
+    } finally {
+      setIsLoading(false);
+    }
+  }, [getHeaders]);
+
   const [isFetchingMore, setIsFetchingMore] = useState(false);
 
   const fetchProducts = useCallback(async (params = {}, append = false) => {
@@ -645,7 +663,7 @@ export const ShopProvider = ({ children }) => {
 
   const value = useMemo(() => ({
     products, adminProducts, iconProducts, handpickedProducts, catalog, isLoading, isFetchingMore, error, clearError, 
-    pagination, adminPagination, fetchProducts, fetchAdminProducts, fetchIconProducts, fetchHandpickedProducts, fetchCatalog,
+    pagination, adminPagination, fetchProducts, fetchAdminProducts, fetchIconProducts, fetchHandpickedProducts, fetchCatalog, fetchHomeLayout,
     addProduct, updateProduct, deleteProduct,
     addCatalogItem, updateCatalogItem, deleteCatalogItem,
     cart, wishlist, toggleWishlist, addToCart, removeFromCart, updateQuantity, loginUser, logoutUser, registerUser, updateUserProfile, currentUser,
@@ -657,7 +675,7 @@ export const ShopProvider = ({ children }) => {
     isAdminLoggedIn: currentUser?.role === 'admin'
   }), [
     products, adminProducts, iconProducts, handpickedProducts, catalog, isLoading, isFetchingMore, error, clearError, pagination, adminPagination,
-    fetchProducts, fetchAdminProducts, fetchIconProducts, fetchHandpickedProducts, fetchCatalog, addProduct, updateProduct, deleteProduct,
+    fetchProducts, fetchAdminProducts, fetchIconProducts, fetchHandpickedProducts, fetchCatalog, fetchHomeLayout, addProduct, updateProduct, deleteProduct,
     addCatalogItem, updateCatalogItem, deleteCatalogItem, cart, wishlist, toggleWishlist, addToCart, 
     removeFromCart, updateQuantity, loginUser, logoutUser, registerUser, updateUserProfile, currentUser, placeOrder, 
     siteConfig, updateSiteConfig, toast, showToast, allOrders, myOrders, appointments, fetchAllOrders, 

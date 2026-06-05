@@ -260,7 +260,7 @@ const Services = ({ services }) => {
               key={service.id}
               style={{ position: 'relative', overflow: 'hidden', cursor: 'pointer', borderRadius: '12px', height: '200px' }}
             >
-              <img src={service.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={service.title} />
+              <ShimmerImage src={service.image} style={{ width: '100%', height: '100%' }} alt={service.title} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 65%)' }} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '0.8rem' }}>
                 <span style={{ color: 'var(--primary)', fontWeight: 800, fontSize: '0.6rem', letterSpacing: '3px', display: 'block', marginBottom: '0.25rem' }}>0{idx + 1}</span>
@@ -279,7 +279,7 @@ const Services = ({ services }) => {
               transition={{ type: 'spring', stiffness: 200, damping: 25 }}
               style={{ position: 'relative', overflow: 'hidden', cursor: 'pointer', borderRadius: '8px', height: '100%', flex: 1 }}
             >
-              <img src={service.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={service.title} />
+              <ShimmerImage src={service.image} style={{ width: '100%', height: '100%' }} alt={service.title} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%, rgba(0,0,0,0.2) 100%)' }} />
               <div style={{ position: 'absolute', bottom: '0', left: '0', width: '100%', padding: 'clamp(1.5rem, 4vw, 3.5rem)', color: 'white' }}>
                 <span style={{ color: 'var(--primary)', fontWeight: 800, fontSize: 'clamp(0.8rem, 2vw, 1.1rem)', letterSpacing: '4px', display: 'block', marginBottom: '0.5rem' }}>0{idx + 1}</span>
@@ -425,7 +425,7 @@ const CategoryCarousel = ({ categories, onCategoryClick }) => {
                 boxShadow: '0 12px 25px rgba(0,0,0,0.15)', transition: '0.4s', cursor: 'pointer'
               }}
             >
-              <img src={cat.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={cat.name} draggable="false" />
+              <ShimmerImage src={cat.image} style={{ width: '100%', height: '100%' }} alt={cat.name} draggable="false" />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent 70%)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '1.2rem' }}>
                 <h3 style={{ color: 'white', fontSize: '1.1rem', fontFamily: 'Roboto', marginBottom: '0.3rem' }}>{cat.name}</h3>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--primary)', fontWeight: 800, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '2px' }}>
@@ -469,7 +469,7 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
               }}
             >
               <div style={{ height: isMobile ? '210px' : '290px', borderRadius: '3px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
-                <img src={p.images?.[0] || p.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={p.name} />
+                <ShimmerImage src={p.images?.[0] || p.image} style={{ width: '100%', height: '100%' }} alt={p.name} />
                 <div style={{ position: 'absolute', top: '0.8rem', right: '0.8rem', background: 'var(--primary)', color: 'white', padding: '0.3rem 0.6rem', borderRadius: '4px', fontWeight: 800, fontSize: '0.5rem', letterSpacing: '1px' }}>
                   LATEST
                 </div>
@@ -571,7 +571,7 @@ const HandpickedCollection = ({ products, onProductClick }) => {
                           }}
                       >
                           <div style={{ height: isMobile ? '220px' : '420px', borderRadius: '18px', overflow: 'hidden', boxShadow: '0 25px 50px rgba(233,163,163,0.12)', border: '1px solid #fff0f0' }}>
-                              <img src={resolveImageUrl(p.images?.[0] || p.image)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={p.name} />
+                              <ShimmerImage src={resolveImageUrl(p.images?.[0] || p.image)} style={{ width: '100%', height: '100%' }} alt={p.name} />
                               <div style={{ position: 'absolute', top: '1rem', left: '1rem', background: 'white', padding: '0.3rem 0.7rem', borderRadius: '50px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
                                   <span style={{ fontSize: '0.55rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>0{idx+1}</span>
                               </div>
@@ -659,38 +659,54 @@ const GroupedCollectionCarousels = ({ collectionsData, onProductClick, onCategor
   );
 };
 
+import ShimmerImage from '../components/ShimmerImage';
+
+const SkeletonRow = ({ isMobile }) => (
+  <div style={{ display: 'flex', gap: '20px', padding: '0 5vw', overflow: 'hidden' }}>
+    {[1, 2, 3, 4].map(i => (
+      <div key={i} style={{ 
+        width: isMobile ? '47vw' : 'clamp(140px, 12vw, 290px)',
+        height: isMobile ? '300px' : '400px',
+        background: '#f6f7f8',
+        borderRadius: '12px',
+        animation: 'shimmer 1.5s infinite linear'
+      }} />
+    ))}
+    <style>{`
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+      .skeleton-shimmer {
+        background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+      }
+    `}</style>
+  </div>
+);
+
 const LandingPage = () => {
   useSmoothScroll();
   const navigate = useNavigate();
-  const { products, fetchIconProducts, fetchHandpickedProducts, handpickedProducts, fetchProducts, clearError, siteConfig, getHeaders, error } = useShop();
+  const { products, fetchProducts, clearError, siteConfig, error, fetchHomeLayout, handpickedProducts, iconProducts } = useShop();
   const [IS_BOOKING_OPEN, SET_IS_BOOKING_OPEN] = useState(false);
   const [COLLECTIONS_DATA, SET_COLLECTIONS_DATA] = useState({});
-  const [IS_INITIAL_LOADING, SET_IS_INITIAL_LOADING] = useState(true);
+  const [IS_LOADING_HOME, SET_IS_LOADING_HOME] = useState(true);
 
   useEffect(() => {
     const LOAD_DATA = async () => {
         try {
-            await fetchIconProducts();
-            await fetchHandpickedProducts();
-            await fetchProducts({ limit: 20 });
-            const COLLECTIONS = siteConfig.categories || [];
-            const DATA_MAP = {};
-            for (const CAT of COLLECTIONS) {
-                const COLLECTION_ID = CAT.id;
-                try {
-                    const resp = await axios.get(`${API_BASE_URL}/products`, {
-                        params: { category: COLLECTION_ID, limit: 12 },
-                        headers: getHeaders()
-                    });
-                    DATA_MAP[COLLECTION_ID] = { name: CAT.name, products: resp.data.products };
-                } catch (err) { console.error(`Error fetching collection ${COLLECTION_ID}:`, err); }
-            }
-            SET_COLLECTIONS_DATA(DATA_MAP);
-        } catch (err) { console.error("Critical boot error:", err); }
-        finally { SET_IS_INITIAL_LOADING(false); }
+            const data = await fetchHomeLayout();
+            SET_COLLECTIONS_DATA(data || {});
+            fetchProducts({ limit: 20 });
+        } catch (err) { 
+            console.error("Critical boot error:", err); 
+        } finally { 
+            SET_IS_LOADING_HOME(false);
+        }
     };
     LOAD_DATA();
-  }, [siteConfig.categories, fetchIconProducts, fetchProducts, getHeaders]);
+  }, [fetchHomeLayout, fetchProducts]);
 
   if (error) return (
     <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff9f9', padding: '2rem', textAlign: 'center' }}>
@@ -701,7 +717,8 @@ const LandingPage = () => {
       </div>
     </div>
   );
-  if (IS_INITIAL_LOADING) return <PookieLoader fullScreen={true} />;
+
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   return (
     <div style={{ background: 'var(--white)', overflow: 'hidden' }}>
@@ -713,14 +730,30 @@ const LandingPage = () => {
 
       <Services services={siteConfig.services} />
 
-      <HandpickedCollection products={handpickedProducts} onProductClick={(id) => navigate(`/product/${id}`)} />
+      {IS_LOADING_HOME && (!handpickedProducts || handpickedProducts.length === 0) ? (
+        <div style={{ padding: '4rem 0' }}>
+            <div className="container" style={{ marginBottom: '2rem' }}>
+                <div style={{ width: '200px', height: '20px', background: '#f0f0f0', marginBottom: '1rem' }} className="skeleton-shimmer" />
+                <div style={{ width: '300px', height: '40px', background: '#f0f0f0' }} className="skeleton-shimmer" />
+            </div>
+            <SkeletonRow isMobile={isMobile} />
+        </div>
+      ) : (
+        <HandpickedCollection products={handpickedProducts} onProductClick={(id) => navigate(`/product/${id}`)} />
+      )}
 
       <section className="collection-wrapper" style={{ background: 'var(--accent)' }}>
-        <GroupedCollectionCarousels
-          collectionsData={COLLECTIONS_DATA}
-          onProductClick={(id) => navigate(`/product/${id}`)}
-          onCategoryClick={(id) => navigate(`/products?category=${id}`)}
-        />
+        {IS_LOADING_HOME && Object.keys(COLLECTIONS_DATA).length === 0 ? (
+           <div style={{ padding: '4rem 0' }}>
+             <SkeletonRow isMobile={isMobile} />
+           </div>
+        ) : (
+            <GroupedCollectionCarousels
+                collectionsData={COLLECTIONS_DATA}
+                onProductClick={(id) => navigate(`/product/${id}`)}
+                onCategoryClick={(id) => navigate(`/products?category=${id}`)}
+            />
+        )}
       </section>
 
       <CustomCarousel catalog={products} onProductClick={(id) => navigate(`/product/${id}`)} />

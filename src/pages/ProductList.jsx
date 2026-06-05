@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, ArrowLeft, Filter, Heart, Search, ChevronLeft, ChevronRight, Sparkles, Edit2, Trash2, X, Star, Plus } from 'lucide-react';
 import { Link, useParams, useNavigate, useSearchParams } from 'react-router-dom';
@@ -9,9 +8,40 @@ import ProductDetailModal from '../components/ProductDetailModal';
 import EditProductModal from '../components/EditProductModal';
 import PookieLoader from '../components/PookieLoader';
 import { resolveImageUrl } from '../utils/imageUtils';
-
 import ErrorDisplay from '../components/ErrorDisplay';
 import EmptyState from '../components/EmptyState';
+import ShimmerImage from '../components/ShimmerImage';
+
+const ProductCardSkeleton = () => {
+  const isMobile = window.innerWidth < 768;
+  return (
+    <div style={{
+      background: 'white',
+      borderRadius: '8px',
+      padding: '0.4rem',
+      border: '1px solid #fff0f0',
+      height: isMobile ? '350px' : '450px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '10px'
+    }}>
+      <div style={{ 
+        flex: isMobile ? '0.8' : '0.7', 
+        background: '#f8f9fa', 
+        borderRadius: '6px',
+        animation: 'shimmer 2s infinite linear' 
+      }} className="skeleton-shimmer" />
+      <div style={{ padding: '0.5rem' }}>
+        <div style={{ width: '40%', height: '10px', background: '#f0f0f0', marginBottom: '10px' }} className="skeleton-shimmer" />
+        <div style={{ width: '90%', height: '15px', background: '#f0f0f0', marginBottom: '15px' }} className="skeleton-shimmer" />
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ width: '30%', height: '20px', background: '#f0f0f0' }} className="skeleton-shimmer" />
+          <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#f0f0f0' }} className="skeleton-shimmer" />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const ProductCard = React.memo(({ product, wishlist, toggleWishlist, addToCart, onClick }) => {
   const isMobile = window.innerWidth < 768;
@@ -44,11 +74,10 @@ const ProductCard = React.memo(({ product, wishlist, toggleWishlist, addToCart, 
         background: '#fefafa',
         flexShrink: 0
       }}>
-        <img
+        <ShimmerImage
           src={resolveImageUrl(product.images?.[0] || product.image)}
           alt={product.name}
-          loading="lazy"
-          style={{ width: '100%', height: '100%', objectFit: 'contain', opacity: product.stock === 0 ? 0.6 : 1 }}
+          style={{ width: '100%', height: '100%', opacity: product.stock === 0 ? 0.6 : 1 }}
         />
         {product.stock === 0 && (
           <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.4)', backdropFilter: 'blur(2px)' }}>
@@ -322,6 +351,7 @@ const ProductList = () => {
   );
 
   const isDesktop = window.innerWidth >= 1024;
+  const isMobile = window.innerWidth < 768;
 
   return (
     <div style={{ padding: '4rem 0 8rem', width: '95%', maxWidth: '1800px', margin: '0 auto' }}>
@@ -441,75 +471,82 @@ const ProductList = () => {
 
           {error && <ErrorDisplay message={error} onRetry={() => { clearError(); fetchProducts({ category: filter, search: search, sortBy: sortBy, page: 1 }); }} />}
 
-          {isLoading ? (
-            <PookieLoader fullScreen={true} />
-          ) : (
-            <>
-              {products.length === 0 ? (
-                <div style={{ width: '100%', gridColumn: '1 / -1', display: 'flex', justifyContent: 'center' }}>
-                  <EmptyState 
-                    message="Your perfect piece is playing hide and seek!" 
-                    subtext="This specific collection is currently empty, but there's plenty of other magic to explore. Try looking in 'Everything' or adjusting your search." 
-                  />
-                </div>
-              ) : (
-                <div className="amara-product-grid">
-                  {products.map((product, index) => {
-                    if (products.length === index + 1) {
-                      return (
-                        <div ref={lastProductElementRef} key={product.id}>
-                          <ProductCard
-                            product={product}
-                            wishlist={wishlist}
-                            toggleWishlist={toggleWishlist}
-                            addToCart={addToCart}
-                            onClick={handleProductClick}
-                          />
-                        </div>
-                      );
-                    }
+          <div className="amara-product-grid">
+            {isLoading ? (
+              [...Array(12)].map((_, i) => <ProductCardSkeleton key={i} />)
+            ) : products.length === 0 ? (
+              <div style={{ width: '100%', gridColumn: '1 / -1', display: 'flex', justifyContent: 'center' }}>
+                <EmptyState 
+                  message="Your perfect piece is playing hide and seek!" 
+                  subtext="This specific collection is currently empty, but there's plenty of other magic to explore. Try looking in 'Everything' or adjusting your search." 
+                />
+              </div>
+            ) : (
+              <>
+                {products.map((product, index) => {
+                  if (products.length === index + 1) {
                     return (
-                      <ProductCard
-                        key={product.id}
-                        product={product}
-                        wishlist={wishlist}
-                        toggleWishlist={toggleWishlist}
-                        addToCart={addToCart}
-                        onClick={handleProductClick}
-                      />
+                      <div ref={lastProductElementRef} key={product.id}>
+                        <ProductCard
+                          product={product}
+                          wishlist={wishlist}
+                          toggleWishlist={toggleWishlist}
+                          addToCart={addToCart}
+                          onClick={handleProductClick}
+                        />
+                      </div>
                     );
-                  })}
-                </div>
-              )}
+                  }
+                  return (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      wishlist={wishlist}
+                      toggleWishlist={toggleWishlist}
+                      addToCart={addToCart}
+                      onClick={handleProductClick}
+                    />
+                  );
+                })}
+              </>
+            )}
+          </div>
 
-              {isFetchingMore && (
-                <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
-                  <div className="infinite-scroll-loader">
-                    <Sparkles className="spinning-sparkle" size={32} color="var(--primary)" />
-                    <p style={{ marginTop: '1rem', color: 'var(--primary)', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Curating more magic...</p>
-                  </div>
-                </div>
-              )}
-
-              {!isFetchingMore && pagination.currentPage === pagination.totalPages && products.length > 0 && (
-                 <div style={{ textAlign: 'center', padding: '5rem 0', opacity: 0.5 }}>
-                   <p style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '3px', color: 'var(--secondary)' }}>You've explored the entire collection</p>
-                   <div style={{ width: '40px', height: '1px', background: 'var(--primary)', margin: '1rem auto' }}></div>
-                 </div>
-              )}
-
-              <style>{`
-                .spinning-sparkle {
-                  animation: sparkle-spin 3s linear infinite;
-                }
-                @keyframes sparkle-spin {
-                  from { transform: rotate(0deg) scale(1); }
-                  50% { transform: rotate(180deg) scale(1.2); }
-                  to { transform: rotate(360deg) scale(1); }
-                }
-              `}</style>
-            </>
+          {isFetchingMore && (
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
+              <div className="infinite-scroll-loader">
+                <Sparkles className="spinning-sparkle" size={32} color="var(--primary)" />
+                <p style={{ marginTop: '1rem', color: 'var(--primary)', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Curating more magic...</p>
+              </div>
+            </div>
           )}
+
+          {!isFetchingMore && pagination.currentPage === pagination.totalPages && products.length > 0 && (
+             <div style={{ textAlign: 'center', padding: '5rem 0', opacity: 0.5 }}>
+               <p style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '3px', color: 'var(--secondary)' }}>You've explored the entire collection</p>
+               <div style={{ width: '40px', height: '1px', background: 'var(--primary)', margin: '1rem auto' }}></div>
+             </div>
+          )}
+
+          <style>{`
+            .spinning-sparkle {
+              animation: sparkle-spin 3s linear infinite;
+            }
+            @keyframes sparkle-spin {
+              from { transform: rotate(0deg) scale(1); }
+              50% { transform: rotate(180deg) scale(1.2); }
+              to { transform: rotate(360deg) scale(1); }
+            }
+            .skeleton-shimmer {
+              background: linear-gradient(90deg, #f0f0f0 25%, #f9f9f9 50%, #f0f0f0 75%);
+              background-size: 200% 100%;
+              animation: skeleton-wave 1.5s infinite linear;
+            }
+            @keyframes skeleton-wave {
+              0% { background-position: -200% 0; }
+              100% { background-position: 200% 0; }
+            }
+          `}</style>
         </div>
       </div>
 
