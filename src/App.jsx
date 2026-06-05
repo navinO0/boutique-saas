@@ -50,7 +50,15 @@ const Navbar = ({ onOpenCart }) => {
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
   const isAdminUser = isAdminLoggedIn;
+
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
 
   return (
     <>
@@ -62,11 +70,13 @@ const Navbar = ({ onOpenCart }) => {
         width: '95%', maxWidth: '1400px', zIndex: 2500,
         padding: isScrolled ? '0.6rem 1.5rem' : '1rem 2rem',
         transition: '0.4s cubic-bezier(0.19, 1, 0.22, 1)',
-        background: isScrolled ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.8)',
-        backdropFilter: 'blur(22px)',
+        background: isScrolled 
+          ? (isDesktop ? 'rgba(255, 255, 255, 0.42)' : 'rgba(255, 255, 255, 0.95)') 
+          : (isDesktop ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.7)'),
+        backdropFilter: 'blur(28px)',
         borderRadius: '32px',
-        boxShadow: isScrolled ? '0 12px 35px rgba(233,163,163,0.15)' : '0 8px 32px rgba(0,0,0,0.05)',
-        border: '1px solid rgba(255,255,255,0.4)',
+        boxShadow: isScrolled ? '0 15px 45px rgba(233,163,163,0.12)' : '0 10px 40px rgba(0,0,0,0.03)',
+        border: '1px solid rgba(255,255,255,0.45)',
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -89,14 +99,15 @@ const Navbar = ({ onOpenCart }) => {
             onClick={() => setIsSearchOpen(true)}
             style={{ 
               cursor: 'pointer', 
-              background: '#fff0f0', 
               padding: '0.65rem', 
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: 'var(--primary)',
-              transition: '0.3s'
+              transition: '0.4s',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              backdropFilter: 'blur(5px)'
             }}
           >
             <Search size={18} />
@@ -114,7 +125,7 @@ const Navbar = ({ onOpenCart }) => {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', color: 'var(--secondary)' }}>
-            <div style={{ position: 'relative', cursor: 'pointer', background: '#fff0f0', padding: '0.6rem', borderRadius: '50%' }} onClick={onOpenCart}>
+            <div style={{ position: 'relative', cursor: 'pointer', padding: '0.6rem', borderRadius: '50%', border: '1px solid rgba(255, 255, 255, 0.3)', backdropFilter: 'blur(5px)' }} onClick={onOpenCart}>
               <ShoppingCart size={18} color="var(--primary)" />
               {cart.length > 0 && (
                 <span style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'var(--primary)', color: 'white', fontSize: '0.6rem', width: '15px', height: '15px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>
@@ -123,9 +134,22 @@ const Navbar = ({ onOpenCart }) => {
               )}
             </div>
             {currentUser ? (
-              <button onClick={handleLogout} style={{ background: '#fff0f0', color: 'var(--primary)', padding: '0.55rem', borderRadius: '50%', display: 'flex', border: 'none', cursor: 'pointer' }}><LogOut size={16} /></button>
+               <button onClick={handleLogout} style={{ background: 'none', color: 'var(--primary)', padding: '0.55rem', borderRadius: '50%', display: 'flex', border: '1px solid rgba(255, 255, 255, 0.3)', cursor: 'pointer', backdropFilter: 'blur(5px)' }}><LogOut size={16} /></button>
             ) : (
-              <Link to="/auth" style={{ background: 'var(--primary)', color: 'white', padding: '0.55rem 1.1rem', borderRadius: '22px', fontSize: '0.75rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
+              <Link to="/auth" style={{ 
+                color: 'var(--primary)', 
+                padding: '0.55rem 1.25rem', 
+                borderRadius: '25px', 
+                fontSize: '0.75rem', 
+                fontWeight: 800, 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.5rem', 
+                textDecoration: 'none',
+                backdropFilter: 'blur(5px)',
+                border: '1px solid var(--primary)',
+                boxShadow: '0 4px 15px rgba(183, 110, 110, 0.05)'
+              }}>
                 <User size={15} /> Login
               </Link>
             )}
@@ -144,12 +168,12 @@ const Navbar = ({ onOpenCart }) => {
           }} 
           className="mobile-only"
         >
-          <Link to="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0 0.2rem' }}>
+          <Link to="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0.4rem 0.5rem', borderRadius: '12px' }}>
             <motion.div whileTap={{ scale: 0.8 }}><ShoppingBag size={18} color="var(--primary)" /></motion.div>
             <span style={{ fontSize: '0.45rem', fontWeight: 800, textTransform: 'uppercase' }}>Home</span>
           </Link>
 
-          <Link to="/about" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0 0.2rem' }}>
+          <Link to="/about" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0.4rem 0.5rem', borderRadius: '12px' }}>
             <motion.div whileTap={{ scale: 0.8 }}><Info size={18} /></motion.div>
             <span style={{ fontSize: '0.45rem', fontWeight: 800, textTransform: 'uppercase' }}>About</span>
           </Link>
@@ -157,18 +181,18 @@ const Navbar = ({ onOpenCart }) => {
           {/* Search Trigger */}
           <div 
             onClick={() => setIsSearchOpen(true)}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0 0.2rem', cursor: 'pointer' }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0.4rem 0.5rem', cursor: 'pointer', borderRadius: '12px' }}
           >
             <motion.div whileTap={{ scale: 0.8 }}><Search size={18} /></motion.div>
             <span style={{ fontSize: '0.45rem', fontWeight: 800, textTransform: 'uppercase' }}>Search</span>
           </div>
 
-          <Link to="/products" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0 0.2rem' }}>
+          <Link to="/products" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0.4rem 0.5rem', borderRadius: '12px' }}>
             <motion.div whileTap={{ scale: 0.8 }}><Sparkles size={18} /></motion.div>
             <span style={{ fontSize: '0.45rem', fontWeight: 800, textTransform: 'uppercase' }}>Shop</span>
           </Link>
           
-          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0 0.2rem', cursor: 'pointer' }} onClick={onOpenCart}>
+          <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0.4rem 0.5rem', cursor: 'pointer', borderRadius: '12px' }} onClick={onOpenCart}>
             <motion.div whileTap={{ scale: 0.8 }}>
               <ShoppingCart size={18} color="var(--primary)" />
               {cart.length > 0 && (
@@ -180,7 +204,7 @@ const Navbar = ({ onOpenCart }) => {
             <span style={{ fontSize: '0.45rem', fontWeight: 800, textTransform: 'uppercase' }}>Bag</span>
           </div>
 
-          <Link to={currentUser ? (isAdminUser ? "/admin" : "/account") : "/auth"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0 0.2rem' }}>
+          <Link to={currentUser ? (isAdminUser ? "/admin" : "/account") : "/auth"} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.1rem', color: 'var(--secondary)', padding: '0.4rem 0.5rem', borderRadius: '12px' }}>
             <motion.div whileTap={{ scale: 0.8 }}><User size={18} /></motion.div>
             <span style={{ fontSize: '0.45rem', fontWeight: 800, textTransform: 'uppercase' }}>Me</span>
           </Link>
