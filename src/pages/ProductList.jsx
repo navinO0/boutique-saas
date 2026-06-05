@@ -114,11 +114,10 @@ const ProductList = () => {
   const filter = searchParams.get('category') || categoryId || 'all';
   const sortBy = searchParams.get('sortBy') || 'newest';
   const maxPrice = searchParams.get('maxPrice') || '100000';
-  const page = parseInt(searchParams.get('page')) || 1;
   const search = searchParams.get('search') || '';
   const sizes = searchParams.get('sizes') || '';
 
-  const hasFilters = filter !== 'all' || search !== '' || sortBy !== 'newest' || page !== 1 || maxPrice !== '100000' || sizes !== '';
+  const hasFilters = filter !== 'all' || search !== '' || sortBy !== 'newest' || maxPrice !== '100000' || sizes !== '';
 
   // Local states for inputs (Applied only on "Apply" button click)
   const [searchInput, setSearchInput] = useState(search);
@@ -139,10 +138,7 @@ const ProductList = () => {
         newParams.set(key, value);
       }
     });
-    // Reset page to 1 on filter/search change unless page is explicitly included
-    if (!updates.page && page !== 1) {
-      newParams.delete('page');
-    }
+
     setSearchParams(newParams);
   };
 
@@ -162,8 +158,7 @@ const ProductList = () => {
       sortBy: sortByInput,
       maxPrice: priceInput,
       search: searchInput,
-      sizes: sizesInput,
-      page: 1
+      sizes: sizesInput
     });
     setIsFilterDrawerOpen(false);
   };
@@ -173,13 +168,39 @@ const ProductList = () => {
       category: filter !== 'all' ? filter : undefined,
       search: search,
       sortBy: sortBy,
-      page: page,
+      page: 1,
       maxPrice: maxPrice !== '100000' ? maxPrice : undefined,
       sizes: sizes || undefined
     });
-  }, [filter, sortBy, search, page, maxPrice, sizes]);
+  }, [filter, sortBy, search, maxPrice, sizes]);
 
-  // Sync local inputs if URL changes (e.g. initial load or back button)
+  const { isFetchingMore } = useShop();
+
+  // Infinite Scroll Logic
+  const observer = React.useRef();
+  const lastProductElementRef = useCallback(node => {
+    if (isLoading || isFetchingMore) return;
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && pagination.currentPage < pagination.totalPages) {
+        fetchProducts({
+          category: filter !== 'all' ? filter : undefined,
+          search: search,
+          sortBy: sortBy,
+          page: pagination.currentPage + 1,
+          maxPrice: maxPrice !== '100000' ? maxPrice : undefined,
+          sizes: sizes || undefined
+        }, true);
+      }
+    }, {
+      rootMargin: '100px'
+    });
+
+    if (node) observer.current.observe(node);
+  }, [isLoading, isFetchingMore, pagination.currentPage, pagination.totalPages, filter, search, sortBy, maxPrice, sizes, fetchProducts]);
+
+  // Sync local inputs if URL changes
   useEffect(() => {
     setSearchInput(search);
     setPriceInput(maxPrice);
@@ -190,11 +211,6 @@ const ProductList = () => {
 
   const handleProductClick = (id) => {
     navigate(`/product/${id}`);
-  };
-
-  const handlePageChange = (newPage) => {
-    updateParams({ page: newPage });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const FilterContent = ({ isSidebar = false }) => (
@@ -423,7 +439,7 @@ const ProductList = () => {
             )}
           </AnimatePresence>
 
-          {error && <ErrorDisplay message={error} onRetry={() => { clearError(); fetchProducts({ category: filter, search: search, sortBy: sortBy, page: page }); }} />}
+          {error && <ErrorDisplay message={error} onRetry={() => { clearError(); fetchProducts({ category: filter, search: search, sortBy: sortBy, page: 1 }); }} />}
 
           {isLoading ? (
             <PookieLoader fullScreen={true} />
@@ -438,46 +454,60 @@ const ProductList = () => {
                 </div>
               ) : (
                 <div className="amara-product-grid">
-                  {products.map((product) => (
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      wishlist={wishlist}
-                      toggleWishlist={toggleWishlist}
-                      addToCart={addToCart}
-                      onClick={handleProductClick}
-                    />
-                  ))}
+                  {products.map((product, index) => {
+                    if (products.length === index + 1) {
+                      return (
+                        <div ref={lastProductElementRef} key={product.id}>
+                          <ProductCard
+                            product={product}
+                            wishlist={wishlist}
+                            toggleWishlist={toggleWishlist}
+                            addToCart={addToCart}
+                            onClick={handleProductClick}
+                          />
+                        </div>
+                      );
+                    }
+                    return (
+                      <ProductCard
+                        key={product.id}
+                        product={product}
+                        wishlist={wishlist}
+                        toggleWishlist={toggleWishlist}
+                        addToCart={addToCart}
+                        onClick={handleProductClick}
+                      />
+                    );
+                  })}
                 </div>
               )}
 
-              {pagination.totalPages > 1 && (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginTop: '5rem' }}>
-                  <button
-                    onClick={() => handlePageChange(pagination.currentPage - 1)}
-                    disabled={pagination.currentPage === 1}
-                    style={{ background: 'white', border: '1px solid #fff0f0', padding: '0.8rem', borderRadius: '50%', color: 'var(--primary)', cursor: pagination.currentPage === 1 ? 'not-allowed' : 'pointer' }}
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-                  {[...Array(pagination.totalPages)].map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => handlePageChange(i + 1)}
-                      style={{ width: '36px', height: '36px', borderRadius: '50%', border: 'none', fontWeight: 800, background: pagination.currentPage === i + 1 ? 'var(--primary)' : 'white', color: pagination.currentPage === i + 1 ? 'white' : 'var(--secondary)', cursor: 'pointer' }}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
-                  <button
-                    onClick={() => handlePageChange(pagination.currentPage + 1)}
-                    disabled={pagination.currentPage === pagination.totalPages}
-                    style={{ background: 'white', border: '1px solid #fff0f0', padding: '0.8rem', borderRadius: '50%', color: 'var(--primary)', cursor: pagination.currentPage === pagination.totalPages ? 'not-allowed' : 'pointer' }}
-                  >
-                    <ChevronRight size={20} />
-                  </button>
+              {isFetchingMore && (
+                <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
+                  <div className="infinite-scroll-loader">
+                    <Sparkles className="spinning-sparkle" size={32} color="var(--primary)" />
+                    <p style={{ marginTop: '1rem', color: 'var(--primary)', fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Curating more magic...</p>
+                  </div>
                 </div>
               )}
+
+              {!isFetchingMore && pagination.currentPage === pagination.totalPages && products.length > 0 && (
+                 <div style={{ textAlign: 'center', padding: '5rem 0', opacity: 0.5 }}>
+                   <p style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '3px', color: 'var(--secondary)' }}>You've explored the entire collection</p>
+                   <div style={{ width: '40px', height: '1px', background: 'var(--primary)', margin: '1rem auto' }}></div>
+                 </div>
+              )}
+
+              <style>{`
+                .spinning-sparkle {
+                  animation: sparkle-spin 3s linear infinite;
+                }
+                @keyframes sparkle-spin {
+                  from { transform: rotate(0deg) scale(1); }
+                  50% { transform: rotate(180deg) scale(1.2); }
+                  to { transform: rotate(360deg) scale(1); }
+                }
+              `}</style>
             </>
           )}
         </div>

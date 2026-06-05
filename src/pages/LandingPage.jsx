@@ -371,10 +371,10 @@ const CustomCarousel = ({ catalog, onProductClick }) => {
                 <div className="card-glass-overlay">
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '0.5rem' }}>
                     <div style={{ minWidth: 0 }}>
-                      <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '3px', marginBottom: '0.4rem' }}>{p.category}</p>
-                      <h3 style={{ color: 'white', fontSize: isMobile ? '1.1rem' : '1.4rem', fontFamily: 'Playfair Display', lineHeight: 1.15, fontStyle: 'italic' }}>{p.name}</h3>
+                      <p style={{ color: 'var(--primary)', fontWeight: 700, fontSize: '0.45rem', textTransform: 'uppercase', letterSpacing: '3px', marginBottom: '0.4rem' }}>{p.category}</p>
+                      <h3 style={{ color: 'white', fontSize: isMobile ? '0.4rem' : '1.4rem', fontFamily: 'Playfair Display', lineHeight: 1.15, fontStyle: 'italic' }}>{p.name}</h3>
                     </div>
-                    <div style={{ background: 'var(--primary)', padding: '0.55rem', borderRadius: '8px', color: 'white' }}><ArrowRight size={18} /></div>
+                    <div style={{ background: 'var(--primary)', padding: '0.25rem', borderRadius: '3px', color: 'white' }}><ArrowRight size={18} /></div>
                   </div>
                 </div>
               </motion.div>
@@ -463,12 +463,12 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
               whileHover={!isMobile ? { y: -12 } : {}}
               onClick={() => onProductClick(p.id)}
               style={{
-                width: isMobile ? '42vw' : 'clamp(140px, 12vw, 190px)',
-                background: 'white', borderRadius: '12px', padding: '0.4rem',
+                width: isMobile ? '47vw' : 'clamp(140px, 12vw, 290px)',
+                background: 'white', borderRadius: '3px', padding: '0.4rem',
                 boxShadow: '0 20px 40px rgba(233,163,163,0.08)', border: '1px solid #fff5f5', cursor: 'pointer'
               }}
             >
-              <div style={{ height: isMobile ? '190px' : '230px', borderRadius: '10px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
+              <div style={{ height: isMobile ? '210px' : '290px', borderRadius: '3px', overflow: 'hidden', background: '#fefafa', position: 'relative' }}>
                 <img src={p.images?.[0] || p.image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={p.name} />
                 <div style={{ position: 'absolute', top: '0.8rem', right: '0.8rem', background: 'var(--primary)', color: 'white', padding: '0.3rem 0.6rem', borderRadius: '4px', fontWeight: 800, fontSize: '0.5rem', letterSpacing: '1px' }}>
                   LATEST
@@ -476,9 +476,9 @@ const CollectionRow = ({ products, onProductClick, isMobile }) => {
               </div>
               <div style={{ padding: '0.8rem 0.5rem 0.5rem' }}>
                 <p style={{ color: 'var(--primary)', fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }}>{p.category}</p>
-                <h3 style={{ fontSize: '0.95rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', margin: '0.4rem 0', fontWeight: 700 }}>{p.name}</h3>
+                <h3 style={{ fontSize: isMobile ? '0.75rem' : '0.95rem', fontFamily: 'Roboto', color: 'var(--secondary)', margin: '0.4rem 0', fontWeight: 700 }}>{p.name}</h3>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #fef0f0', paddingTop: '0.6rem' }}>
-                  <p style={{ color: 'var(--primary)', fontWeight: 800 }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
+                  <p style={{ fontSize: isMobile ? '0.85rem' : '1.25rem',color: 'var(--primary)', fontWeight: 800 }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
                   <div style={{ background: 'var(--primary)', padding: '0.4rem', borderRadius: '50%', color: 'white', display: 'flex' }}>
                     <ArrowRight size={12} />
                   </div>
@@ -579,7 +579,7 @@ const HandpickedCollection = ({ products, onProductClick }) => {
                           <div style={{ padding: '2rem 1rem 0', textAlign: 'center' }}>
                               <p style={{ color: 'var(--primary)', fontSize: '0.6rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '4px', marginBottom: '0.6rem' }}>{p.category}</p>
                               <h3 style={{ fontSize: '1rem', fontFamily: 'Playfair Display', color: 'var(--secondary)', fontWeight: 700, fontStyle: 'italic' }}>{p.name}</h3>
-                              <div style={{ width: '30px', height: '2px', background: 'var(--primary)', margin: '1rem auto' }} />
+                              <div style={{ width: '30px', height: '2px', background: 'var(--primary)' }} />
                               <p style={{ fontWeight: 900, color: 'var(--secondary)', fontSize: '1.1rem' }}>₹{parseFloat(p.discountedPrice).toLocaleString()}</p>
                           </div>
                       </motion.div>

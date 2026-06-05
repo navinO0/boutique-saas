@@ -130,30 +130,53 @@ export const ShopProvider = ({ children }) => {
     }
   }, [getHeaders, getCachedData, setCachedData]);
 
-  const fetchProducts = useCallback(async (params = {}) => {
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+
+  const fetchProducts = useCallback(async (params = {}, append = false) => {
     const cacheKey = `products_${JSON.stringify(params)}`;
     const cached = getCachedData(cacheKey);
-    if (cached) {
+    
+    if (cached && !append) {
       setProducts(cached.products);
       setPagination(cached.pagination);
       return;
     }
-    setIsLoading(true);
+
+    if (!append) {
+      setIsLoading(true);
+    } else {
+      setIsFetchingMore(true);
+    }
+    
     setError(null);
     try {
       const response = await axios.get(`${API_BASE_URL}/products`, { params, headers: getHeaders() });
-      setProducts(response.data.products);
+      
+      if (append) {
+        setProducts(prev => {
+          const existingIds = new Set(prev.map(p => p.id));
+          const newItems = response.data.products.filter(p => !existingIds.has(p.id));
+          return [...prev, ...newItems];
+        });
+      } else {
+        setProducts(response.data.products);
+      }
+
       const paginationData = {
         currentPage: response.data.currentPage,
         totalPages: response.data.totalPages
       };
       setPagination(paginationData);
-      setCachedData(cacheKey, { products: response.data.products, pagination: paginationData });
+      
+      if (!append) {
+        setCachedData(cacheKey, { products: response.data.products, pagination: paginationData });
+      }
     } catch (err) {
       console.error('Error fetching products:', err);
       setError('The collection is currently resting. ');
     } finally {
       setIsLoading(false);
+      setIsFetchingMore(false);
     }
   }, [getHeaders, getCachedData, setCachedData]);
 
@@ -621,7 +644,7 @@ export const ShopProvider = ({ children }) => {
   }, [getHeaders, showToast]);
 
   const value = useMemo(() => ({
-    products, adminProducts, iconProducts, handpickedProducts, catalog, isLoading, error, clearError, 
+    products, adminProducts, iconProducts, handpickedProducts, catalog, isLoading, isFetchingMore, error, clearError, 
     pagination, adminPagination, fetchProducts, fetchAdminProducts, fetchIconProducts, fetchHandpickedProducts, fetchCatalog,
     addProduct, updateProduct, deleteProduct,
     addCatalogItem, updateCatalogItem, deleteCatalogItem,
@@ -633,7 +656,7 @@ export const ShopProvider = ({ children }) => {
     getHeaders,
     isAdminLoggedIn: currentUser?.role === 'admin'
   }), [
-    products, adminProducts, iconProducts, handpickedProducts, catalog, isLoading, error, clearError, pagination, adminPagination,
+    products, adminProducts, iconProducts, handpickedProducts, catalog, isLoading, isFetchingMore, error, clearError, pagination, adminPagination,
     fetchProducts, fetchAdminProducts, fetchIconProducts, fetchHandpickedProducts, fetchCatalog, addProduct, updateProduct, deleteProduct,
     addCatalogItem, updateCatalogItem, deleteCatalogItem, cart, wishlist, toggleWishlist, addToCart, 
     removeFromCart, updateQuantity, loginUser, logoutUser, registerUser, updateUserProfile, currentUser, placeOrder, 
