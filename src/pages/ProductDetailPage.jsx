@@ -178,13 +178,21 @@ const ProductDetailPage = () => {
                 style={{ boxShadow: '0 40px 100px rgba(233,163,163,0.15)' }}
               >
                 <AnimatePresence mode="wait">
-                  <ShimmerImage
+                  <motion.div
                     key={currentImageIndex}
-                    src={resolveImageUrl(product.images?.[currentImageIndex] || product.image)}
-                    onClick={() => setIsFullScreen(true)}
-                    className="premium-full-box-image"
-                    style={{ cursor: 'zoom-in' }}
-                  />
+                    initial={{ opacity: 0, scale: 1.05 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ duration: 0.6, ease: "circOut" }}
+                    style={{ width: '100%', height: '100%' }}
+                  >
+                    <ShimmerImage
+                      src={resolveImageUrl(product.images?.[currentImageIndex] || product.image)}
+                      onClick={() => setIsFullScreen(true)}
+                      className="premium-full-box-image"
+                      style={{ cursor: 'zoom-in', objectFit: 'contain', background: '#fff' }}
+                    />
+                  </motion.div>
                 </AnimatePresence>
 
                 {/* Desktop Tap Navigation Regions */}
@@ -525,7 +533,7 @@ const ProductDetailPage = () => {
                     }}
                   >
                     <div style={{ height: isDreamMobile ? 'clamp(200px, 50vw, 280px)' : 'clamp(280px, 30vw, 380px)', borderRadius: '6px', overflow: 'hidden', flexShrink: 0, background: '#fef5f5' }}>
-                      <ShimmerImage src={resolveImageUrl(p.images?.[0] || p.image)} style={{ width: '100%', height: '100%' }} alt={p.name} />
+                      <ShimmerImage src={resolveImageUrl(p.images?.[0] || p.image)} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt={p.name} />
                     </div>
                     <div style={{ padding: '0.8rem 0.5rem', textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                       <h3 style={{ fontSize: 'clamp(0.85rem, 2vw, 1.1rem)', fontFamily: 'Roboto', color: 'var(--secondary)', fontWeight: 700 }}>{p.name}</h3>

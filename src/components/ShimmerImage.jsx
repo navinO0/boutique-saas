@@ -36,10 +36,9 @@ const ShimmerImage = React.memo(({ src, alt, style, className, loading = "lazy",
         loading={loading}
         onLoad={() => setIsLoaded(true)}
         style={{
-          ...style,
           width: '100%',
           height: '100%',
-          objectFit: 'cover',
+          objectFit: style?.objectFit || 'cover',
           display: 'block',
         }}
         {...props}

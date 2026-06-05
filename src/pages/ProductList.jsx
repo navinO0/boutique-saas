@@ -77,7 +77,7 @@ const ProductCard = React.memo(({ product, wishlist, toggleWishlist, addToCart, 
         <ShimmerImage
           src={resolveImageUrl(product.images?.[0] || product.image)}
           alt={product.name}
-          style={{ width: '100%', height: '100%', opacity: product.stock === 0 ? 0.6 : 1 }}
+          style={{ width: '100%', height: '100%', opacity: product.stock === 0 ? 0.6 : 1, objectFit: 'contain' }}
         />
         {product.stock === 0 && (
           <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.4)', backdropFilter: 'blur(2px)' }}>
