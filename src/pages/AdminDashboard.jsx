@@ -16,6 +16,7 @@ import EditCatalogModal from '../components/EditCatalogModal';
 import { resolveImageUrl } from '../utils/imageUtils';
 import EmptyState from '../components/EmptyState';
 import PookieLoader from '../components/PookieLoader';
+import { uploadImage } from '../utils/cloudinary';
 
 const AttentionRequiredView = ({ onEditProduct }) => {
   const { products, fetchInquiries, updateInquiryStatus, allOrders, getHeaders, fetchProducts, fetchAllOrders } = useShop();
@@ -993,6 +994,7 @@ const BannerManager = () => {
 const ConfigForm = ({ siteConfig, onUpdate }) => {
   const [formData, setFormData] = useState(siteConfig);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingQR, setIsUploadingQR] = useState(false);
 
   useEffect(() => {
     setFormData(siteConfig);
@@ -1063,19 +1065,24 @@ const ConfigForm = ({ siteConfig, onUpdate }) => {
                     alignItems: 'center',
                     gap: '0.6rem'
                   }}>
-                    <Upload size={14} /> {formData.upiQR ? 'Change QR Image' : 'Upload QR Image'}
+                    {isUploadingQR ? <PookieLoader mini={true} /> : <Upload size={14} />} {isUploadingQR ? 'Uploading...' : (formData.upiQR ? 'Change QR Image' : 'Upload QR Image')}
                     <input 
                       type="file" 
                       accept="image/*" 
                       style={{ display: 'none' }} 
-                      onChange={(e) => {
+                      disabled={isUploadingQR}
+                      onChange={async (e) => {
                         const file = e.target.files[0];
                         if (file) {
-                          const reader = new FileReader();
-                          reader.onloadend = () => {
-                            setFormData({ ...formData, upiQR: reader.result });
-                          };
-                          reader.readAsDataURL(file);
+                          setIsUploadingQR(true);
+                          try {
+                            const url = await uploadImage(file);
+                            setFormData({ ...formData, upiQR: url });
+                          } catch (error) {
+                            alert(error.message);
+                          } finally {
+                            setIsUploadingQR(false);
+                          }
                         }
                       }}
                     />

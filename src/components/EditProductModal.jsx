@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Save, Trash2, Image as ImageIcon, Plus, Sparkles, Heart } from 'lucide-react';
+import { X, Save, Trash2, Image as ImageIcon, Plus, Sparkles, Heart, Upload } from 'lucide-react';
 import axios from 'axios';
 import { useShop } from '../context/ShopContext';
 import API_BASE_URL from '../config/api';
+import PookieLoader from './PookieLoader';
+
+import { uploadImage } from '../utils/cloudinary';
 
 const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
   const { siteConfig } = useShop();
   const [categories, setCategories] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = React.useRef(null);
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -125,6 +130,25 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
         images: [...formData.images, imageUrlInput.trim()]
       });
       setImageUrlInput('');
+    }
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const url = await uploadImage(file);
+      setFormData(prev => ({
+        ...prev,
+        images: [...prev.images, url]
+      }));
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -281,7 +305,7 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.68rem', fontWeight: 800, marginBottom: '0.5rem', color: 'var(--primary)', textTransform: 'uppercase' }}>Work Portfolio (Images)</label>
-                <div style={{ display: 'flex', gap: '0.6rem', marginBottom: '0.8rem' }}>
+                <div style={{ display: 'flex', gap: '0.6rem', marginBottom: '0.8rem', alignItems: 'center' }}>
                   <input
                     type="text"
                     placeholder="Paste Image URL  "
@@ -290,8 +314,39 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addImage())}
                     style={{ flex: 1, padding: '0.85rem 1rem', border: 'none', background: '#fff9f9', borderRadius: '18px', outline: 'none', fontSize: '0.85rem', minWidth: 0 }}
                   />
-                  <button type="button" onClick={addImage} style={{ padding: '0 1.2rem', background: 'var(--primary)', color: 'white', borderRadius: '18px', border: 'none', cursor: 'pointer', flexShrink: 0 }}>
+                  <button type="button" onClick={addImage} style={{ padding: '0 1.2rem', background: 'var(--primary)', color: 'white', borderRadius: '18px', border: 'none', cursor: 'pointer', flexShrink: 0, height: '42px' }}>
                     <Plus size={18} />
+                  </button>
+                  <div style={{ width: '1px', height: '24px', background: '#eee', margin: '0 0.5rem' }} />
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleFileUpload} 
+                    accept="image/*" 
+                    style={{ display: 'none' }} 
+                  />
+                  <button 
+                    type="button" 
+                    onClick={() => fileInputRef.current?.click()} 
+                    disabled={isUploading}
+                    style={{ 
+                      padding: '0 1.2rem', 
+                      background: '#fff0f0', 
+                      color: 'var(--primary)', 
+                      borderRadius: '18px', 
+                      border: 'none', 
+                      cursor: 'pointer', 
+                      flexShrink: 0, 
+                      height: '42px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      fontSize: '0.75rem',
+                      fontWeight: 800
+                    }}
+                  >
+                    {isUploading ? <PookieLoader mini={true} /> : <Upload size={16} />}
+                    {isUploading ? 'Uploading...' : 'Upload Device'}
                   </button>
                 </div>
 

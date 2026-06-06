@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Save, Trash2, Image as ImageIcon, Plus, Sparkles } from 'lucide-react';
+import { X, Save, Trash2, Image as ImageIcon, Plus, Sparkles, Upload } from 'lucide-react';
 import { BOUTIQUE_CONFIG } from '../data/config';
+import { uploadImage } from '../utils/cloudinary';
+import PookieLoader from './PookieLoader';
 
 const EditCatalogModal = ({ isOpen, onClose, item, onSave }) => {
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = React.useRef(null);
   const [formData, setFormData] = useState({
     name: '',
     category: 'Bridal',
@@ -57,6 +61,25 @@ const EditCatalogModal = ({ isOpen, onClose, item, onSave }) => {
     }
   };
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const url = await uploadImage(file);
+      setFormData(prev => ({
+        ...prev,
+        images: [...prev.images, url]
+      }));
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   const removeImage = (index) => {
     setFormData({
       ...formData,
@@ -104,7 +127,7 @@ const EditCatalogModal = ({ isOpen, onClose, item, onSave }) => {
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, marginBottom: '0.8rem', color: 'var(--primary)', textTransform: 'uppercase' }}>Portfolio Gallery (Images)</label>
-                <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '1.2rem' }}>
+                <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '1.2rem', alignItems: 'center' }}>
                   <input
                     type="text"
                     placeholder="Image URL  "
@@ -112,8 +135,38 @@ const EditCatalogModal = ({ isOpen, onClose, item, onSave }) => {
                     onChange={(e) => setImageUrlInput(e.target.value)}
                     style={{ flex: 1, padding: '1.2rem', border: 'none', background: '#fff9f9', borderRadius: '25px', outline: 'none' }}
                   />
-                  <button type="button" onClick={addImage} style={{ padding: '0 1.5rem', background: 'var(--primary)', color: 'white', borderRadius: '25px', border: 'none', cursor: 'pointer' }}>
+                  <button type="button" onClick={addImage} style={{ padding: '0 1.5rem', background: 'var(--primary)', color: 'white', borderRadius: '25px', border: 'none', cursor: 'pointer', height: '54px' }}>
                     <Plus size={24} />
+                  </button>
+                  <div style={{ width: '1px', height: '30px', background: '#eee', margin: '0 0.5rem' }} />
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleFileUpload} 
+                    accept="image/*" 
+                    style={{ display: 'none' }} 
+                  />
+                  <button 
+                    type="button" 
+                    onClick={() => fileInputRef.current?.click()} 
+                    disabled={isUploading}
+                    style={{ 
+                      padding: '0 1.5rem', 
+                      background: '#fff0f0', 
+                      color: 'var(--primary)', 
+                      borderRadius: '25px', 
+                      border: 'none', 
+                      cursor: 'pointer', 
+                      height: '54px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.6rem',
+                      fontSize: '0.85rem',
+                      fontWeight: 800
+                    }}
+                  >
+                    {isUploading ? <PookieLoader mini={true} /> : <Upload size={18} />}
+                    {isUploading ? 'Uploading...' : 'Upload Device'}
                   </button>
                 </div>
 
