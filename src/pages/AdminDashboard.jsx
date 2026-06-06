@@ -866,6 +866,16 @@ const CollectionsManager = () => {
                 onChange={(e) => handleUpdate(cat.id, 'image', e.target.value)}
                 style={{ width: '100%', padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.75rem' }}
               />
+              <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <input
+                  type="checkbox"
+                  checked={cat.showOnLanding || false}
+                  onChange={(e) => handleUpdate(cat.id, 'showOnLanding', e.target.checked)}
+                  id={`landing-${cat.id}`}
+                  style={{ accentColor: 'var(--primary)', cursor: 'pointer', width: '16px', height: '16px' }}
+                />
+                <label htmlFor={`landing-${cat.id}`} style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--secondary)', textTransform: 'uppercase', cursor: 'pointer' }}>Show on Landing Page</label>
+              </div>
             </div>
             <button
               onClick={() => handleDelete(cat.id)}
