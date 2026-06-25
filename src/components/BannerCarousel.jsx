@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { resolveImageUrl } from '../utils/imageUtils';
 
 // Swiper Imports
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -53,10 +54,10 @@ const BannerCarousel = ({ banners = [], fullWidth = false }) => {
             {/* Same slide content */}
             <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', cursor: banner.link ? 'pointer' : 'default' }}>
               <picture>
-                <source media="(max-width: 767px)" srcSet={banner.mobileImage || banner.image} />
-                <source media="(max-width: 1024px)" srcSet={banner.tabletImage || banner.image} />
+                <source media="(max-width: 767px)" srcSet={resolveImageUrl(banner.mobileImage || banner.image)} />
+                <source media="(max-width: 1024px)" srcSet={resolveImageUrl(banner.tabletImage || banner.image)} />
                 <img
-                  src={banner.desktopImage || banner.image}
+                  src={resolveImageUrl(banner.desktopImage || banner.image)}
                   alt={banner.title}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />

@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { resolveImageUrl } from '../utils/imageUtils';
 
 const ShimmerImage = React.memo(({ src, alt, style, className, loading = "lazy", ...props }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const imgRef = useRef(null);
+
+  const resolvedSrc = resolveImageUrl(src);
 
   useEffect(() => {
     // Check if image is already cached
     if (imgRef.current && imgRef.current.complete) {
       setIsLoaded(true);
     }
-  }, [src]);
+  }, [resolvedSrc]);
 
   return (
     <div style={{ ...style, position: 'relative', overflow: 'hidden', background: '#f5f5f5' }} className={className}>
@@ -31,7 +34,7 @@ const ShimmerImage = React.memo(({ src, alt, style, className, loading = "lazy",
 
       <img
         ref={imgRef}
-        src={src}
+        src={resolvedSrc}
         alt={alt}
         loading={loading}
         onLoad={() => setIsLoaded(true)}

@@ -1,3 +1,5 @@
+import { compressImage } from './imageUtils';
+
 /**
  * Utility for uploading images to Cloudinary using the Unsigned Upload API.
  */
@@ -6,7 +8,7 @@ const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 /**
- * Uploads a file to Cloudinary.
+ * Uploads a file to Cloudinary with automatic optimization.
  * @param {File} file - The file object to upload.
  * @returns {Promise<string>} - The secure URL of the uploaded image.
  */
@@ -15,8 +17,20 @@ export const uploadImage = async (file) => {
     throw new Error('Cloudinary is not configured. Please set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in your .env file.');
   }
 
+  // Optimize image before upload to save bandwidth and speed up the process
+  let fileToUpload = file;
+  try {
+    const originalSize = file.size / 1024;
+    fileToUpload = await compressImage(file);
+    const compressedSize = fileToUpload.size / 1024;
+    console.log(`[Optimization] Compressed image from ${originalSize.toFixed(2)}KB to ${compressedSize.toFixed(2)}KB (${((1 - compressedSize / originalSize) * 100).toFixed(1)}% reduction)`);
+  } catch (err) {
+    console.warn('[Optimization] Compression failed, falling back to original file:', err);
+    fileToUpload = file;
+  }
+
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append('file', fileToUpload);
   formData.append('upload_preset', UPLOAD_PRESET);
 
   try {

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MapPin, CreditCard, CheckCircle, Upload, ChevronRight, MapPin as PinIcon, Home, Plus, Edit2, AlertCircle } from 'lucide-react';
+import { X, MapPin, CreditCard, CheckCircle, Upload, ChevronRight, MapPin as PinIcon, Home, Plus, Edit2, AlertCircle, ImageIcon } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
+import { uploadImage } from '../utils/cloudinary';
 
 const CheckoutModal = ({ isOpen, onClose, total }) => {
   const { userAddresses, addAddress, placeOrder, siteConfig } = useShop();
@@ -11,6 +12,8 @@ const CheckoutModal = ({ isOpen, onClose, total }) => {
   const [editingAddressId, setEditingAddressId] = useState(null);
   const [addressForm, setAddressForm] = useState({ name: '', phone: '', addressText: '', city: '', pincode: '' });
   const [transactionId, setTransactionId] = useState('');
+  const [paymentScreenshot, setPaymentScreenshot] = useState('');
+  const [isUploadingScreenshot, setIsUploadingScreenshot] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleNextStep = () => {
@@ -36,14 +39,18 @@ const CheckoutModal = ({ isOpen, onClose, total }) => {
     setIsAddingAddress(true);
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPaymentScreenshot(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setIsUploadingScreenshot(true);
+      try {
+        const url = await uploadImage(file);
+        setPaymentScreenshot(url);
+      } catch (err) {
+        alert(err.message || 'Failed to upload screenshot');
+      } finally {
+        setIsUploadingScreenshot(false);
+      }
     }
   };
 
@@ -52,10 +59,15 @@ const CheckoutModal = ({ isOpen, onClose, total }) => {
       alert("Please enter a valid Transaction ID to confirm your order");
       return;
     }
+    if (!paymentScreenshot) {
+      alert("Please upload your payment screenshot for verification");
+      return;
+    }
     setIsSubmitting(true);
     const result = await placeOrder({
       address: selectedAddress,
-      transactionId: transactionId
+      transactionId: transactionId,
+      paymentScreenshot: paymentScreenshot
     });
     setIsSubmitting(false);
     if (result.success) {
@@ -210,6 +222,38 @@ const CheckoutModal = ({ isOpen, onClose, total }) => {
                 </div>
 
                 <div style={{ textAlign: 'left' }}>
+                  <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.8rem', paddingLeft: '0.5rem' }}>Verify Payment Manifest</label>
+                  
+                  <div style={{ display: 'flex', gap: '1rem', background: '#fffcfc', padding: '1rem', borderRadius: '25px', border: '2px dashed #ffefef', marginBottom: '1.5rem', alignItems: 'center' }}>
+                    <div style={{ width: '60px', height: '60px', borderRadius: '15px', background: 'white', border: '1px solid #f9f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
+                      {paymentScreenshot ? (
+                        <img src={paymentScreenshot} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Screenshot" />
+                      ) : (
+                        <ImageIcon size={20} color="#eee" />
+                      )}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--secondary)', marginBottom: '0.3rem' }}>{paymentScreenshot ? 'Change Screenshot' : 'Upload Receipt'}</p>
+                      <p style={{ fontSize: '0.62rem', color: '#999' }}>Upload the screenshot of your payment</p>
+                    </div>
+                    <label style={{ 
+                      padding: '0.6rem 1rem', 
+                      background: 'var(--primary)', 
+                      color: 'white', 
+                      borderRadius: '12px', 
+                      fontSize: '0.7rem', 
+                      fontWeight: 800, 
+                      cursor: isUploadingScreenshot ? 'not-allowed' : 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      opacity: isUploadingScreenshot ? 0.7 : 1
+                    }}>
+                      {isUploadingScreenshot ? 'Uploading...' : (paymentScreenshot ? 'Re-upload' : 'Upload')}
+                      <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileChange} disabled={isUploadingScreenshot} />
+                    </label>
+                  </div>
+
                   <label style={{ display: 'block', fontSize: '0.7rem', fontWeight: 700, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.8rem', paddingLeft: '0.5rem' }}>Transaction ID / UTR Number</label>
                   <div style={{ position: 'relative' }}>
                     <input 

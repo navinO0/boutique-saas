@@ -859,13 +859,35 @@ const CollectionsManager = () => {
                 onChange={(e) => handleUpdate(cat.id, 'name', e.target.value)}
                 style={{ width: '100%', padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontWeight: 800, color: 'var(--secondary)' }}
               />
-              <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.5rem', marginTop: '1rem' }}>Cover Image URL</label>
-              <input
-                type="text"
-                value={cat.image}
-                onChange={(e) => handleUpdate(cat.id, 'image', e.target.value)}
-                style={{ width: '100%', padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.75rem' }}
-              />
+              <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.5rem', marginTop: '1rem' }}>Cover Image</label>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <input
+                  type="text"
+                  value={cat.image}
+                  onChange={(e) => handleUpdate(cat.id, 'image', e.target.value)}
+                  style={{ flex: 1, padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.75rem' }}
+                  placeholder="Image URL"
+                />
+                <label style={{ background: 'white', padding: '0.8rem', borderRadius: '15px', border: '1px solid #fff0f0', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Upload size={16} />
+                  <input 
+                    type="file" 
+                    style={{ display: 'none' }} 
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        try {
+                          const url = await uploadImage(file);
+                          handleUpdate(cat.id, 'image', url);
+                        } catch (err) {
+                          alert(err.message);
+                        }
+                      }
+                    }}
+                  />
+                </label>
+              </div>
               <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <input
                   type="checkbox"
@@ -975,16 +997,79 @@ const BannerManager = () => {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Desktop Image URL (Large Screens)</label>
-                  <input type="text" value={banner.desktopImage || banner.image} onChange={(e) => handleUpdate(idx, 'desktopImage', e.target.value)} style={{ width: '100%', padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.75rem', color: '#666' }} />
+                  <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Desktop Image</label>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input type="text" value={banner.desktopImage || banner.image} onChange={(e) => handleUpdate(idx, 'desktopImage', e.target.value)} style={{ flex: 1, padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.75rem', color: '#666' }} placeholder="Desktop Image URL" />
+                    <label style={{ background: 'white', padding: '0.8rem', borderRadius: '15px', border: '1px solid #fff0f0', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Upload size={16} />
+                      <input 
+                        type="file" 
+                        style={{ display: 'none' }} 
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            try {
+                              const url = await uploadImage(file);
+                              handleUpdate(idx, 'desktopImage', url);
+                            } catch (err) {
+                              alert(err.message);
+                            }
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Tablet Image URL (Medium Screens)</label>
-                  <input type="text" value={banner.tabletImage || banner.image} onChange={(e) => handleUpdate(idx, 'tabletImage', e.target.value)} style={{ width: '100%', padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.75rem', color: '#666' }} />
+                  <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Tablet Image</label>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input type="text" value={banner.tabletImage || banner.image} onChange={(e) => handleUpdate(idx, 'tabletImage', e.target.value)} style={{ flex: 1, padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.75rem', color: '#666' }} placeholder="Tablet Image URL" />
+                    <label style={{ background: 'white', padding: '0.8rem', borderRadius: '15px', border: '1px solid #fff0f0', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Upload size={16} />
+                      <input 
+                        type="file" 
+                        style={{ display: 'none' }} 
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            try {
+                              const url = await uploadImage(file);
+                              handleUpdate(idx, 'tabletImage', url);
+                            } catch (err) {
+                              alert(err.message);
+                            }
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Mobile Image URL (Small Screens)</label>
-                  <input type="text" value={banner.mobileImage || banner.image} onChange={(e) => handleUpdate(idx, 'mobileImage', e.target.value)} style={{ width: '100%', padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.75rem', color: '#666' }} />
+                  <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Mobile Image</label>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input type="text" value={banner.mobileImage || banner.image} onChange={(e) => handleUpdate(idx, 'mobileImage', e.target.value)} style={{ flex: 1, padding: '0.8rem 1.2rem', border: 'none', background: 'white', borderRadius: '15px', outline: 'none', fontSize: '0.75rem', color: '#666' }} placeholder="Mobile Image URL" />
+                    <label style={{ background: 'white', padding: '0.8rem', borderRadius: '15px', border: '1px solid #fff0f0', color: 'var(--primary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Upload size={16} />
+                      <input 
+                        type="file" 
+                        style={{ display: 'none' }} 
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            try {
+                              const url = await uploadImage(file);
+                              handleUpdate(idx, 'mobileImage', url);
+                            } catch (err) {
+                              alert(err.message);
+                            }
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
