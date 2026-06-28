@@ -77,6 +77,34 @@ export const ShopProvider = ({ children }) => {
     fetchSiteConfig();
   }, [fetchSiteConfig]);
 
+  // Apply favicon & page title dynamically from config
+  useEffect(() => {
+    // --- Favicon ---
+    const faviconUrl = siteConfig?.branding?.favicon || siteConfig?.favicon;
+    if (faviconUrl) {
+      let link = document.querySelector("link[rel~='icon']");
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'icon';
+        document.head.appendChild(link);
+      }
+      // Force cache-bust so browsers pick up the new favicon immediately
+      link.href = faviconUrl.includes('?')
+        ? faviconUrl
+        : `${faviconUrl}?v=${Date.now()}`;
+      link.type = faviconUrl.endsWith('.png') ? 'image/png' : 'image/x-icon';
+    }
+
+    // --- Page Title ---
+    const pageTitle =
+      siteConfig?.seo?.websiteTitle ||
+      siteConfig?.branding?.brandName ||
+      siteConfig?.name;
+    if (pageTitle) {
+      document.title = pageTitle;
+    }
+  }, [siteConfig]);
+
   const updateSiteConfig = async (newConfig) => {
     try {
       const resp = await axios.patch(`${API_BASE_URL}/company/config`, newConfig, { headers: getHeaders() });

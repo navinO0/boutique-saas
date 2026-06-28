@@ -63,6 +63,16 @@ const Navbar = ({ onOpenCart }) => {
   }, []);
 
 
+  // Transparent when at top, solid white when scrolled, or when mobile menu is open
+  const getNavBackground = () => {
+    // Mobile menu is open → always fully opaque so dropdown is readable
+    if (isOpen && !isDesktop) return 'rgba(255, 255, 255, 1)';
+    // Scrolled down → solid/glassy white
+    if (isScrolled) return 'rgba(255, 255, 255, 0.95)';
+    // At top → transparent
+    return 'rgba(255, 255, 255, 0.08)';
+  };
+
   return (
     <>
       <nav
@@ -73,13 +83,11 @@ const Navbar = ({ onOpenCart }) => {
         width: '95%', maxWidth: '1400px', zIndex: 2500,
         padding: isScrolled ? '0.6rem 1.5rem' : '1rem 2rem',
         transition: '0.4s cubic-bezier(0.19, 1, 0.22, 1)',
-        background: isScrolled 
-          ? (isDesktop ? 'rgba(255, 255, 255, 0.42)' : 'rgba(255, 255, 255, 0.95)') 
-          : (isDesktop ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.7)'),
-        backdropFilter: 'blur(28px)',
-        borderRadius: '32px',
-        boxShadow: isScrolled ? '0 15px 45px rgba(233,163,163,0.12)' : '0 10px 40px rgba(0,0,0,0.03)',
-        border: '1px solid rgba(255,255,255,0.45)',
+        background: getNavBackground(),
+        backdropFilter: isScrolled ? 'blur(28px)' : 'blur(8px)',
+        borderRadius: isOpen && !isDesktop ? '20px' : '32px',
+        boxShadow: (isScrolled || isOpen) ? '0 15px 45px rgba(233,163,163,0.12)' : 'none',
+        border: isScrolled ? '1px solid rgba(255,255,255,0.45)' : '1px solid rgba(255,255,255,0.15)',
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -221,19 +229,25 @@ const Navbar = ({ onOpenCart }) => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            style={{ overflow: 'hidden', padding: '2rem 0' }}
+            style={{ 
+              overflow: 'hidden', 
+              padding: '1.5rem 0 2rem',
+              background: 'rgba(255, 255, 255, 1)',
+              borderTop: '1px solid rgba(233, 163, 163, 0.15)',
+              marginTop: '0.5rem',
+            }}
           >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'center', fontSize: '1rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>
-              <Link to="/" onClick={() => setIsOpen(false)}>Home</Link>
-              <Link to="/products" onClick={() => setIsOpen(false)}>Collections</Link>
-              <Link to="/catalog" onClick={() => setIsOpen(false)}>Catalog</Link>
-              <Link to="/about" onClick={() => setIsOpen(false)}>About</Link>
-              <Link to="/contact" onClick={() => setIsOpen(false)}>Contact</Link>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'center', fontSize: '1rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--secondary)' }}>
+              <Link to="/" onClick={() => setIsOpen(false)} style={{ color: 'var(--secondary)' }}>Home</Link>
+              <Link to="/products" onClick={() => setIsOpen(false)} style={{ color: 'var(--secondary)' }}>Collections</Link>
+              <Link to="/catalog" onClick={() => setIsOpen(false)} style={{ color: 'var(--secondary)' }}>Catalog</Link>
+              <Link to="/about" onClick={() => setIsOpen(false)} style={{ color: 'var(--secondary)' }}>About</Link>
+              <Link to="/contact" onClick={() => setIsOpen(false)} style={{ color: 'var(--secondary)' }}>Contact</Link>
               {currentUser && (
-                isAdminUser ? <Link to="/admin" onClick={() => setIsOpen(false)}>Admin</Link> : <Link to="/account" onClick={() => setIsOpen(false)}>Account</Link>
+                isAdminUser ? <Link to="/admin" onClick={() => setIsOpen(false)} style={{ color: 'var(--secondary)' }}>Admin</Link> : <Link to="/account" onClick={() => setIsOpen(false)} style={{ color: 'var(--secondary)' }}>Account</Link>
               )}
-              {!currentUser && <Link to="/auth" onClick={() => setIsOpen(false)}>Login</Link>}
-              {currentUser && <button onClick={handleLogout} style={{ color: 'var(--primary)', background: 'none', border: 'none', fontWeight: 700, textTransform: 'uppercase' }}>Logout</button>}
+              {!currentUser && <Link to="/auth" onClick={() => setIsOpen(false)} style={{ color: 'var(--secondary)' }}>Login</Link>}
+              {currentUser && <button onClick={handleLogout} style={{ color: 'var(--primary)', background: 'none', border: 'none', fontWeight: 700, textTransform: 'uppercase', cursor: 'pointer' }}>Logout</button>}
             </div>
           </motion.div>
         )}
